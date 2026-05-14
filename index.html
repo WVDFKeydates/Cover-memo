@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WV Philippines — Monthly Financial Summary</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --bg: #f5f3ef;
+    --surface: #ffffff;
+    --surface2: #f0ede8;
+    --ink: #1a1714;
+    --ink2: #5c5650;
+    --ink3: #9c958e;
+    --accent: #2b5fab;
+    --green: #1d7a5f;
+    --amber: #b85c1a;
+    --red: #b02020;
+    --border: rgba(26,23,20,0.10);
+    --border2: rgba(26,23,20,0.06);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--ink); font-size: 14px; line-height: 1.5; }
+
+  /* HEADER */
+  .header { background: var(--ink); color: #fff; padding: 28px 40px 22px; display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+  .header-icon { width: 46px; height: 46px; border-radius: 10px; background: var(--accent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .header-icon svg { width: 24px; height: 24px; fill: none; stroke: #fff; stroke-width: 1.8; }
+  .header-left { display: flex; align-items: flex-start; gap: 16px; }
+  .header-org { font-family: 'DM Serif Display', serif; font-size: 22px; line-height: 1.2; }
+  .header-sub { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 3px; }
+  .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+  .header-period { font-size: 12px; color: rgba(255,255,255,0.55); }
+  .header-updated { font-size: 11px; color: rgba(255,255,255,0.35); }
+  .status-pill { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 4px 12px; font-size: 11px; color: rgba(255,255,255,0.85); }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #f0c040; flex-shrink: 0; }
+  .print-btn { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.20); border-radius: 8px; padding: 6px 14px; font-size: 12px; color: rgba(255,255,255,0.8); cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s; }
+  .print-btn:hover { background: rgba(255,255,255,0.18); }
+  .print-btn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+
+  /* LAYOUT */
+  .main { padding: 28px 40px 48px; max-width: 1280px; margin: 0 auto; }
+  .section { margin-bottom: 28px; }
+  .section-label { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 22px 24px; }
+  .card-title { font-family: 'DM Serif Display', serif; font-size: 15px; color: var(--ink); margin-bottom: 4px; }
+  .card-sub { font-size: 11px; color: var(--ink3); margin-bottom: 16px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-65-35 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+  .chart-wrap { position: relative; }
+
+  /* NARRATIVE BOX */
+  .narrative {
+    background: var(--ink); color: #fff; border-radius: 14px; padding: 22px 28px;
+    margin-bottom: 28px; display: flex; gap: 20px; align-items: flex-start;
+  }
+  .narrative-icon { flex-shrink: 0; width: 36px; height: 36px; border-radius: 8px; background: rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+  .narrative-icon svg { width: 18px; height: 18px; fill: none; stroke: rgba(255,255,255,0.8); stroke-width: 1.8; }
+  .narrative-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 8px; }
+  .narrative-text { font-size: 13px; color: rgba(255,255,255,0.85); line-height: 1.7; }
+  .narrative-text strong { color: #fff; font-weight: 500; }
+
+  /* AT-RISK CALLOUT */
+  .risk-banner { background: #fff8f5; border: 1px solid rgba(176,32,32,0.2); border-left: 3px solid var(--red); border-radius: 10px; padding: 16px 20px; margin-bottom: 28px; }
+  .risk-banner-title { font-size: 11px; font-weight: 600; color: var(--red); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
+  .risk-items-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .risk-item-card { background: #fff; border: 1px solid rgba(176,32,32,0.12); border-radius: 8px; padding: 12px 14px; }
+  .risk-item-name { font-size: 12px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+  .risk-item-detail { font-size: 11px; color: var(--ink2); line-height: 1.5; }
+  .risk-badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 1px 7px; border-radius: 4px; margin-bottom: 6px; }
+  .rb-red { background: #fce8e8; color: var(--red); }
+  .rb-amber { background: #fdeee4; color: var(--amber); }
+
+  /* METRIC CARDS */
+  .metric-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+  .metric-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 4px; position: relative; overflow: hidden; }
+  .metric-card.dark { background: var(--ink); }
+  .metric-label { font-size: 11px; color: var(--ink3); }
+  .metric-card.dark .metric-label { color: rgba(255,255,255,0.5); }
+  .metric-value { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--ink); line-height: 1.1; }
+  .metric-card.dark .metric-value { color: #fff; }
+  .mv-green { color: var(--green) !important; }
+  .mv-amber { color: var(--amber) !important; }
+  .mv-red { color: var(--red) !important; }
+  .metric-note { font-size: 10px; color: var(--ink3); margin-top: 2px; }
+  .metric-card.dark .metric-note { color: rgba(255,255,255,0.4); }
+  .sparkline-wrap { margin-top: 10px; }
+  .trend-label { font-size: 9px; color: var(--ink3); margin-bottom: 3px; }
+  .spark-box { position: relative; width: 100%; height: 40px; }
+
+  /* AREA FILTER */
+  .filter-row { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .filter-label { font-size: 11px; color: var(--ink3); margin-right: 4px; }
+  .filter-btn { font-size: 11px; padding: 5px 14px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--ink2); cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
+  .filter-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .filter-btn:hover:not(.active) { background: var(--surface2); }
+
+  /* PROJECT TABLE */
+  .proj-table { width: 100%; border-collapse: collapse; }
+  .proj-table th { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink3); padding: 0 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+  .proj-table th:nth-child(3), .proj-table th:nth-child(4), .proj-table th:nth-child(5) { text-align: right; }
+  .proj-table td { padding: 0; border-bottom: 1px solid var(--border2); vertical-align: top; }
+  .proj-table tbody tr:last-child td { border-bottom: none; }
+  .proj-row-main { display: flex; align-items: center; gap: 8px; padding: 10px 8px; cursor: pointer; user-select: none; }
+  .proj-row-main:hover { background: var(--surface2); border-radius: 6px; }
+  .proj-expand-icon { width: 16px; height: 16px; flex-shrink: 0; color: var(--ink3); transition: transform 0.2s; }
+  .proj-expand-icon.open { transform: rotate(90deg); }
+  .proj-name-cell { flex: 1; font-size: 12px; font-weight: 500; }
+  .proj-loc { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 20px; font-weight: 500; width: 64px; text-align: center; }
+  .loc-v { background: #e8f0fb; color: #1a3e7a; }
+  .loc-m { background: #e2f4ee; color: #0f4a36; }
+  .loc-l { background: #fdeee4; color: #6e2e0a; }
+  .burn-cell { display: flex; align-items: center; gap: 6px; justify-content: flex-end; }
+  .burn-bar { width: 60px; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; flex-shrink: 0; position: relative; }
+  .burn-fill { height: 100%; border-radius: 3px; }
+  .burn-pct { font-size: 11px; color: var(--ink2); min-width: 32px; text-align: right; }
+  .variance-pos { color: var(--green); font-weight: 500; font-size: 12px; min-width: 72px; text-align: right; }
+  .variance-neg { color: var(--red); font-weight: 500; font-size: 12px; min-width: 72px; text-align: right; }
+  .proj-detail { display: none; padding: 0 8px 12px 40px; }
+  .proj-detail.open { display: block; }
+  .proj-detail-inner { background: var(--surface2); border-radius: 8px; padding: 12px 14px; font-size: 11px; color: var(--ink2); line-height: 1.6; border-left: 3px solid var(--border); }
+  .toggle-mode { display: flex; align-items: center; gap: 0; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-left: auto; }
+  .toggle-btn { font-size: 11px; padding: 5px 14px; border: none; background: transparent; color: var(--ink2); cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
+  .toggle-btn.active { background: var(--ink); color: #fff; }
+
+  /* LEGEND */
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 12px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--ink2); }
+  .legend-sq { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  /* FUNDING */
+  .fund-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--border2); font-size: 12px; gap: 12px; }
+  .fund-row:last-child { border-bottom: none; }
+  .fund-name { font-weight: 500; }
+  .fund-code { font-size: 10px; color: var(--ink3); background: var(--surface2); padding: 2px 7px; border-radius: 4px; }
+  .fund-amount { font-weight: 500; }
+  .fund-total { padding-top: 12px; border-top: 1px solid var(--border); margin-top: 4px; font-weight: 600; font-size: 13px; display: flex; justify-content: space-between; }
+
+  /* AGING */
+  .aging-row { display: grid; grid-template-columns: 1fr 80px 80px 80px; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border2); font-size: 12px; }
+  .aging-row:last-child { border-bottom: none; }
+  .aging-head { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink3); padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .aging-val { text-align: right; }
+  .aging-val.over60 { color: var(--red); font-weight: 500; }
+
+  /* BS MOVEMENTS */
+  .bs-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--border2); font-size: 12px; gap: 12px; }
+  .bs-row:last-child { border-bottom: none; }
+  .bs-code { font-size: 10px; color: var(--ink3); background: var(--surface2); padding: 2px 7px; border-radius: 4px; font-family: monospace; flex-shrink: 0; }
+  .bs-desc { flex: 1; }
+  .bs-change { font-size: 11px; font-weight: 500; white-space: nowrap; }
+  .bs-change.up { color: var(--green); }
+  .bs-change.down { color: var(--red); }
+  .bs-reason { font-size: 10px; color: var(--ink3); margin-top: 2px; }
+
+  /* ENV RISK ITEMS */
+  .env-risk-item { padding: 12px 0; border-bottom: 1px solid var(--border2); font-size: 12px; color: var(--ink2); line-height: 1.6; }
+  .env-risk-item:last-child { border-bottom: none; }
+  .env-risk-tag { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-bottom: 5px; }
+  .tag-forex { background: #e8f0fb; color: #1a3e7a; }
+  .tag-inflation { background: #fdeee4; color: #6e2e0a; }
+  .tag-burn { background: #fdf4e3; color: #6b3d00; }
+
+  /* CASH GAUGE */
+  .gauge-container { display: flex; flex-direction: column; align-items: center; padding: 16px 0 8px; }
+  .gauge-alert { background: #fff0f0; border: 1px solid rgba(176,32,32,0.25); border-radius: 10px; padding: 10px 16px; width: 100%; text-align: center; margin-top: 14px; }
+  .gauge-alert-title { font-size: 11px; font-weight: 600; color: var(--red); }
+  .gauge-alert-sub { font-size: 10px; color: #c04040; margin-top: 2px; }
+
+  /* PAYABLES */
+  .payables-row { display: grid; grid-template-columns: 1fr 80px 80px 80px; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border2); font-size: 12px; }
+  .payables-row:last-child { border-bottom: none; }
+  .payables-head { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink3); padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .payables-val { text-align: right; }
+  .payables-val.over60p { color: var(--red); font-weight: 500; }
+
+  /* SIGNOFF */
+  .signoff { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+  .signoff-person { display: flex; flex-direction: column; gap: 2px; }
+  .signoff-name { font-weight: 500; font-size: 13px; }
+  .signoff-role { font-size: 11px; color: var(--ink3); }
+  .signoff-divider { width: 1px; height: 36px; background: var(--border); }
+
+  /* FOOTER */
+  .footer { padding: 18px 40px; text-align: center; font-size: 11px; color: var(--ink3); border-top: 1px solid var(--border); background: var(--surface2); }
+
+  /* PRINT */
+  @media print {
+    body { background: #fff; font-size: 12px; }
+    .header { background: #1a1714 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .print-btn { display: none !important; }
+    .filter-row { display: none !important; }
+    .proj-detail { display: block !important; }
+    .card, .metric-card, .narrative, .risk-banner { break-inside: avoid; }
+    .main { padding: 16px 24px; }
+    @page { margin: 1cm; }
+  }
+
+  @media (max-width: 960px) {
+    .header { padding: 20px; }
+    .main { padding: 20px 16px 36px; }
+    .metric-row { grid-template-columns: repeat(3, 1fr); }
+    .grid-2, .grid-3, .grid-65-35 { grid-template-columns: 1fr; }
+    .risk-items-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 540px) {
+    .metric-row { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-left">
+    <div class="header-icon">
+      <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 8h10M7 11h6"/></svg>
+    </div>
+    <div>
+      <div class="header-org">World Vision Philippines</div>
+      <div class="header-sub">Monthly Financial Summary &amp; Management Review · FFR Dashboard</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="header-period">Period ending March 2026</div>
+    <div class="header-updated">Last updated: May 14, 2026</div>
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
+      <div class="status-pill"><span class="status-dot"></span>YTD Burn 93% &nbsp;·&nbsp; Annual 41%</div>
+      <button class="print-btn" onclick="window.print()">
+        <svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print / Save PDF
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- NARRATIVE SUMMARY -->
+  <div class="narrative">
+    <div class="narrative-icon">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </div>
+    <div style="flex:1;">
+      <div class="narrative-label">Finance manager summary — March 2026</div>
+      <div class="narrative-text">
+        The office closed March 2026 with a <strong>net surplus of $1.25M</strong>, driven by strong Global Centre and Direct Funding receipts. However, three areas require management attention:
+        <strong>cash position remains 40% below the target low</strong> at $301K (vs. $499K target);
+        <strong>admin cost rate has crept to 10.4%</strong> against a 9.49% target, primarily from technical support and CLU cost overruns;
+        and <strong>ADP Bukidnon is the only project in overspend</strong> at 109% YTD driven by shared NO/FO costs rather than direct programme costs.
+        The majority of underspending across other projects is attributable to rescheduled activities, integration savings, and deferred implementation — all with catch-up plans in place for Q2.
+      </div>
+    </div>
+  </div>
+
+  <!-- AT-RISK CALLOUT -->
+  <div class="risk-banner">
+    <div class="risk-banner-title">⚠ Items requiring management action</div>
+    <div class="risk-items-grid">
+      <div class="risk-item-card">
+        <div class="risk-badge rb-red">Overspend</div>
+        <div class="risk-item-name">ADP Bukidnon — 109% YTD</div>
+        <div class="risk-item-detail">Shared technical &amp; management costs (NO/FO) are the primary driver. Programme costs remain within limits. Monitor monthly to prevent year-end overspend.</div>
+      </div>
+      <div class="risk-item-card">
+        <div class="risk-badge rb-red">Cash</div>
+        <div class="risk-item-name">Cash position 40% below target</div>
+        <div class="risk-item-detail">Actual low of $301K vs. $499K target. RD USD account transfer to disbursement contributed to the decline. Requires monitoring and proactive funding requests.</div>
+      </div>
+      <div class="risk-item-card">
+        <div class="risk-badge rb-amber">Admin rate</div>
+        <div class="risk-item-name">Admin cost rate at 10.4% vs. 9.49% target</div>
+        <div class="risk-item-detail">Cost reduction in support costs is ongoing. BIR tax exemption threshold (30%) is not at risk, but internal target must be met by year-end.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI METRICS -->
+  <div class="section">
+    <div class="section-label">Financial overview</div>
+    <div class="metric-row">
+      <div class="metric-card dark">
+        <div class="metric-label">Total income received</div>
+        <div class="metric-value">$9.83M</div>
+        <div class="metric-note">FY2026 YTD · all sources</div>
+        <div class="sparkline-wrap">
+          <div class="trend-label">6-month trend (est.)</div>
+          <div class="spark-box"><canvas id="spark0" role="img" aria-label="Sparkline for total income trend"></canvas></div>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Total expenditures</div>
+        <div class="metric-value">$8.53M</div>
+        <div class="metric-note">Project + fundraising</div>
+        <div class="sparkline-wrap">
+          <div class="trend-label">6-month trend (est.)</div>
+          <div class="spark-box"><canvas id="spark1" role="img" aria-label="Sparkline for expenditure trend"></canvas></div>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Net surplus</div>
+        <div class="metric-value mv-green">$1.25M</div>
+        <div class="metric-note">Before hosting &amp; forex</div>
+        <div class="sparkline-wrap">
+          <div class="trend-label">6-month trend (est.)</div>
+          <div class="spark-box"><canvas id="spark2" role="img" aria-label="Sparkline for net surplus trend"></canvas></div>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Admin cost rate</div>
+        <div class="metric-value mv-amber">10.4%</div>
+        <div class="metric-note">Target: 9.49%</div>
+        <div class="sparkline-wrap">
+          <div class="trend-label">6-month trend (est.)</div>
+          <div class="spark-box"><canvas id="spark3" role="img" aria-label="Sparkline for admin rate trend"></canvas></div>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Cash low (actual)</div>
+        <div class="metric-value mv-red">$301K</div>
+        <div class="metric-note">Target $499K — 40% gap</div>
+        <div class="sparkline-wrap">
+          <div class="trend-label">6-month trend (est.)</div>
+          <div class="spark-box"><canvas id="spark4" role="img" aria-label="Sparkline for cash position trend"></canvas></div>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Total receivables</div>
+        <div class="metric-value">$1.06M</div>
+        <div class="metric-note">All ageing buckets</div>
+        <div class="sparkline-wrap">
+          <div class="trend-label">6-month trend (est.)</div>
+          <div class="spark-box"><canvas id="spark5" role="img" aria-label="Sparkline for receivables trend"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INCOME & CASH -->
+  <div class="section grid-65-35">
+    <div class="card">
+      <div class="card-title">Income &amp; expenditure by funding source</div>
+      <div class="card-sub">USD · FY2026 year-to-date as of March 31, 2026</div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-sq" style="background:#2b5fab;"></div>Income</div>
+        <div class="legend-item"><div class="legend-sq" style="background:#a8c0e8;"></div>Expenses</div>
+      </div>
+      <div class="chart-wrap" style="height:260px;">
+        <canvas id="incomeChart" role="img" aria-label="Grouped bar chart of income vs expenses by funding source.">Income vs expenses by source.</canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Cash position</div>
+      <div class="card-sub">Actual low vs target (USD)</div>
+      <div class="gauge-container">
+        <div class="chart-wrap" style="height:170px; width:100%;">
+          <canvas id="cashChart" role="img" aria-label="Doughnut showing actual cash $301K vs target $499K — 40% below.">Cash position gauge.</canvas>
+        </div>
+        <div style="text-align:center; margin-top:6px;">
+          <div style="font-family:'DM Serif Display',serif; font-size:28px; color:var(--red);">$301K</div>
+          <div style="font-size:11px; color:var(--ink3);">actual vs <strong style="color:var(--ink2);">$499K</strong> target</div>
+        </div>
+        <div class="gauge-alert">
+          <div class="gauge-alert-title">40% below target low</div>
+          <div class="gauge-alert-sub">Requires proactive monitoring &amp; funding action</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECTS SECTION -->
+  <div class="section">
+    <div class="section-label">Project burn rates &amp; variance detail</div>
+    <div class="card">
+      <!-- FILTER ROW -->
+      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+        <div>
+          <div class="card-title" style="margin-bottom:2px;">All projects — YTD performance</div>
+          <div class="card-sub" style="margin-bottom:0;">Click any row to expand variance explanation</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <div class="filter-row" style="margin-bottom:0;">
+            <span class="filter-label">Filter:</span>
+            <button class="filter-btn active" onclick="filterArea('all',this)">All areas</button>
+            <button class="filter-btn" onclick="filterArea('Luzon',this)">Luzon</button>
+            <button class="filter-btn" onclick="filterArea('Visayas',this)">Visayas</button>
+            <button class="filter-btn" onclick="filterArea('Mindanao',this)">Mindanao</button>
+          </div>
+          <div class="toggle-mode">
+            <button class="toggle-btn active" id="btnPct" onclick="setMode('pct')">% Burn</button>
+            <button class="toggle-btn" id="btnUsd" onclick="setMode('usd')">$ Variance</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="gap:28px;">
+        <div>
+          <div class="chart-wrap" style="height:340px;">
+            <canvas id="burnChart" role="img" aria-label="Horizontal bar chart of project burn rates. Reference line at 100%.">Burn rates.</canvas>
+          </div>
+        </div>
+        <div>
+          <table class="proj-table" id="projTable">
+            <thead>
+              <tr>
+                <th style="padding-left:28px;">Project</th>
+                <th>Area</th>
+                <th style="text-align:right;" id="burnHeader">YTD burn</th>
+                <th style="text-align:right;">Variance</th>
+              </tr>
+            </thead>
+            <tbody id="projBody">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECEIVABLES & PAYABLES & FUNDING -->
+  <div class="section grid-2">
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      <div class="card">
+        <div class="card-title">Receivables ageing</div>
+        <div class="card-sub">USD · as of March 31, 2026 · log scale used for readability</div>
+        <div class="legend">
+          <div class="legend-item"><div class="legend-sq" style="background:#2b5fab;"></div>0–30 days</div>
+          <div class="legend-item"><div class="legend-sq" style="background:#b85c1a;"></div>31–60 days</div>
+          <div class="legend-item"><div class="legend-sq" style="background:#b02020;"></div>&gt;60 days</div>
+        </div>
+        <div class="chart-wrap" style="height:200px;">
+          <canvas id="agingChart" role="img" aria-label="Grouped bar chart of receivables ageing by account on log scale.">Receivables ageing.</canvas>
+        </div>
+        <div style="margin-top:14px;">
+          <div class="aging-row aging-head">
+            <div>Account</div><div style="text-align:right;">0–30d</div><div style="text-align:right;">31–60d</div><div style="text-align:right;">&gt;60d</div>
+          </div>
+          <div class="aging-row"><div>Travel advances</div><div class="aging-val">$82.9K</div><div class="aging-val">$17.9K</div><div class="aging-val over60">$543</div></div>
+          <div class="aging-row"><div>Salary advances</div><div class="aging-val">$1.7K</div><div class="aging-val">—</div><div class="aging-val over60">$8.9K</div></div>
+          <div class="aging-row"><div>Supplier advances</div><div class="aging-val">—</div><div class="aging-val">—</div><div class="aging-val over60">$546K</div></div>
+          <div class="aging-row"><div>Partner advances</div><div class="aging-val">—</div><div class="aging-val">—</div><div class="aging-val over60">$337.8K</div></div>
+          <div class="aging-row"><div>Other receivables</div><div class="aging-val">$1.8K</div><div class="aging-val">$13.7K</div><div class="aging-val over60">$66.2K</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Payables ageing</div>
+        <div class="card-sub">USD · as of March 31, 2026</div>
+        <div class="payables-row payables-head">
+          <div>Account</div><div style="text-align:right;">0–30d</div><div style="text-align:right;">31–60d</div><div style="text-align:right;">&gt;60d</div>
+        </div>
+        <div class="payables-row"><div>Accounts payable</div><div class="payables-val">$35.1K</div><div class="payables-val">$54.2K</div><div class="payables-val over60p">$49.9K</div></div>
+        <div class="payables-row"><div>Retention fee payable</div><div class="payables-val">$1.7K</div><div class="payables-val">$498</div><div class="payables-val over60p">$22.2K</div></div>
+        <div class="payables-row"><div>Payroll &amp; taxes payable</div><div class="payables-val">$7.2K</div><div class="payables-val">$86.5K</div><div class="payables-val over60p">$292.1K</div></div>
+        <div class="payables-row"><div>Accrued pension</div><div class="payables-val">$670</div><div class="payables-val">—</div><div class="payables-val">—</div></div>
+        <div class="payables-row"><div>Other liabilities</div><div class="payables-val">$1.8K</div><div class="payables-val">$9.9K</div><div class="payables-val over60p">$260.9K</div></div>
+      </div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      <div class="card">
+        <div class="card-title">Net income by funding source</div>
+        <div class="card-sub">Net excess / (deficit) · USD</div>
+        <div class="chart-wrap" style="height:190px;">
+          <canvas id="netChart" role="img" aria-label="Bar chart showing net income by funding source.">Net income by source.</canvas>
+        </div>
+        <div style="margin-top:14px; padding-top:12px; border-top:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:7px;"><span style="color:var(--ink2);">Long-term investments (Jun 2027–Sep 2028)</span><span style="font-weight:500;">$1,313,098</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:7px;"><span style="color:var(--ink2);">Short-term investments (&lt;1 year)</span><span style="font-weight:500;">$192,018</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:var(--ink2);">Cash equivalents (&lt;3 months, for rollover)</span><span style="font-weight:500;">$1,562,959</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Direct funding — March 2026</div>
+        <div class="card-sub">All amounts USD · reported to GC Accounting</div>
+        <div class="fund-row"><span class="fund-name">ESPO</span><span class="fund-code">PHLO0328</span><span class="fund-amount">$45,770</span></div>
+        <div class="fund-row"><span class="fund-name">GFRO</span><span class="fund-code">GFRO0105</span><span class="fund-amount">$31,633</span></div>
+        <div class="fund-row"><span class="fund-name">GFRO</span><span class="fund-code">GFRO0115</span><span class="fund-amount">$17,337</span></div>
+        <div class="fund-row"><span class="fund-name">GFRO</span><span class="fund-code">GFRO0106</span><span class="fund-amount">$10,544</span></div>
+        <div class="fund-row"><span class="fund-name">GFRO</span><span class="fund-code">GFRO0116</span><span class="fund-amount">$5,779</span></div>
+        <div class="fund-total"><span>Total direct funding</span><span>$111,063</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Balance sheet movements</div>
+        <div class="card-sub">Accounts with &gt;25% change month-on-month</div>
+        <div class="bs-row"><span class="bs-code">155</span><div class="bs-desc"><div>Employee loan benefits</div><div class="bs-reason">Release of 3 salary advances</div></div><span class="bs-change up">+33% (+$2.2K)</span></div>
+        <div class="bs-row"><span class="bs-code">121</span><div class="bs-desc"><div>Restricted cash — checking</div><div class="bs-reason">Transfer of RD USD account to disbursement</div></div><span class="bs-change down">−25% (−$929K)</span></div>
+        <div class="bs-row"><span class="bs-code">250</span><div class="bs-desc"><div>Accrued pension</div><div class="bs-reason">Normal settlement activity</div></div><span class="bs-change down">−97% (−$19.5K)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ENV RISKS -->
+  <div class="section grid-2">
+    <div class="card">
+      <div class="card-title">Environment &amp; risk highlights</div>
+      <div class="card-sub">Internal and external factors affecting financial position</div>
+      <div class="env-risk-item"><div><span class="env-risk-tag tag-forex">Forex</span></div>4.2% increase in USD/PHP revaluation rate (58.33 vs. 56.00 budgeted), causing underspending of USD-funded budgets. PBAS USD allocations to be adjusted at year-end based on actual exchange rates.</div>
+      <div class="env-risk-item"><div><span class="env-risk-tag tag-inflation">Inflation</span></div>March 2026 inflation at 4.1%. Middle East crisis could push inflation to 5%–7.3% and weaken peso to ₱60–₱61.30/USD, reducing purchasing power and requiring stricter cost controls.</div>
+      <div class="env-risk-item"><div><span class="env-risk-tag tag-burn">Burn rate</span></div>Aggregate 93% YTD / 41% of annual budget. Key factors: rescheduled trainings (SNC, CEW, PEACE clubs), activity integration savings, deferred AIM+ and tablet procurement, overspending in technical support &amp; CLU functions.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Other highlights &amp; action points</div>
+      <div class="card-sub">Major items for follow-up and monitoring</div>
+      <div class="env-risk-item"><strong style="font-size:12px;">Emergency grant closures</strong><br>Closing procedures ongoing for PEER and MEER grants (HKG SAR, CHAF, Coca-Cola) totalling $811K. Forecasted actuals at 99% of budget.</div>
+      <div class="env-risk-item"><strong style="font-size:12px;">Fundraising investment fund</strong><br>For repayment as part of assessment before mid-year review.</div>
+      <div class="env-risk-item"><strong style="font-size:12px;">Income statement — 31% increase</strong><br>Grants and donations from Germany and Spain rose $111K in March vs. zero in February, with $114K more requested from global treasury.</div>
+      <div class="env-risk-item"><strong style="font-size:12px;">RD cash grants receivable</strong><br>Total $1.195M outstanding: ING BTE ($89K), CITI Eco Youth ($250K), AMTRAC ($839K), Leslie Foundation ($17.8K).</div>
+    </div>
+  </div>
+
+  <!-- SIGNOFF -->
+  <div class="section">
+    <div class="section-label">Management sign-off</div>
+    <div class="signoff">
+      <div class="signoff-person"><span class="signoff-name">Arceli Ponce</span><span class="signoff-role">Finance Manager — Accounting, Reporting &amp; Compliance</span></div>
+      <div class="signoff-divider"></div>
+      <div class="signoff-person"><span class="signoff-name">Zuzee Sabarre-Acedera</span><span class="signoff-role">Finance Director</span></div>
+      <div class="signoff-divider"></div>
+      <div class="signoff-person"><span class="signoff-name">Herbert Carpio</span><span class="signoff-role">National Director</span></div>
+
+    </div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  World Vision Philippines — Monthly Financial Summary &amp; Management Review · Period ending March 2026 · Dashboard generated May 14, 2026
+</footer>
+
+<script>
+// ─── DATA ────────────────────────────────────────────────────────────────────
+const projects = [
+  { name: 'Southern Leyte', area: 'Visayas', burn: 70, annualBurn: 24, actual: 144783, budget: 206772, variance: 61989, over: false,
+    note: 'Primary factors: timing of SNFC-related activities and rescheduling of community training due to limited facilitator availability. Variance included in midyear planning.' },
+  { name: 'ADP Aklan 1', area: 'Visayas', burn: 60, annualBurn: 30, actual: 60931, budget: 100842, variance: 39911, over: false,
+    note: 'Budget for Celebrating Families has no cost due to integration of SNC activities. Scale Up Initiatives delayed while identifying sustainable livelihood project. AIM+ deferred to April. Remaining budget for forward economic intervention.' },
+  { name: 'Sultan Kudarat AP', area: 'Mindanao', burn: 89, annualBurn: 39, actual: 315823, budget: 354795, variance: 38972, over: false,
+    note: 'SNC activities rescheduled to integrate with CEW and PEACE clubs formation in May. SOP activities integrated with BBB in March. Savings to be used for RC validation during Back to School in May.' },
+  { name: 'Este Area Programme', area: 'Visayas', burn: 83, annualBurn: 42, actual: 180396, budget: 216412, variance: 36016, over: false,
+    note: 'Underspending from rescheduled Mental Health sessions, minimal GEDSDI and GMP capacity building, and S4T TOT timing. Ongoing IPF capacity building also contributing. Variance in midyear planning.' },
+  { name: 'Bohol NE ADP', area: 'Visayas', burn: 72, annualBurn: 27, actual: 88151, budget: 123100, variance: 34949, over: false,
+    note: 'Cost savings from facilitation of farewell letters and videos. Ongoing capacity building for new IPF approach. Variance to be addressed in midyear planning.' },
+  { name: 'ADP North Cebu', area: 'Visayas', burn: 67, annualBurn: 27, actual: 68950, budget: 103245, variance: 34295, over: false,
+    note: 'Minimal expense on Gender Equality and partnerships due to integration in CoMSCA Summit. Teachers training and reading hubs not yet implemented due to TINO emergency response prioritisation. Variance in midyear planning.' },
+  { name: 'Bohol 5 AP', area: 'Visayas', burn: 64, annualBurn: 34, actual: 58255, budget: 91257, variance: 33002, over: false,
+    note: 'Underspending from timing of implementation vs. original plan. ADP prioritised IPF capacity building for staff and community. Variance to be addressed in midyear planning.' },
+  { name: 'ADP Pangasinan', area: 'Luzon', burn: 91, annualBurn: 35, actual: 292686, budget: 321566, variance: 28880, over: false,
+    note: 'Activities delayed due to prerequisite processes: livelihood support dependent on CSA training and RF profiling completion. Community mapping postponed due to schedule conflicts. All rescheduled for succeeding months; included in midyear budget revision.' },
+  { name: 'Bohol 03 ADP', area: 'Visayas', burn: 63, annualBurn: 27, actual: 46708, budget: 74504, variance: 27795, over: false,
+    note: 'Underspending from timing vs. original plan and deferred hiring of support staff to replace resigned PO. ADP prioritised IPF capacity building. Variance to be addressed in midyear planning.' },
+  { name: 'ADP Bukidnon', area: 'Mindanao', burn: 109, annualBurn: 47, actual: 422367, budget: 388129, variance: -34238, over: true,
+    note: 'DPC activity expenditures remain within acceptable limits. Shared costs from technical and management teams (NO and FO levels) are the primary driver of overall budget overspending. Annual burn rate remains within acceptable levels. Action: Continue monitoring at full cost level to ensure no year-end overspend.' },
+];
+
+let currentArea = 'all';
+let currentMode = 'pct';
+
+function burnColor(v) { return v > 100 ? '#b02020' : v >= 85 ? '#b85c1a' : '#2b5fab'; }
+
+function filterArea(area, btn) {
+  currentArea = area;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+  renderBurnChart();
+}
+
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('btnPct').classList.toggle('active', mode === 'pct');
+  document.getElementById('btnUsd').classList.toggle('active', mode === 'usd');
+  document.getElementById('burnHeader').textContent = mode === 'pct' ? 'YTD burn' : '$ variance';
+  renderTable();
+  renderBurnChart();
+}
+
+function filteredProjects() {
+  if (currentArea === 'all') return projects;
+  return projects.filter(p => p.area === currentArea);
+}
+
+function renderTable() {
+  const fp = filteredProjects();
+  const body = document.getElementById('projBody');
+  body.innerHTML = '';
+  fp.forEach((p, i) => {
+    const locClass = p.area === 'Visayas' ? 'loc-v' : p.area === 'Mindanao' ? 'loc-m' : 'loc-l';
+    const fillPct = Math.min(p.burn, 100);
+    const varDisplay = currentMode === 'pct'
+      ? `<span class="${p.over ? 'variance-neg' : 'variance-pos'}">${p.over ? '−' : '+'}${Math.abs(p.variance).toLocaleString('en', {maximumFractionDigits:0})}</span>`
+      : `<span class="${p.over ? 'variance-neg' : 'variance-pos'}">${p.over ? '−' : '+'}$${(Math.abs(p.variance)/1000).toFixed(1)}K</span>`;
+    const burnDisplay = currentMode === 'pct'
+      ? `<div class="burn-cell"><div class="burn-bar"><div class="burn-fill" style="width:${fillPct}%;background:${burnColor(p.burn)};"></div></div><span class="burn-pct" style="color:${burnColor(p.burn)};font-weight:${p.burn>100?600:400};">${p.burn}%</span></div>`
+      : `<div style="text-align:right;font-size:12px;color:${burnColor(p.burn)};font-weight:500;">$${(p.actual/1000).toFixed(0)}K</div>`;
+
+    const tr = document.createElement('tr');
+    tr.dataset.area = p.area;
+    tr.innerHTML = `
+      <td>
+        <div class="proj-row-main" onclick="toggleDetail(${i})">
+          <svg class="proj-expand-icon" id="icon${i}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <span class="proj-name-cell">${p.name}</span>
+        </div>
+        <div class="proj-detail" id="detail${i}">
+          <div class="proj-detail-inner">${p.note}</div>
+        </div>
+      </td>
+      <td style="padding:10px 8px;"><span class="proj-loc ${locClass}">${p.area}</span></td>
+      <td style="padding:10px 8px;">${burnDisplay}</td>
+      <td style="padding:10px 8px;">${varDisplay}</td>`;
+    body.appendChild(tr);
+  });
+}
+
+function toggleDetail(i) {
+  const detail = document.getElementById('detail' + i);
+  const icon = document.getElementById('icon' + i);
+  const isOpen = detail.classList.contains('open');
+  detail.classList.toggle('open', !isOpen);
+  icon.classList.toggle('open', !isOpen);
+}
+
+// ─── CHARTS ──────────────────────────────────────────────────────────────────
+const gridColor = 'rgba(26,23,20,0.07)';
+const tickColor = '#9c958e';
+
+// Sparklines
+const sparkData = [
+  { data: [7.2,7.8,8.1,8.5,9.1,9.83], color: '#fff' },
+  { data: [5.8,6.2,6.9,7.3,7.8,8.53], color: '#2b5fab' },
+  { data: [1.1,1.3,0.9,1.4,1.1,1.25], color: '#1d7a5f' },
+  { data: [9.1,9.3,9.6,9.8,10.1,10.4], color: '#b85c1a' },
+  { data: [520,490,460,510,380,301], color: '#b02020' },
+  { data: [0.88,0.92,0.95,1.0,1.03,1.06], color: '#2b5fab' },
+];
+sparkData.forEach((s, i) => {
+  const ctx = document.getElementById('spark' + i);
+  if (!ctx) return;
+  const mn = Math.min(...s.data), mx = Math.max(...s.data), pad = (mx - mn) * 0.2 || 0.5;
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Oct','Nov','Dec','Jan','Feb','Mar'],
+      datasets: [{ data: s.data, borderColor: s.color, borderWidth: 1.5, pointRadius: 0, tension: 0.4, fill: false }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      animation: false,
+      plugins: { legend: { display: false }, tooltip: { enabled: false } },
+      scales: {
+        x: { display: false },
+        y: { display: false, min: mn - pad, max: mx + pad }
+      }
+    }
+  });
+});
+
+// Income chart
+new Chart(document.getElementById('incomeChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Global Centre', 'Direct Funding', 'Local Fundraising', 'Other Local'],
+    datasets: [
+      { label: 'Income', data: [6016993, 886990, 2895449, 33637], backgroundColor: '#2b5fab' },
+      { label: 'Expenses', data: [4857059, 600631, 3072366, 33637], backgroundColor: '#a8c0e8' }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { color: gridColor }, ticks: { color: tickColor, font: { size: 11 } } },
+      y: { grid: { color: gridColor }, ticks: { color: tickColor, font: { size: 10 }, callback: v => '$' + (v/1e6).toFixed(1) + 'M' } }
+    }
+  }
+});
+
+// Cash donut
+new Chart(document.getElementById('cashChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Actual ($301K)', 'Gap ($198K)'],
+    datasets: [{ data: [301468, 198026], backgroundColor: ['#b02020', '#e8e4df'], borderWidth: 0 }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, cutout: '72%',
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' $' + ctx.parsed.toLocaleString() } } }
+  }
+});
+
+// Burn chart (rendered/updated by renderBurnChart)
+let burnChartInstance = null;
+function renderBurnChart() {
+  const fp = filteredProjects();
+  const labels = fp.map(p => p.name.length > 18 ? p.name.substring(0,17) + '…' : p.name);
+  const data = currentMode === 'pct' ? fp.map(p => p.burn) : fp.map(p => p.actual / 1000);
+  const colors = fp.map(p => burnColor(p.burn));
+
+  if (burnChartInstance) burnChartInstance.destroy();
+  const ctx = document.getElementById('burnChart');
+  burnChartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: currentMode === 'pct' ? 'YTD Burn Rate (%)' : 'YTD Actual ($K)',
+        data,
+        backgroundColor: colors
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        annotation: currentMode === 'pct' ? {
+          annotations: {
+            line100: {
+              type: 'line', xMin: 100, xMax: 100,
+              borderColor: 'rgba(176,32,32,0.5)', borderWidth: 1.5,
+              borderDash: [4, 3],
+              label: { content: '100%', enabled: true, position: 'end', color: '#b02020', font: { size: 9 } }
+            }
+          }
+        } : {}
+      },
+      scales: {
+        x: {
+          grid: { color: gridColor },
+          ticks: { color: tickColor, font: { size: 10 }, callback: v => currentMode === 'pct' ? v + '%' : '$' + v + 'K' },
+          min: 0
+        },
+        y: { grid: { display: false }, ticks: { color: tickColor, font: { size: 10 } } }
+      }
+    }
+  });
+}
+
+// Aging chart — log scale
+new Chart(document.getElementById('agingChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Travel Adv.', 'Salary Adv.', 'Supplier Adv.', 'Partner Adv.', 'Other AR'],
+    datasets: [
+      { label: '0–30 days', data: [82927, 1735, 100, 100, 1751], backgroundColor: '#2b5fab' },
+      { label: '31–60 days', data: [17925, 100, 100, 100, 13687], backgroundColor: '#b85c1a' },
+      { label: '>60 days', data: [543, 8884, 546047, 337777, 66231], backgroundColor: '#b02020' }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: {
+      callbacks: {
+        label: ctx => {
+          const v = ctx.parsed.y;
+          return ' $' + (v < 200 ? 0 : v).toLocaleString();
+        }
+      }
+    }},
+    scales: {
+      x: { stacked: true, grid: { display: false }, ticks: { color: tickColor, font: { size: 11 } } },
+      y: {
+        stacked: true, type: 'logarithmic',
+        grid: { color: gridColor },
+        ticks: { color: tickColor, font: { size: 10 }, callback: v => v >= 1000 ? '$' + (v/1000).toFixed(0) + 'K' : '' }
+      }
+    }
+  }
+});
+
+// Net income bar
+new Chart(document.getElementById('netChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Global Centre', 'Direct Funding', 'Local Fundraising', 'Other Local'],
+    datasets: [{
+      label: 'Net excess / (deficit)',
+      data: [1110418, 286359, -176917, 33637],
+      backgroundColor: [1110418, 286359, -176917, 33637].map(v => v >= 0 ? '#1d7a5f' : '#b02020')
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: tickColor, font: { size: 11 } } },
+      y: { grid: { color: gridColor }, ticks: { color: tickColor, font: { size: 10 }, callback: v => (v < 0 ? '-' : '') + '$' + Math.abs(v/1000).toFixed(0) + 'K' } }
+    }
+  }
+});
+
+// Init
+renderTable();
+renderBurnChart();
+</script>
+</body>
+</html>
