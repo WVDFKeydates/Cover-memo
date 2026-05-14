@@ -3,49 +3,51 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WV Philippines — Monthly Financial Summary</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>WV Philippines — April 2026 Financial Summary</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@300;400&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
   :root {
-    --bg: #f5f3ef;
+    --bg: #F3F2F0;
     --surface: #ffffff;
-    --surface2: #f0ede8;
-    --ink: #1a1714;
-    --ink2: #5c5650;
-    --ink3: #9c958e;
-    --accent: #2b5fab;
-    --green: #1d7a5f;
-    --amber: #b85c1a;
-    --red: #b02020;
-    --border: rgba(26,23,20,0.10);
-    --border2: rgba(26,23,20,0.06);
+    --surface2: #E9E7E3;
+    --ink: #111222;
+    --ink2: #3F3D4C;
+    --ink3: #6D6A76;
+    --accent: #FF5515;
+    --green: #155930;
+    --amber: #FF6929;
+    --red: #B10831;
+    --border: rgba(17,18,34,0.10);
+    --border2: rgba(17,18,34,0.06);
+    --orange: #FF5515;
+    --midnight: #111222;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--ink); font-size: 14px; line-height: 1.5; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--ink); font-size: 14px; line-height: 1.5; }
 
   /* HEADER */
-  .header { background: var(--ink); color: #fff; padding: 28px 40px 22px; display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
-  .header-icon { width: 46px; height: 46px; border-radius: 10px; background: var(--accent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .header { background: var(--midnight); color: #fff; padding: 0 40px 0; display: flex; align-items: stretch; justify-content: space-between; gap: 20px; flex-wrap: wrap; border-top: 4px solid var(--orange); }
+  .header-icon { width: 46px; height: 46px; border-radius: 0; background: var(--orange); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .header-icon svg { width: 24px; height: 24px; fill: none; stroke: #fff; stroke-width: 1.8; }
-  .header-left { display: flex; align-items: flex-start; gap: 16px; }
-  .header-org { font-family: 'DM Serif Display', serif; font-size: 22px; line-height: 1.2; }
+  .header-left { display: flex; align-items: center; gap: 16px; padding: 20px 0; }
+  .header-org { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 18px; line-height: 1.2; letter-spacing: 0.02em; text-transform: uppercase; }
   .header-sub { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 3px; }
-  .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+  .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; padding: 20px 0; }
   .header-period { font-size: 12px; color: rgba(255,255,255,0.55); }
   .header-updated { font-size: 11px; color: rgba(255,255,255,0.35); }
   .status-pill { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 4px 12px; font-size: 11px; color: rgba(255,255,255,0.85); }
-  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #f0c040; flex-shrink: 0; }
-  .print-btn { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.20); border-radius: 8px; padding: 6px 14px; font-size: 12px; color: rgba(255,255,255,0.8); cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s; }
-  .print-btn:hover { background: rgba(255,255,255,0.18); }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--orange); flex-shrink: 0; }
+  .print-btn { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.20); border-radius: 8px; padding: 6px 14px; font-size: 12px; color: rgba(255,255,255,0.8); cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.2s; }
+  .print-btn:hover { background: #e04000; }
   .print-btn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; }
 
   /* LAYOUT */
   .main { padding: 28px 40px 48px; max-width: 1280px; margin: 0 auto; }
   .section { margin-bottom: 28px; }
-  .section-label { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 22px 24px; }
-  .card-title { font-family: 'DM Serif Display', serif; font-size: 15px; color: var(--ink); margin-bottom: 4px; }
+  .section-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--midnight); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 2px solid var(--orange); display: inline-block; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 22px 24px; }
+  .card-title { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px; color: var(--midnight); margin-bottom: 4px; }
   .card-sub { font-size: 11px; color: var(--ink3); margin-bottom: 16px; }
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
@@ -54,36 +56,37 @@
 
   /* NARRATIVE BOX */
   .narrative {
-    background: var(--ink); color: #fff; border-radius: 14px; padding: 22px 28px;
+    background: var(--midnight); color: #fff; border-radius: 4px; padding: 22px 28px;
     margin-bottom: 28px; display: flex; gap: 20px; align-items: flex-start;
+    border-left: 4px solid var(--orange);
   }
-  .narrative-icon { flex-shrink: 0; width: 36px; height: 36px; border-radius: 8px; background: rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+  .narrative-icon { flex-shrink: 0; width: 36px; height: 36px; border-radius: 2px; background: var(--orange); display: flex; align-items: center; justify-content: center; margin-top: 2px; }
   .narrative-icon svg { width: 18px; height: 18px; fill: none; stroke: rgba(255,255,255,0.8); stroke-width: 1.8; }
   .narrative-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 8px; }
   .narrative-text { font-size: 13px; color: rgba(255,255,255,0.85); line-height: 1.7; }
   .narrative-text strong { color: #fff; font-weight: 500; }
 
   /* AT-RISK CALLOUT */
-  .risk-banner { background: #fff8f5; border: 1px solid rgba(176,32,32,0.2); border-left: 3px solid var(--red); border-radius: 10px; padding: 16px 20px; margin-bottom: 28px; }
-  .risk-banner-title { font-size: 11px; font-weight: 600; color: var(--red); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
+  .risk-banner { background: #fff8f5; border: 1px solid rgba(177,8,49,0.2); border-left: 4px solid var(--red); border-radius: 4px; padding: 16px 20px; margin-bottom: 28px; }
+  .risk-banner-title { font-size: 11px; font-weight: 700; color: #B10831; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
   .risk-items-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  .risk-item-card { background: #fff; border: 1px solid rgba(176,32,32,0.12); border-radius: 8px; padding: 12px 14px; }
+  .risk-item-card { background: #fff; border: 1px solid rgba(177,8,49,0.12); border-radius: 4px; padding: 12px 14px; }
   .risk-item-name { font-size: 12px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
   .risk-item-detail { font-size: 11px; color: var(--ink2); line-height: 1.5; }
   .risk-badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 1px 7px; border-radius: 4px; margin-bottom: 6px; }
-  .rb-red { background: #fce8e8; color: var(--red); }
-  .rb-amber { background: #fdeee4; color: var(--amber); }
+  .rb-red { background: #FFDDE5; color: #B10831; }
+  .rb-amber { background: #FFE8DC; color: #FF6929; }
 
   /* METRIC CARDS */
   .metric-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
-  .metric-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 4px; position: relative; overflow: hidden; }
-  .metric-card.dark { background: var(--ink); }
+  .metric-card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 18px 20px; display: flex; flex-direction: column; gap: 4px; position: relative; overflow: hidden; border-top: 3px solid var(--orange); }
+  .metric-card.dark { background: var(--midnight); border-top-color: var(--orange); }
   .metric-label { font-size: 11px; color: var(--ink3); }
   .metric-card.dark .metric-label { color: rgba(255,255,255,0.5); }
-  .metric-value { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--ink); line-height: 1.1; }
+  .metric-value { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 22px; color: var(--midnight); line-height: 1.1; }
   .metric-card.dark .metric-value { color: #fff; }
-  .mv-green { color: var(--green) !important; }
-  .mv-amber { color: var(--amber) !important; }
+  .mv-green { color: #155930 !important; }
+  .mv-amber { color: #FF6929 !important; }
   .mv-red { color: var(--red) !important; }
   .metric-note { font-size: 10px; color: var(--ink3); margin-top: 2px; }
   .metric-card.dark .metric-note { color: rgba(255,255,255,0.4); }
@@ -94,14 +97,14 @@
   /* AREA FILTER */
   .filter-row { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
   .filter-label { font-size: 11px; color: var(--ink3); margin-right: 4px; }
-  .filter-btn { font-size: 11px; padding: 5px 14px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--ink2); cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
-  .filter-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .filter-btn { font-size: 11px; padding: 5px 14px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--ink2); cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.15s; }
+  .filter-btn.active { background: var(--midnight); color: #fff; border-color: var(--midnight); }
   .filter-btn:hover:not(.active) { background: var(--surface2); }
 
   /* PROJECT TABLE */
   .proj-table { width: 100%; border-collapse: collapse; }
   .proj-table th { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink3); padding: 0 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
-  .proj-table th:nth-child(3), .proj-table th:nth-child(5) { text-align: right; }
+  .proj-table th:nth-child(3), .proj-table th:nth-child(4) { text-align: right; }
   .proj-table td { padding: 0; border-bottom: 1px solid var(--border2); vertical-align: top; }
   .proj-table tbody tr:last-child td { border-bottom: none; }
   .proj-row-main { display: flex; align-items: center; gap: 8px; padding: 10px 8px; cursor: pointer; user-select: none; }
@@ -110,33 +113,33 @@
   .proj-expand-icon.open { transform: rotate(90deg); }
   .proj-name-cell { flex: 1; font-size: 12px; font-weight: 500; }
   .proj-loc { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 20px; font-weight: 500; width: 64px; text-align: center; }
-  .loc-v { background: #e8f0fb; color: #1a3e7a; }
-  .loc-m { background: #e2f4ee; color: #0f4a36; }
-  .loc-l { background: #fdeee4; color: #6e2e0a; }
+  .loc-v { background: #E9E7E3; color: #111222; }
+  .loc-m { background: #D1EFDD; color: #155930; }
+  .loc-l { background: #FFE8DC; color: #E04000; }
   .burn-cell { display: flex; align-items: center; gap: 6px; justify-content: flex-end; }
   .burn-bar { width: 60px; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; flex-shrink: 0; position: relative; }
   .burn-fill { height: 100%; border-radius: 3px; }
   .burn-pct { font-size: 11px; color: var(--ink2); min-width: 32px; text-align: right; }
-  .variance-pos { color: var(--green); font-weight: 500; font-size: 12px; min-width: 72px; text-align: right; }
-  .variance-neg { color: var(--red); font-weight: 500; font-size: 12px; min-width: 72px; text-align: right; }
+  .variance-pos { color: #155930; font-weight: 500; font-size: 12px; min-width: 72px; text-align: right; }
+  .variance-neg { color: #B10831; font-weight: 500; font-size: 12px; min-width: 72px; text-align: right; }
   .proj-detail { display: none; padding: 0 8px 12px 40px; }
   .proj-detail.open { display: block; }
-  .proj-detail-inner { background: var(--surface2); border-radius: 8px; padding: 12px 14px; font-size: 11px; color: var(--ink2); line-height: 1.6; border-left: 3px solid var(--border); }
+  .proj-detail-inner { background: var(--surface2); border-radius: 0; padding: 12px 14px; font-size: 11px; color: var(--ink2); line-height: 1.6; border-left: 3px solid var(--orange); }
   .toggle-mode { display: flex; align-items: center; gap: 0; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-left: auto; }
-  .toggle-btn { font-size: 11px; padding: 5px 14px; border: none; background: transparent; color: var(--ink2); cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
-  .toggle-btn.active { background: var(--ink); color: #fff; }
+  .toggle-btn { font-size: 11px; padding: 5px 14px; border: none; background: transparent; color: var(--ink2); cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.15s; }
+  .toggle-btn.active { background: var(--midnight); color: #fff; }
 
   /* COMMENT COLUMN */
   .comment-cell { padding: 6px 8px !important; vertical-align: middle !important; }
   .comment-input {
-    width: 100%; min-width: 130px; font-size: 11px; font-family: 'DM Sans', sans-serif;
+    width: 100%; min-width: 130px; font-size: 11px; font-family: 'Inter', sans-serif;
     color: var(--ink2); background: transparent; border: 1px dashed transparent;
     border-radius: 6px; padding: 5px 8px; resize: none; outline: none;
     line-height: 1.5; transition: all 0.15s; height: 32px; overflow: hidden;
   }
   .comment-input::placeholder { color: var(--ink3); font-style: italic; }
   .comment-input:hover { border-color: var(--border); background: var(--surface2); }
-  .comment-input:focus { border-color: var(--accent); background: #f0f5ff; border-style: solid; height: auto; min-height: 32px; }
+  .comment-input:focus { border-color: var(--orange); background: #FFF5F0; border-style: solid; height: auto; min-height: 32px; }
   .comment-input.has-value { border-color: var(--border); background: var(--surface2); border-style: solid; }
   .comment-header-wrap { display: flex; align-items: center; gap: 5px; }
   .comment-clear-all { font-size: 9px; color: var(--ink3); cursor: pointer; text-decoration: underline; margin-left: 4px; }
@@ -146,25 +149,25 @@
   .ai-name-input {
     font-size: 12px; font-weight: 500; color: var(--ink); background: transparent;
     border: none; outline: none; width: 100%; padding: 2px 4px; border-radius: 4px;
-    font-family: 'DM Sans', sans-serif; line-height: 1.4; margin-bottom: 4px;
+    font-family: 'Inter', sans-serif; line-height: 1.4; margin-bottom: 4px;
   }
   .ai-name-input:hover { background: rgba(176,32,32,0.05); }
-  .ai-name-input:focus { background: #fff5f5; outline: 1px solid var(--red); }
+  .ai-name-input:focus { background: #FFF5F0; outline: 1px solid var(--orange); }
   .ai-detail-input {
     font-size: 11px; color: var(--ink2); background: transparent;
     border: none; outline: none; width: 100%; padding: 2px 4px; border-radius: 4px;
-    font-family: 'DM Sans', sans-serif; line-height: 1.5; resize: none; overflow: hidden; min-height: 18px;
+    font-family: 'Inter', sans-serif; line-height: 1.5; resize: none; overflow: hidden; min-height: 18px;
   }
   .ai-detail-input:hover { background: rgba(176,32,32,0.05); }
-  .ai-detail-input:focus { background: #fff5f5; outline: 1px solid var(--red); }
+  .ai-detail-input:focus { background: #FFF5F0; outline: 1px solid var(--orange); }
   .ai-badge-input {
     font-size: 10px; font-weight: 600; background: transparent; border: none; outline: none;
-    font-family: 'DM Sans', sans-serif; cursor: text; padding: 0;
+    font-family: 'Inter', sans-serif; cursor: text; padding: 0;
   }
   .ai-badge-select {
     font-size: 10px; border: 1px solid rgba(176,32,32,0.2); border-radius: 4px;
     padding: 1px 4px; background: #fff; color: var(--ink2); cursor: pointer;
-    font-family: 'DM Sans', sans-serif; margin-left: 4px;
+    font-family: 'Inter', sans-serif; margin-left: 4px;
   }
   .ai-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
   .ai-delete { background: transparent; border: none; cursor: pointer; color: var(--ink3); font-size: 16px; line-height: 1; padding: 0 2px; opacity: 0; transition: opacity 0.15s; }
@@ -181,14 +184,14 @@
   .hl-title-input {
     font-size:12px; font-weight:600; color:var(--ink); background:transparent;
     border:none; outline:none; width:100%; padding:2px 4px; border-radius:4px;
-    font-family:'DM Sans',sans-serif; line-height:1.4;
+    font-family:'Inter',sans-serif; line-height:1.4;
   }
   .hl-title-input:hover { background:var(--surface2); }
   .hl-title-input:focus { background:#f0f5ff; outline:1px solid var(--accent); }
   .hl-body-input {
     font-size:12px; color:var(--ink2); background:transparent;
     border:none; outline:none; width:100%; padding:2px 4px; border-radius:4px;
-    font-family:'DM Sans',sans-serif; line-height:1.6; resize:none; overflow:hidden;
+    font-family:'Inter',sans-serif; line-height:1.6; resize:none; overflow:hidden;
     margin-top:2px; min-height:20px;
   }
   .hl-body-input:hover { background:var(--surface2); }
@@ -216,11 +219,11 @@
   .fund-total { padding-top: 12px; border-top: 1px solid var(--border); margin-top: 4px; font-weight: 600; font-size: 13px; display: flex; justify-content: space-between; }
 
   /* AGING */
-  .aging-row { display: grid; grid-template-columns: 1fr 80px 80px 80px; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border2); font-size: 12px; }
+  .aging-row { display: grid; grid-template-columns: 1fr 80px 80px 80px 90px; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border2); font-size: 12px; }
   .aging-row:last-child { border-bottom: none; }
   .aging-head { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink3); padding-bottom: 8px; border-bottom: 1px solid var(--border); }
   .aging-val { text-align: right; }
-  .aging-val.over60 { color: var(--red); font-weight: 500; }
+  .aging-val.over60 { color: #B10831; font-weight: 500; }
 
   /* BS MOVEMENTS */
   .bs-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--border2); font-size: 12px; gap: 12px; }
@@ -228,40 +231,40 @@
   .bs-code { font-size: 10px; color: var(--ink3); background: var(--surface2); padding: 2px 7px; border-radius: 4px; font-family: monospace; flex-shrink: 0; }
   .bs-desc { flex: 1; }
   .bs-change { font-size: 11px; font-weight: 500; white-space: nowrap; }
-  .bs-change.up { color: var(--green); }
-  .bs-change.down { color: var(--red); }
+  .bs-change.up { color: #155930; }
+  .bs-change.down { color: #B10831; }
   .bs-reason { font-size: 10px; color: var(--ink3); margin-top: 2px; }
 
   /* ENV RISK ITEMS */
   .env-risk-item { padding: 12px 0; border-bottom: 1px solid var(--border2); font-size: 12px; color: var(--ink2); line-height: 1.6; }
   .env-risk-item:last-child { border-bottom: none; }
   .env-risk-tag { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-bottom: 5px; }
-  .tag-forex { background: #e8f0fb; color: #1a3e7a; }
-  .tag-inflation { background: #fdeee4; color: #6e2e0a; }
-  .tag-burn { background: #fdf4e3; color: #6b3d00; }
+  .tag-forex { background: #E0F0FF; color: #03586E; }
+  .tag-inflation { background: #FFF0E8; color: #E04000; }
+  .tag-burn { background: #FFF8F0; color: #FF6929; }
 
   /* CASH GAUGE */
   .gauge-container { display: flex; flex-direction: column; align-items: center; padding: 16px 0 8px; }
-  .gauge-alert { background: #fff0f0; border: 1px solid rgba(176,32,32,0.25); border-radius: 10px; padding: 10px 16px; width: 100%; text-align: center; margin-top: 14px; }
-  .gauge-alert-title { font-size: 11px; font-weight: 600; color: var(--red); }
-  .gauge-alert-sub { font-size: 10px; color: #c04040; margin-top: 2px; }
+  .gauge-alert { background: #fff0f0; border: 1px solid rgba(177,8,49,0.25); border-radius: 4px; padding: 10px 16px; width: 100%; text-align: center; margin-top: 14px; }
+  .gauge-alert-title { font-size: 11px; font-weight: 600; color: #B10831; }
+  .gauge-alert-sub { font-size: 10px; color: #B10831; opacity:0.75; margin-top: 2px; }
 
   /* PAYABLES */
-  .payables-row { display: grid; grid-template-columns: 1fr 80px 80px 80px; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border2); font-size: 12px; }
+  .payables-row { display: grid; grid-template-columns: 1fr 90px 80px 80px 90px; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border2); font-size: 12px; }
   .payables-row:last-child { border-bottom: none; }
   .payables-head { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink3); padding-bottom: 8px; border-bottom: 1px solid var(--border); }
   .payables-val { text-align: right; }
-  .payables-val.over60p { color: var(--red); font-weight: 500; }
+  .payables-val.over60p { color: #B10831; font-weight: 500; }
 
   /* SIGNOFF */
-  .signoff { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+  .signoff { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; border-top: 3px solid var(--orange); }
   .signoff-person { display: flex; flex-direction: column; gap: 2px; }
   .signoff-name { font-weight: 500; font-size: 13px; }
   .signoff-role { font-size: 11px; color: var(--ink3); }
   .signoff-divider { width: 1px; height: 36px; background: var(--border); }
 
   /* FOOTER */
-  .footer { padding: 18px 40px; text-align: center; font-size: 11px; color: var(--ink3); border-top: 1px solid var(--border); background: var(--surface2); }
+  .footer { padding: 18px 40px; text-align: center; font-size: 11px; color: var(--ink3); border-top: 2px solid var(--orange); background: var(--midnight); color: rgba(255,255,255,0.5); }
 
   /* PRINT */
   @media print {
@@ -292,8 +295,12 @@
 <!-- HEADER -->
 <header class="header">
   <div class="header-left">
-    <div class="header-icon">
-      <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 8h10M7 11h6"/></svg>
+    <div class="header-icon" style="width:56px;height:56px;background:var(--orange);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <svg viewBox="0 0 32 32" width="32" height="32" fill="none">
+        <path d="M4 28 L28 4 L28 28 Z" fill="var(--orange)"/>
+        <path d="M8 28 L28 8 L28 28 Z" fill="rgba(0,0,0,0.15)"/>
+        <path d="M16 10 L18 15 L23 15 L19 18 L21 23 L16 20 L11 23 L13 18 L9 15 L14 15 Z" fill="white" opacity="0.9"/>
+      </svg>
     </div>
     <div>
       <div class="header-org">World Vision Philippines</div>
@@ -301,7 +308,18 @@
     </div>
   </div>
   <div class="header-right">
-    <div class="header-period">Period ending March 2026</div>
+      <div style="margin-bottom:8px;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 72" width="285" height="54" aria-label="World Vision logo" role="img">
+          <text x="2" y="52" font-family="Georgia,'Times New Roman',serif" font-weight="700" font-size="42" fill="#ffffff" letter-spacing="-1">World Vision</text>
+          <path d="M296 1 L378 1 L378 68 Q342 68 296 1 Z" fill="#FF5515"/>
+          <path d="M320 1 Q378 1 378 68 Q342 68 320 1 Z" fill="rgba(0,0,0,0.10)"/>
+          <g transform="translate(352,32)">
+            <path d="M0,-15 C2,-5 5,-2 15,0 C5,2 2,5 0,15 C-2,5 -5,2 -15,0 C-5,-2 -2,-5 0,-15 Z" fill="white"/>
+          </g>
+          <text x="371" y="9" font-family="Arial,sans-serif" font-size="8" fill="white">®</text>
+        </svg>
+      </div>
+    <div class="header-period">Period ending April 2026</div>
     <div class="header-updated">Last updated: May 14, 2026</div>
     <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
       <div class="status-pill"><span class="status-dot"></span>YTD Burn 93% &nbsp;·&nbsp; Annual 41%</div>
@@ -321,11 +339,11 @@
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
     </div>
     <div style="flex:1;">
-      <div class="narrative-label">Finance manager summary — March 2026</div>
+      <div class="narrative-label">Finance manager summary — April 2026</div>
       <div class="narrative-text">
-        The office closed March 2026 with a <strong>net surplus of $1.25M</strong>, driven by strong Global Centre and Direct Funding receipts. However, three areas require management attention:
-        <strong>cash position remains 40% below the target low</strong> at $301K (vs. $499K target);
-        <strong>admin cost rate has crept to 10.4%</strong> against a 9.49% target, primarily from technical support and CLU cost overruns;
+        The office closed April 2026 with a <strong>net surplus of $1.04M</strong>, driven by strong Global Centre and Direct Funding receipts. However, three areas require management attention:
+        <strong>cash position remains 65% below the target low</strong> at $181K (vs. $521K target);
+        <strong>admin cost rate has crept to 10.6%</strong> against a 9.49% target, primarily from technical support and CLU cost overruns;
         and <strong>ADP Bukidnon is the only project in overspend</strong> at 109% YTD driven by shared NO/FO costs rather than direct programme costs.
         The majority of underspending across other projects is attributable to rescheduled activities, integration savings, and deferred implementation — all with catch-up plans in place for Q2.
       </div>
@@ -338,7 +356,7 @@
       <div class="risk-banner-title" style="margin-bottom:0;">⚠ Items requiring management action</div>
       <div style="display:flex; gap:8px; align-items:center;">
         <span id="actionSaved" style="font-size:10px; color:var(--green); opacity:0; transition:opacity 0.4s;">✓ Saved</span>
-        <button onclick="addActionItem()" style="display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid rgba(176,32,32,0.25);background:#fff;color:var(--red);cursor:pointer;font-family:'DM Sans',sans-serif;">
+        <button onclick="addActionItem()" style="display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid rgba(176,32,32,0.25);background:#fff;color:var(--red);cursor:pointer;font-family:'Inter',sans-serif;">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add item
         </button>
       </div>
@@ -352,7 +370,7 @@
     <div class="metric-row">
       <div class="metric-card dark">
         <div class="metric-label">Total income received</div>
-        <div class="metric-value">$9.83M</div>
+        <div class="metric-value">$10.94M</div>
         <div class="metric-note">FY2026 YTD · all sources</div>
         <div class="sparkline-wrap">
           <div class="trend-label">6-month trend (est.)</div>
@@ -361,7 +379,7 @@
       </div>
       <div class="metric-card">
         <div class="metric-label">Total expenditures</div>
-        <div class="metric-value">$8.53M</div>
+        <div class="metric-value">$9.90M</div>
         <div class="metric-note">Project + fundraising</div>
         <div class="sparkline-wrap">
           <div class="trend-label">6-month trend (est.)</div>
@@ -370,7 +388,7 @@
       </div>
       <div class="metric-card">
         <div class="metric-label">Net surplus</div>
-        <div class="metric-value mv-green">$1.25M</div>
+        <div class="metric-value mv-green">$1.04M</div>
         <div class="metric-note">Before hosting &amp; forex</div>
         <div class="sparkline-wrap">
           <div class="trend-label">6-month trend (est.)</div>
@@ -379,7 +397,7 @@
       </div>
       <div class="metric-card">
         <div class="metric-label">Admin cost rate</div>
-        <div class="metric-value mv-amber">10.4%</div>
+        <div class="metric-value mv-amber">10.6%</div>
         <div class="metric-note">Target: 9.49%</div>
         <div class="sparkline-wrap">
           <div class="trend-label">6-month trend (est.)</div>
@@ -388,8 +406,8 @@
       </div>
       <div class="metric-card">
         <div class="metric-label">Cash low (actual)</div>
-        <div class="metric-value mv-red">$301K</div>
-        <div class="metric-note">Target $499K — 40% gap</div>
+        <div class="metric-value mv-red">$181K</div>
+        <div class="metric-note">Target $521K — 65% gap</div>
         <div class="sparkline-wrap">
           <div class="trend-label">6-month trend (est.)</div>
           <div class="spark-box"><canvas id="spark4" role="img" aria-label="Sparkline for cash position trend"></canvas></div>
@@ -397,8 +415,8 @@
       </div>
       <div class="metric-card">
         <div class="metric-label">Total receivables</div>
-        <div class="metric-value">$1.06M</div>
-        <div class="metric-note">All ageing buckets</div>
+        <div class="metric-value">$85,369</div>
+        <div class="metric-note">Account 180 · Other Accounts Receivable</div>
         <div class="sparkline-wrap">
           <div class="trend-label">6-month trend (est.)</div>
           <div class="spark-box"><canvas id="spark5" role="img" aria-label="Sparkline for receivables trend"></canvas></div>
@@ -411,11 +429,11 @@
   <div class="section grid-65-35">
     <div class="card">
       <div class="card-title">Income &amp; expenditure by funding source</div>
-      <div class="card-sub">USD · FY2026 year-to-date as of March 31, 2026</div>
+      <div class="card-sub">USD · FY2026 year-to-date as of April 30, 2026</div>
       <div class="legend">
-        <div class="legend-item"><div class="legend-sq" style="background:#2b5fab;"></div>Income</div>
-        <div class="legend-item"><div class="legend-sq" style="background:#a8c0e8;"></div>Expenses</div>
-        <div class="legend-item"><div class="legend-sq" style="background:rgba(29,122,95,0.18);border:1.5px solid #1d7a5f;"></div>Net income</div>
+        <div class="legend-item"><div class="legend-sq" style="background:#FF5515;"></div>Income</div>
+        <div class="legend-item"><div class="legend-sq" style="background:#C9C4BC;"></div>Expenses</div>
+        <div class="legend-item"><div class="legend-sq" style="background:rgba(21,89,48,0.15);border:1.5px solid #155930;"></div>Net income</div>
       </div>
       <div class="chart-wrap" style="height:260px;">
         <canvas id="incomeChart" role="img" aria-label="Grouped bar chart of income vs expenses by funding source.">Income vs expenses by source.</canvas>
@@ -423,17 +441,17 @@
       <div style="display:flex; gap:0; margin-top:16px; border-top:1px solid var(--border); padding-top:14px;">
         <div style="flex:1; text-align:center; padding:0 8px; border-right:1px solid var(--border);">
           <div style="font-size:10px; color:var(--ink3); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px;">Total income</div>
-          <div style="font-family:'DM Serif Display',serif; font-size:18px; color:var(--accent);">$9,833,069</div>
+          <div style="font-family:'Inter',sans-serif;font-weight:700; font-size:18px; color:var(--accent);">$10,938,007</div>
           <div style="font-size:10px; color:var(--ink3); margin-top:2px;">all sources combined</div>
         </div>
         <div style="flex:1; text-align:center; padding:0 8px; border-right:1px solid var(--border);">
           <div style="font-size:10px; color:var(--ink3); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px;">Total expenses</div>
-          <div style="font-family:'DM Serif Display',serif; font-size:18px; color:var(--ink);">$8,563,693</div>
+          <div style="font-family:'Inter',sans-serif;font-weight:700; font-size:18px; color:var(--ink);">$9,899,909</div>
           <div style="font-size:10px; color:var(--ink3); margin-top:2px;">project + fundraising</div>
         </div>
         <div style="flex:1; text-align:center; padding:0 8px;">
           <div style="font-size:10px; color:var(--ink3); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px;">Net income</div>
-          <div style="font-family:'DM Serif Display',serif; font-size:18px; color:var(--green);">$1,269,376</div>
+          <div style="font-family:'Inter',sans-serif;font-weight:700; font-size:18px; color:#155930;">$1,038,098</div>
           <div style="font-size:10px; color:var(--ink3); margin-top:2px;">income minus expenses</div>
         </div>
       </div>
@@ -446,12 +464,12 @@
           <canvas id="cashChart" role="img" aria-label="Doughnut showing actual cash $301K vs target $499K — 40% below.">Cash position gauge.</canvas>
         </div>
         <div style="text-align:center; margin-top:6px;">
-          <div style="font-family:'DM Serif Display',serif; font-size:28px; color:var(--red);">$301K</div>
-          <div style="font-size:11px; color:var(--ink3);">actual vs <strong style="color:var(--ink2);">$499K</strong> target</div>
+          <div style="font-family:'Inter',sans-serif;font-weight:700; font-size:28px; color:#B10831;">$181K</div>
+          <div style="font-size:11px; color:var(--ink3);">actual vs <strong style="color:var(--ink2);">$521K</strong> target</div>
         </div>
         <div class="gauge-alert">
-          <div class="gauge-alert-title">40% below target low</div>
-          <div class="gauge-alert-sub">Requires proactive monitoring &amp; funding action</div>
+          <div class="gauge-alert-title">65% below target low</div>
+          <div class="gauge-alert-sub">Actual $181K vs $521K target — requires urgent action</div>
         </div>
       </div>
     </div>
@@ -495,8 +513,8 @@
                 <th style="padding-left:28px;">Project</th>
                 <th>Area</th>
                 <th style="text-align:right;" id="burnHeader">YTD burn</th>
-                <th style="min-width:150px;"><span style="display:flex;align-items:center;gap:5px;">Comments <span style="font-size:9px;color:#9c958e;cursor:pointer;text-decoration:underline;font-weight:400;text-transform:none;letter-spacing:0;" onclick="clearAllComments()">clear all</span></span></th>
                 <th style="text-align:right;">Variance</th>
+                <th style="min-width:150px;"><span style="display:flex;align-items:center;gap:5px;">Comments <span style="font-size:9px;color:#9c958e;cursor:pointer;text-decoration:underline;font-weight:400;text-transform:none;letter-spacing:0;" onclick="clearAllComments()">clear all</span></span></th>
               </tr>
             </thead>
             <tbody id="projBody">
@@ -511,38 +529,60 @@
   <div class="section grid-2">
     <div style="display:flex; flex-direction:column; gap:16px;">
       <div class="card">
-        <div class="card-title">Receivables ageing</div>
-        <div class="card-sub">USD · as of March 31, 2026 · log scale used for readability</div>
+        <div class="card-title">Prepayments, Receivables and Other Assets</div>
+        <div class="card-sub">Ageing by account · USD · as of April 30, 2026 · log scale used for readability</div>
         <div class="legend">
-          <div class="legend-item"><div class="legend-sq" style="background:#2b5fab;"></div>0–30 days</div>
-          <div class="legend-item"><div class="legend-sq" style="background:#b85c1a;"></div>31–60 days</div>
-          <div class="legend-item"><div class="legend-sq" style="background:#b02020;"></div>&gt;60 days</div>
+          <div class="legend-item"><div class="legend-sq" style="background:#111222;"></div>0–30 days</div>
+          <div class="legend-item"><div class="legend-sq" style="background:#FF6929;"></div>31–60 days</div>
+          <div class="legend-item"><div class="legend-sq" style="background:#B10831;"></div>&gt;60 days</div>
         </div>
         <div class="chart-wrap" style="height:200px;">
           <canvas id="agingChart" role="img" aria-label="Grouped bar chart of receivables ageing by account on log scale.">Receivables ageing.</canvas>
         </div>
         <div style="margin-top:14px;">
           <div class="aging-row aging-head">
-            <div>Account</div><div style="text-align:right;">0–30d</div><div style="text-align:right;">31–60d</div><div style="text-align:right;">&gt;60d</div>
+            <div>Account</div><div style="text-align:right;">0–30d</div><div style="text-align:right;">31–60d</div><div style="text-align:right;">&gt;60d</div><div style="text-align:right;">Total Balance</div>
           </div>
-          <div class="aging-row"><div>Travel advances</div><div class="aging-val">$82.9K</div><div class="aging-val">$17.9K</div><div class="aging-val over60">$543</div></div>
-          <div class="aging-row"><div>Salary advances</div><div class="aging-val">$1.7K</div><div class="aging-val">—</div><div class="aging-val over60">$8.9K</div></div>
-          <div class="aging-row"><div>Supplier advances</div><div class="aging-val">—</div><div class="aging-val">—</div><div class="aging-val over60">$546K</div></div>
-          <div class="aging-row"><div>Partner advances</div><div class="aging-val">—</div><div class="aging-val">—</div><div class="aging-val over60">$337.8K</div></div>
-          <div class="aging-row"><div>Other receivables</div><div class="aging-val">$1.8K</div><div class="aging-val">$13.7K</div><div class="aging-val over60">$66.2K</div></div>
+          <div class="aging-row"><div>Travel advances (150)</div><div class="aging-val">$88,496</div><div class="aging-val">$20,911</div><div class="aging-val over60">$29</div><div class="aging-val" style="font-weight:500;color:var(--midnight);">$112,808</div></div>
+          <div class="aging-row"><div>Salary advances (155)</div><div class="aging-val">$2,461</div><div class="aging-val">$2,493</div><div class="aging-val over60">$6,185</div><div class="aging-val" style="font-weight:500;color:var(--midnight);">$11,141</div></div>
+          <div class="aging-row"><div>Supplier advances (17002)</div><div class="aging-val">-$12,276</div><div class="aging-val">-$23,573</div><div class="aging-val over60">$468,970</div><div class="aging-val" style="font-weight:500;color:var(--midnight);">$432,932</div></div>
+          <div class="aging-row"><div>Refundable deposits (17003)</div><div class="aging-val">-$526</div><div class="aging-val">-$678</div><div class="aging-val over60">$24,835</div><div class="aging-val" style="font-weight:500;color:var(--midnight);">$23,630</div></div>
+          <div class="aging-row"><div>Partner advances (172)</div><div class="aging-val">-$140,588</div><div class="aging-val">$37,059</div><div class="aging-val over60">$283,899</div><div class="aging-val" style="font-weight:500;color:var(--midnight);">$180,371</div></div>
+          <div class="aging-row"><div>Other receivables (180)</div><div class="aging-val">$11,152</div><div class="aging-val">$1,915</div><div class="aging-val over60">$72,299</div><div class="aging-val" style="font-weight:500;color:var(--midnight);">$85,369</div></div>
+          <div class="aging-row"><div>Other assets (190)</div><div class="aging-val">-$14,200</div><div class="aging-val">$7,265</div><div class="aging-val over60">$173,966</div><div class="aging-val" style="font-weight:500;color:var(--midnight);">$167,032</div></div>
+          <div class="aging-row" style="border-top:1.5px solid var(--border);margin-top:4px;padding-top:8px;font-weight:600;">
+            <div>Total</div>
+            <div class="aging-val">-$65,481</div>
+            <div class="aging-val">$45,392</div>
+            <div class="aging-val over60" style="color:var(--midnight);">$1,104,153</div>
+            <div class="aging-val" style="font-weight:700;color:var(--midnight);">$1,013,283</div>
+          </div>
+          <div style="margin-top:10px;padding:10px 12px;background:var(--surface2);border-radius:4px;border-left:3px solid var(--orange);font-size:10px;color:var(--ink3);line-height:1.6;">
+            <strong style="color:var(--ink2);">Note:</strong> Amounts above are sourced from the ageing report. Any variance between the ageing breakdown and the total current balance is due to report timing — the extract may be generated after certain settlements have already been processed in the subsequent period.
+          </div>
         </div>
       </div>
       <div class="card">
         <div class="card-title">Payables ageing</div>
-        <div class="card-sub">USD · as of March 31, 2026</div>
+        <div class="card-sub">USD · as of April 30, 2026</div>
         <div class="payables-row payables-head">
-          <div>Account</div><div style="text-align:right;">0–30d</div><div style="text-align:right;">31–60d</div><div style="text-align:right;">&gt;60d</div>
+          <div>Account</div><div style="text-align:right;">Total Balance</div><div style="text-align:right;">0–30d</div><div style="text-align:right;">31–60d</div><div style="text-align:right;">&gt;60d</div>
         </div>
-        <div class="payables-row"><div>Accounts payable</div><div class="payables-val">$35.1K</div><div class="payables-val">$54.2K</div><div class="payables-val over60p">$49.9K</div></div>
-        <div class="payables-row"><div>Retention fee payable</div><div class="payables-val">$1.7K</div><div class="payables-val">$498</div><div class="payables-val over60p">$22.2K</div></div>
-        <div class="payables-row"><div>Payroll &amp; taxes payable</div><div class="payables-val">$7.2K</div><div class="payables-val">$86.5K</div><div class="payables-val over60p">$292.1K</div></div>
-        <div class="payables-row"><div>Accrued pension</div><div class="payables-val">$670</div><div class="payables-val">—</div><div class="payables-val">—</div></div>
-        <div class="payables-row"><div>Other liabilities</div><div class="payables-val">$1.8K</div><div class="payables-val">$9.9K</div><div class="payables-val over60p">$260.9K</div></div>
+        <div class="payables-row"><div>Accounts payable (200)</div><div class="payables-val" style="font-weight:500;color:var(--midnight);">($438,300)</div><div class="payables-val">$11,494</div><div class="payables-val over60p">($26,609)</div><div class="payables-val over60p">($83,152)</div></div>
+        <div class="payables-row"><div>Retention fee payable (210)</div><div class="payables-val" style="font-weight:500;color:var(--midnight);">($26,976)</div><div class="payables-val">($2,778)</div><div class="payables-val over60p">($1,199)</div><div class="payables-val over60p">($23,000)</div></div>
+        <div class="payables-row"><div>Payroll &amp; taxes payable (230)</div><div class="payables-val" style="font-weight:500;color:var(--midnight);">($350,697)</div><div class="payables-val">$28,046</div><div class="payables-val over60p">($84,273)</div><div class="payables-val over60p">($294,755)</div></div>
+        <div class="payables-row"><div>Accrued pension &amp; severance (250)</div><div class="payables-val" style="font-weight:500;color:var(--midnight);">($41,271)</div><div class="payables-val">($40,601)</div><div class="payables-val over60p">($670)</div><div class="payables-val">—</div></div>
+        <div class="payables-row"><div>Other liabilities (260)</div><div class="payables-val" style="font-weight:500;color:var(--midnight);">($258,158)</div><div class="payables-val">$14,066</div><div class="payables-val over60p">($2,625)</div><div class="payables-val over60p">($269,599)</div></div>
+        <div class="payables-row" style="border-top:1.5px solid var(--border);margin-top:4px;padding-top:8px;font-weight:600;">
+          <div>Total</div>
+          <div class="payables-val" style="font-weight:700;color:var(--midnight);">($1,115,402)</div>
+          <div class="payables-val">$10,227</div>
+          <div class="payables-val over60p">($115,376)</div>
+          <div class="payables-val over60p">($670,506)</div>
+        </div>
+        <div style="margin-top:10px;padding:10px 12px;background:var(--surface2);border-radius:4px;border-left:3px solid var(--orange);font-size:10px;color:var(--ink3);line-height:1.6;">
+          <strong style="color:var(--ink2);">Note:</strong> Amounts above are sourced from the ageing report. Any variance between the ageing breakdown and the total current balance is due to report timing — the extract may be generated after certain settlements have already been processed in the subsequent period.
+        </div>
       </div>
     </div>
     <div style="display:flex; flex-direction:column; gap:16px;">
@@ -559,21 +599,60 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-title">Direct funding — March 2026</div>
+        <div class="card-title">Direct funding — April 2026</div>
         <div class="card-sub">All amounts USD · reported to GC Accounting</div>
-        <div class="fund-row"><span class="fund-name">ESPO</span><span class="fund-code">PHLO0328</span><span class="fund-amount">$45,770</span></div>
-        <div class="fund-row"><span class="fund-name">GFRO</span><span class="fund-code">GFRO0105</span><span class="fund-amount">$31,633</span></div>
-        <div class="fund-row"><span class="fund-name">GFRO</span><span class="fund-code">GFRO0115</span><span class="fund-amount">$17,337</span></div>
-        <div class="fund-row"><span class="fund-name">GFRO</span><span class="fund-code">GFRO0106</span><span class="fund-amount">$10,544</span></div>
-        <div class="fund-row"><span class="fund-name">GFRO</span><span class="fund-code">GFRO0116</span><span class="fund-amount">$5,779</span></div>
-        <div class="fund-total"><span>Total direct funding</span><span>$111,063</span></div>
+        <div style="display:flex;align-items:center;justify-content:center;padding:28px 0;flex-direction:column;gap:8px;">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9C4BC" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <div style="font-size:13px;font-weight:500;color:var(--ink2);">No direct funding received</div>
+          <div style="font-size:11px;color:var(--ink3);">April 2026</div>
+        </div>
+        <div class="fund-total"><span>Total direct funding</span><span>$0</span></div>
       </div>
       <div class="card">
         <div class="card-title">Balance sheet movements</div>
         <div class="card-sub">Accounts with &gt;25% change month-on-month</div>
-        <div class="bs-row"><span class="bs-code">155</span><div class="bs-desc"><div>Employee loan benefits</div><div class="bs-reason">Release of 3 salary advances</div></div><span class="bs-change up">+33% (+$2.2K)</span></div>
-        <div class="bs-row"><span class="bs-code">121</span><div class="bs-desc"><div>Restricted cash — checking</div><div class="bs-reason">Transfer of RD USD account to disbursement</div></div><span class="bs-change down">−25% (−$929K)</span></div>
-        <div class="bs-row"><span class="bs-code">250</span><div class="bs-desc"><div>Accrued pension</div><div class="bs-reason">Normal settlement activity</div></div><span class="bs-change down">−97% (−$19.5K)</span></div>
+        <div class="bs-row">
+          <span class="bs-code">172</span>
+          <div class="bs-desc">
+            <div>Advances to Partners</div>
+            <div class="bs-reason" style="margin-top:4px;">
+              <input type="text" id="bs_172_input" placeholder="Add explanation…"
+                style="width:100%;font-size:11px;color:var(--ink2);background:var(--surface2);border:1px dashed var(--border);border-radius:4px;outline:none;padding:4px 8px;font-family:'Inter',sans-serif;transition:all 0.15s;"
+                onfocus="this.style.borderColor='var(--orange)';this.style.background='#FFF5F0'"
+                onblur="this.style.borderColor='var(--border)';this.style.background='var(--surface2)';saveBsNote('bs_172',this.value)"
+                oninput="saveBsNote('bs_172',this.value)">
+            </div>
+          </div>
+          <span class="bs-change up">−47% (−$157.4K)</span>
+        </div>
+        <div class="bs-row">
+          <span class="bs-code">200</span>
+          <div class="bs-desc">
+            <div>Accounts Payable</div>
+            <div class="bs-reason" style="margin-top:4px;">
+              <input type="text" id="bs_200_input" placeholder="Add explanation…"
+                style="width:100%;font-size:11px;color:var(--ink2);background:var(--surface2);border:1px dashed var(--border);border-radius:4px;outline:none;padding:4px 8px;font-family:'Inter',sans-serif;transition:all 0.15s;"
+                onfocus="this.style.borderColor='var(--orange)';this.style.background='#FFF5F0'"
+                onblur="this.style.borderColor='var(--border)';this.style.background='var(--surface2)';saveBsNote('bs_200',this.value)"
+                oninput="saveBsNote('bs_200',this.value)">
+            </div>
+          </div>
+          <span class="bs-change down">+215% (+$299.2K)</span>
+        </div>
+        <div class="bs-row">
+          <span class="bs-code">250</span>
+          <div class="bs-desc">
+            <div>Accrued Pension &amp; Severance</div>
+            <div class="bs-reason" style="margin-top:4px;">
+              <input type="text" id="bs_250_input" placeholder="Add explanation…"
+                style="width:100%;font-size:11px;color:var(--ink2);background:var(--surface2);border:1px dashed var(--border);border-radius:4px;outline:none;padding:4px 8px;font-family:'Inter',sans-serif;transition:all 0.15s;"
+                onfocus="this.style.borderColor='var(--orange)';this.style.background='#FFF5F0'"
+                onblur="this.style.borderColor='var(--border)';this.style.background='var(--surface2)';saveBsNote('bs_250',this.value)"
+                oninput="saveBsNote('bs_250',this.value)">
+            </div>
+          </div>
+          <span class="bs-change down">+6,060% (+$40.6K)</span>
+        </div>
       </div>
     </div>
   </div>
@@ -585,7 +664,7 @@
         <div class="card-title" style="margin-bottom:0;">Environment &amp; risk highlights</div>
         <div style="display:flex; gap:8px; align-items:center;">
           <span id="envRiskSaved" style="font-size:10px; color:var(--green); opacity:0; transition:opacity 0.4s;">✓ Saved</span>
-          <button onclick="addEnvRisk()" style="display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--ink2);cursor:pointer;font-family:'DM Sans',sans-serif;">
+          <button onclick="addEnvRisk()" style="display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:4px 12px;border-radius:2px;border:none;background:var(--orange);color:#fff;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add item
           </button>
         </div>
@@ -598,7 +677,7 @@
         <div class="card-title" style="margin-bottom:0;">Other highlights &amp; action points</div>
         <div style="display:flex; gap:8px; align-items:center;">
           <span id="highlightsSaved" style="font-size:10px; color:var(--green); opacity:0; transition:opacity 0.4s;">✓ Saved</span>
-          <button onclick="addHighlight()" style="display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--ink2);cursor:pointer;font-family:'DM Sans',sans-serif;">
+          <button onclick="addHighlight()" style="display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:4px 12px;border-radius:2px;border:none;background:var(--orange);color:#fff;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add item
           </button>
         </div>
@@ -624,7 +703,7 @@
 </div>
 
 <footer class="footer">
-  World Vision Philippines — Monthly Financial Summary &amp; Management Review · Period ending March 2026 · Dashboard generated May 14, 2026
+  World Vision Philippines — Monthly Financial Summary &amp; Management Review · Period ending April 2026 · Dashboard generated May 14, 2026
 </footer>
 
 <script>
@@ -655,7 +734,7 @@ const projects = [
 let currentArea = 'all';
 let currentMode = 'pct';
 
-function burnColor(v) { return v > 100 ? '#b02020' : v >= 85 ? '#b85c1a' : '#2b5fab'; }
+function burnColor(v) { return v > 100 ? '#B10831' : v >= 85 ? '#FF6929' : '#111222'; }
 
 function filterArea(area, btn) {
   currentArea = area;
@@ -680,15 +759,15 @@ function filteredProjects() {
 }
 
 function getComment(name) {
-  try { return localStorage.getItem('wvph_comment_' + name) || ''; } catch(e) { return ''; }
+  try { return localStorage.getItem('wvph_apr_comment_' + name) || ''; } catch(e) { return ''; }
 }
 function saveComment(name, val) {
-  try { localStorage.setItem('wvph_comment_' + name, val); } catch(e) {}
+  try { localStorage.setItem('wvph_apr_comment_' + name, val); } catch(e) {}
 }
 function clearAllComments() {
   if (!confirm('Clear all comments?')) return;
   try {
-    projects.forEach(p => localStorage.removeItem('wvph_comment_' + p.name));
+    projects.forEach(p => localStorage.removeItem('wvph_apr_comment_' + p.name));
   } catch(e) {}
   document.querySelectorAll('.comment-input').forEach(el => {
     el.value = '';
@@ -727,8 +806,8 @@ function renderTable() {
       </td>
       <td style="padding:10px 8px;"><span class="proj-loc ${locClass}">${p.area}</span></td>
       <td style="padding:10px 8px;">${burnDisplay}</td>
-      <td class="comment-cell"><textarea class="comment-input${savedComment ? ' has-value' : ''}" data-project="${p.name}" placeholder="Add comment…" rows="1">${savedComment}</textarea></td>
-      <td style="padding:10px 8px;">${varDisplay}</td>`;
+      <td style="padding:10px 8px;">${varDisplay}</td>
+      <td class="comment-cell"><textarea class="comment-input${savedComment ? ' has-value' : ''}" data-project="${p.name}" placeholder="Add comment…" rows="1">${savedComment}</textarea></td>`;
     body.appendChild(tr);
 
     // Auto-resize textarea and save on input
@@ -758,17 +837,17 @@ function toggleDetail(i) {
 }
 
 // ─── CHARTS ──────────────────────────────────────────────────────────────────
-const gridColor = 'rgba(26,23,20,0.07)';
-const tickColor = '#9c958e';
+const gridColor = 'rgba(17,18,34,0.07)';
+const tickColor = '#6D6A76';
 
 // Sparklines
 const sparkData = [
   { data: [7.2,7.8,8.1,8.5,9.1,9.83], color: '#fff' },
-  { data: [5.8,6.2,6.9,7.3,7.8,8.53], color: '#2b5fab' },
-  { data: [1.1,1.3,0.9,1.4,1.1,1.25], color: '#1d7a5f' },
-  { data: [9.1,9.3,9.6,9.8,10.1,10.4], color: '#b85c1a' },
-  { data: [520,490,460,510,380,301], color: '#b02020' },
-  { data: [0.88,0.92,0.95,1.0,1.03,1.06], color: '#2b5fab' },
+  { data: [5.8,6.2,6.9,7.3,7.8,8.53], color: 'rgba(255,255,255,0.6)' },
+  { data: [1.1,1.3,0.9,1.4,1.1,1.25], color: '#155930' },
+  { data: [9.1,9.3,9.6,9.8,10.1,10.4], color: '#FF6929' },
+  { data: [520,490,460,510,380,301], color: '#B10831' },
+  { data: [0.88,0.92,0.95,1.0,1.03,1.06], color: '#111222' },
 ];
 sparkData.forEach((s, i) => {
   const ctx = document.getElementById('spark' + i);
@@ -793,11 +872,11 @@ sparkData.forEach((s, i) => {
 });
 
 // Income chart
-const incomeData   = [6016993, 886990, 2895449, 33637];
-const expenseData  = [4857059, 600631, 3072366, 33637];
-const netData      = incomeData.map((v, i) => v - expenseData[i]); // [1159934, 286359, -176917, 0]
-const netColors    = netData.map(v => v >= 0 ? '#1d7a5f' : '#b02020');
-const netBgColors  = netData.map(v => v >= 0 ? 'rgba(29,122,95,0.18)' : 'rgba(176,32,32,0.18)');
+const incomeData   = [6861174.13, 886989.62, 3140390.49, 49453.22];
+const expenseData  = [5690633.22, 687779.76, 3521496.36, 0];
+const netData      = incomeData.map((v, i) => v - expenseData[i]); // [1170541, 199210, -381106, 49453]
+const netColors    = netData.map(v => v >= 0 ? 'rgba(29,122,95,0.18)' : 'rgba(177,8,49,0.18)');
+const netBgColors  = netData.map(v => v >= 0 ? 'rgba(21,89,48,0.15)' : 'rgba(177,8,49,0.15)');
 
 Chart.register({
   id: 'barTopLabels',
@@ -816,7 +895,7 @@ Chart.register({
         const label = prefix + (absVal >= 1e6 ? (absVal/1e6).toFixed(2) + 'M' : (absVal/1000).toFixed(0) + 'K');
         ctx.save();
         ctx.font = '600 10px DM Sans, sans-serif';
-        ctx.fillStyle = isNet ? (val < 0 ? '#b02020' : '#1d7a5f') : '#5c5650';
+        ctx.fillStyle = isNet ? (val < 0 ? '#B10831' : '#155930') : '#3F3D4C';
         ctx.textAlign = 'center';
         ctx.textBaseline = val < 0 ? 'top' : 'bottom';
         ctx.fillText(label, bar.x, val < 0 ? bar.y + 3 : bar.y - 3);
@@ -862,8 +941,8 @@ new Chart(document.getElementById('incomeChart'), {
 new Chart(document.getElementById('cashChart'), {
   type: 'doughnut',
   data: {
-    labels: ['Actual ($301K)', 'Gap ($198K)'],
-    datasets: [{ data: [301468, 198026], backgroundColor: ['#b02020', '#e8e4df'], borderWidth: 0 }]
+    labels: ['Actual ($181K)', 'Gap ($340K)'],
+    datasets: [{ data: [181270.85, 339929.15], backgroundColor: ['#B10831', '#E9E7E3'], borderWidth: 0 }]
   },
   options: {
     responsive: true, maintainAspectRatio: false, cutout: '72%',
@@ -952,11 +1031,11 @@ function renderBurnChart() {
 new Chart(document.getElementById('agingChart'), {
   type: 'bar',
   data: {
-    labels: ['Travel Adv.', 'Salary Adv.', 'Supplier Adv.', 'Partner Adv.', 'Other AR'],
+    labels: ['Travel Adv.', 'Salary Adv.', 'Supplier Adv.', 'Refundable Dep.', 'Partner Adv.', 'Other AR', 'Other Assets'],
     datasets: [
-      { label: '0–30 days', data: [82927, 1735, 100, 100, 1751], backgroundColor: '#2b5fab' },
-      { label: '31–60 days', data: [17925, 100, 100, 100, 13687], backgroundColor: '#b85c1a' },
-      { label: '>60 days', data: [543, 8884, 546047, 337777, 66231], backgroundColor: '#b02020' }
+      { label: '0–30 days', data: [88496, 2461, -12276, -526, -140588, 11152, -14200], backgroundColor: '#111222' },
+      { label: '31–60 days', data: [20911, 2493, -23573, -678, 37059, 1915, 7265], backgroundColor: '#FF6929' },
+      { label: '>60 days', data: [29, 6185, 468970, 24835, 283899, 72299, 173966], backgroundColor: '#B10831' }
     ]
   },
   options: {
@@ -994,7 +1073,7 @@ const netChartLabelsPlugin = {
       const label = prefix + (absVal >= 1e6 ? (absVal/1e6).toFixed(2) + 'M' : (absVal/1000).toFixed(0) + 'K');
       ctx.save();
       ctx.font = '600 10.5px DM Sans, sans-serif';
-      ctx.fillStyle = val < 0 ? '#b02020' : '#1d7a5f';
+      ctx.fillStyle = val < 0 ? '#B10831' : '#155930';
       ctx.textAlign = 'center';
       ctx.textBaseline = val < 0 ? 'top' : 'bottom';
       ctx.fillText(label, bar.x, val < 0 ? bar.y + 4 : bar.y - 4);
@@ -1009,8 +1088,8 @@ new Chart(document.getElementById('netChart'), {
     labels: ['Global Centre', 'Direct Funding', 'Local Fundraising', 'Other Local'],
     datasets: [{
       label: 'Net excess / (deficit)',
-      data: [1110418, 286359, -176917, 33637],
-      backgroundColor: [1110418, 286359, -176917, 33637].map(v => v >= 0 ? '#1d7a5f' : '#b02020')
+      data: [1170540.91, 199209.86, -381105.87, 49453.22],
+      backgroundColor: [1170540.91, 199209.86, -381105.87, 49453.22].map(v => v >= 0 ? '#155930' : '#B10831')
     }]
   },
   options: {
@@ -1036,7 +1115,7 @@ const DEFAULT_HIGHLIGHTS = [
 
 function loadHighlights() {
   try {
-    const saved = localStorage.getItem('wvph_highlights');
+    const saved = localStorage.getItem('wvph_apr_highlights');
     return saved ? JSON.parse(saved) : DEFAULT_HIGHLIGHTS;
   } catch(e) { return DEFAULT_HIGHLIGHTS; }
 }
@@ -1046,7 +1125,7 @@ function saveHighlights() {
     title: el.querySelector('.hl-title-input').value,
     body:  el.querySelector('.hl-body-input').value
   }));
-  try { localStorage.setItem('wvph_highlights', JSON.stringify(items)); } catch(e) {}
+  try { localStorage.setItem('wvph_apr_highlights', JSON.stringify(items)); } catch(e) {}
   const saved = document.getElementById('highlightsSaved');
   if (saved) { saved.style.opacity = '1'; setTimeout(() => saved.style.opacity = '0', 1800); }
 }
@@ -1117,7 +1196,7 @@ function renderHighlights() {
 // ─── EDITABLE ENV RISK HIGHLIGHTS ────────────────────────────────────────────
 const DEFAULT_ENV_RISKS = [
   { tag: 'Forex',     tagClass: 'tag-forex',     body: '4.2% increase in USD/PHP revaluation rate (58.33 vs. 56.00 budgeted), causing underspending of USD-funded budgets. PBAS USD allocations to be adjusted at year-end based on actual exchange rates.' },
-  { tag: 'Inflation', tagClass: 'tag-inflation',  body: 'March 2026 inflation at 4.1%. Middle East crisis could push inflation to 5%–7.3% and weaken peso to ₱60–₱61.30/USD, reducing purchasing power and requiring stricter cost controls.' },
+  { tag: 'Inflation', tagClass: 'tag-inflation',  body: 'April 2026 inflation at 4.1%. Middle East crisis could push inflation to 5%–7.3% and weaken peso to ₱60–₱61.30/USD, reducing purchasing power and requiring stricter cost controls.' },
   { tag: 'Burn rate', tagClass: 'tag-burn',       body: 'Aggregate 93% YTD / 41% of annual budget. Key factors: rescheduled trainings (SNC, CEW, PEACE clubs), activity integration savings, deferred AIM+ and tablet procurement, overspending in technical support & CLU functions.' }
 ];
 
@@ -1132,7 +1211,7 @@ const TAG_OPTIONS = [
 
 function loadEnvRisks() {
   try {
-    const saved = localStorage.getItem('wvph_env_risks');
+    const saved = localStorage.getItem('wvph_apr_env_risks');
     return saved ? JSON.parse(saved) : DEFAULT_ENV_RISKS;
   } catch(e) { return DEFAULT_ENV_RISKS; }
 }
@@ -1143,7 +1222,7 @@ function saveEnvRisks() {
     tagClass: el.querySelector('.er-tag-span').className.replace('env-risk-tag ','').trim(),
     body:     el.querySelector('.er-body-input').value
   }));
-  try { localStorage.setItem('wvph_env_risks', JSON.stringify(items)); } catch(e) {}
+  try { localStorage.setItem('wvph_apr_env_risks', JSON.stringify(items)); } catch(e) {}
   const saved = document.getElementById('envRiskSaved');
   if (saved) { saved.style.opacity = '1'; setTimeout(() => saved.style.opacity = '0', 1800); }
 }
@@ -1173,10 +1252,10 @@ function createEnvRiskEl(data) {
       <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
         <span class="env-risk-tag er-tag-span ${data.tagClass || 'tag-forex'}" style="padding:0;">
           <input type="text" class="er-tag-input" value="${data.tag}" placeholder="Tag…"
-            style="font-size:10px;font-weight:600;background:transparent;border:none;outline:none;width:${Math.max(40, (data.tag.length||4)*8)}px;font-family:'DM Sans',sans-serif;cursor:text;padding:2px 7px;color:inherit;">
+            style="font-size:10px;font-weight:600;background:transparent;border:none;outline:none;width:${Math.max(40, (data.tag.length||4)*8)}px;font-family:'Inter',sans-serif;cursor:text;padding:2px 7px;color:inherit;">
         </span>
         <select class="er-class-select" title="Tag color"
-          style="font-size:10px;border:1px solid var(--border);border-radius:4px;padding:1px 4px;background:var(--surface2);color:var(--ink2);cursor:pointer;font-family:'DM Sans',sans-serif;">${tagOpts}</select>
+          style="font-size:10px;border:1px solid var(--border);border-radius:4px;padding:1px 4px;background:var(--surface2);color:var(--ink2);cursor:pointer;font-family:'Inter',sans-serif;">${tagOpts}</select>
       </div>
       <textarea class="hl-body-input er-body-input" placeholder="Add details…" rows="1">${data.body}</textarea>
     </div>
@@ -1229,13 +1308,13 @@ function renderEnvRisks() {
 // ─── EDITABLE ACTION ITEMS ────────────────────────────────────────────────────
 const DEFAULT_ACTION_ITEMS = [
   { badge: 'Overspend', badgeClass: 'rb-red',   name: 'ADP Bukidnon — 109% YTD',                   detail: 'Shared technical & management costs (NO/FO) are the primary driver. Programme costs remain within limits. Monitor monthly to prevent year-end overspend.' },
-  { badge: 'Cash',      badgeClass: 'rb-red',   name: 'Cash position 40% below target',             detail: 'Actual low of $301K vs. $499K target. RD USD account transfer to disbursement contributed to the decline. Requires monitoring and proactive funding requests.' },
-  { badge: 'Admin rate',badgeClass: 'rb-amber', name: 'Admin cost rate at 10.4% vs. 9.49% target',  detail: 'Cost reduction in support costs is ongoing. BIR tax exemption threshold (30%) is not at risk, but internal target must be met by year-end.' }
+  { badge: 'Cash',      badgeClass: 'rb-red',   name: 'Cash position 65% below target',             detail: 'Actual low of $181K vs. $521K target. Requires urgent monitoring and proactive funding requests.' },
+  { badge: 'Admin rate',badgeClass: 'rb-amber', name: 'Admin cost rate at 10.6% vs. 9.49% target',  detail: 'Cost reduction in support costs is ongoing. BIR tax exemption threshold (30%) is not at risk, but internal target must be met by year-end.' }
 ];
 
 function loadActionItems() {
   try {
-    const saved = localStorage.getItem('wvph_action_items');
+    const saved = localStorage.getItem('wvph_apr_action_items');
     return saved ? JSON.parse(saved) : DEFAULT_ACTION_ITEMS;
   } catch(e) { return DEFAULT_ACTION_ITEMS; }
 }
@@ -1247,7 +1326,7 @@ function saveActionItems() {
     name:       el.querySelector('.ai-name-input').value,
     detail:     el.querySelector('.ai-detail-input').value
   }));
-  try { localStorage.setItem('wvph_action_items', JSON.stringify(items)); } catch(e) {}
+  try { localStorage.setItem('wvph_apr_action_items', JSON.stringify(items)); } catch(e) {}
   const saved = document.getElementById('actionSaved');
   if (saved) { saved.style.opacity = '1'; setTimeout(() => saved.style.opacity = '0', 1800); }
 }
@@ -1311,12 +1390,28 @@ function renderActionItems() {
   loadActionItems().forEach(item => grid.appendChild(createActionItemEl(item)));
 }
 
+
+// ─── BALANCE SHEET EDITABLE NOTES ────────────────────────────────────────────
+function saveBsNote(key, val) {
+  try { localStorage.setItem('wvph_apr_' + key, val); } catch(e) {}
+}
+function loadBsNotes() {
+  ['bs_172','bs_200','bs_250'].forEach(key => {
+    try {
+      const val = localStorage.getItem('wvph_apr_' + key);
+      const el = document.getElementById(key + '_input');
+      if (el && val) { el.value = val; el.style.color = 'var(--ink2)'; }
+    } catch(e) {}
+  });
+}
+
 // Init
 renderTable();
 renderBurnChart();
 renderHighlights();
 renderEnvRisks();
 renderActionItems();
+loadBsNotes();
 </script>
 </body>
 </html>
