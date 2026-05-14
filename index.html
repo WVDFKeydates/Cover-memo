@@ -101,7 +101,7 @@
   /* PROJECT TABLE */
   .proj-table { width: 100%; border-collapse: collapse; }
   .proj-table th { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink3); padding: 0 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
-  .proj-table th:nth-child(3), .proj-table th:nth-child(4), .proj-table th:nth-child(5) { text-align: right; }
+  .proj-table th:nth-child(3), .proj-table th:nth-child(5) { text-align: right; }
   .proj-table td { padding: 0; border-bottom: 1px solid var(--border2); vertical-align: top; }
   .proj-table tbody tr:last-child td { border-bottom: none; }
   .proj-row-main { display: flex; align-items: center; gap: 8px; padding: 10px 8px; cursor: pointer; user-select: none; }
@@ -125,6 +125,82 @@
   .toggle-mode { display: flex; align-items: center; gap: 0; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-left: auto; }
   .toggle-btn { font-size: 11px; padding: 5px 14px; border: none; background: transparent; color: var(--ink2); cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
   .toggle-btn.active { background: var(--ink); color: #fff; }
+
+  /* COMMENT COLUMN */
+  .comment-cell { padding: 6px 8px !important; vertical-align: middle !important; }
+  .comment-input {
+    width: 100%; min-width: 130px; font-size: 11px; font-family: 'DM Sans', sans-serif;
+    color: var(--ink2); background: transparent; border: 1px dashed transparent;
+    border-radius: 6px; padding: 5px 8px; resize: none; outline: none;
+    line-height: 1.5; transition: all 0.15s; height: 32px; overflow: hidden;
+  }
+  .comment-input::placeholder { color: var(--ink3); font-style: italic; }
+  .comment-input:hover { border-color: var(--border); background: var(--surface2); }
+  .comment-input:focus { border-color: var(--accent); background: #f0f5ff; border-style: solid; height: auto; min-height: 32px; }
+  .comment-input.has-value { border-color: var(--border); background: var(--surface2); border-style: solid; }
+  .comment-header-wrap { display: flex; align-items: center; gap: 5px; }
+  .comment-clear-all { font-size: 9px; color: var(--ink3); cursor: pointer; text-decoration: underline; margin-left: 4px; }
+  .comment-clear-all:hover { color: var(--red); }
+  @media print { .comment-input { border: none !important; background: transparent !important; } }
+  /* EDITABLE ACTION ITEMS */
+  .ai-name-input {
+    font-size: 12px; font-weight: 500; color: var(--ink); background: transparent;
+    border: none; outline: none; width: 100%; padding: 2px 4px; border-radius: 4px;
+    font-family: 'DM Sans', sans-serif; line-height: 1.4; margin-bottom: 4px;
+  }
+  .ai-name-input:hover { background: rgba(176,32,32,0.05); }
+  .ai-name-input:focus { background: #fff5f5; outline: 1px solid var(--red); }
+  .ai-detail-input {
+    font-size: 11px; color: var(--ink2); background: transparent;
+    border: none; outline: none; width: 100%; padding: 2px 4px; border-radius: 4px;
+    font-family: 'DM Sans', sans-serif; line-height: 1.5; resize: none; overflow: hidden; min-height: 18px;
+  }
+  .ai-detail-input:hover { background: rgba(176,32,32,0.05); }
+  .ai-detail-input:focus { background: #fff5f5; outline: 1px solid var(--red); }
+  .ai-badge-input {
+    font-size: 10px; font-weight: 600; background: transparent; border: none; outline: none;
+    font-family: 'DM Sans', sans-serif; cursor: text; padding: 0;
+  }
+  .ai-badge-select {
+    font-size: 10px; border: 1px solid rgba(176,32,32,0.2); border-radius: 4px;
+    padding: 1px 4px; background: #fff; color: var(--ink2); cursor: pointer;
+    font-family: 'DM Sans', sans-serif; margin-left: 4px;
+  }
+  .ai-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .ai-delete { background: transparent; border: none; cursor: pointer; color: var(--ink3); font-size: 16px; line-height: 1; padding: 0 2px; opacity: 0; transition: opacity 0.15s; }
+  .risk-item-card:hover .ai-delete { opacity: 1; }
+  .ai-delete:hover { color: var(--red); }
+  @media print { .ai-delete, #actionBanner button { display: none !important; } .ai-badge-select { display: none !important; } }
+
+  /* EDITABLE HIGHLIGHTS */
+  .hl-item { display:flex; align-items:flex-start; gap:8px; padding:10px 0; border-bottom:1px solid var(--border2); position:relative; }
+  .hl-item:last-child { border-bottom:none; }
+  .hl-drag { cursor:grab; color:var(--ink3); flex-shrink:0; margin-top:3px; opacity:0; transition:opacity 0.15s; }
+  .hl-item:hover .hl-drag { opacity:1; }
+  .hl-body { flex:1; min-width:0; }
+  .hl-title-input {
+    font-size:12px; font-weight:600; color:var(--ink); background:transparent;
+    border:none; outline:none; width:100%; padding:2px 4px; border-radius:4px;
+    font-family:'DM Sans',sans-serif; line-height:1.4;
+  }
+  .hl-title-input:hover { background:var(--surface2); }
+  .hl-title-input:focus { background:#f0f5ff; outline:1px solid var(--accent); }
+  .hl-body-input {
+    font-size:12px; color:var(--ink2); background:transparent;
+    border:none; outline:none; width:100%; padding:2px 4px; border-radius:4px;
+    font-family:'DM Sans',sans-serif; line-height:1.6; resize:none; overflow:hidden;
+    margin-top:2px; min-height:20px;
+  }
+  .hl-body-input:hover { background:var(--surface2); }
+  .hl-body-input:focus { background:#f0f5ff; outline:1px solid var(--accent); }
+  .hl-delete { flex-shrink:0; width:20px; height:20px; border-radius:4px; border:none; background:transparent;
+    color:var(--ink3); cursor:pointer; display:flex; align-items:center; justify-content:center;
+    opacity:0; transition:opacity 0.15s; margin-top:2px; font-size:14px; line-height:1; }
+  .hl-item:hover .hl-delete { opacity:1; }
+  .hl-delete:hover { background:#fce8e8; color:var(--red); }
+  .hl-item.drag-over { border-top:2px solid var(--accent); }
+  @media print { .hl-drag, .hl-delete { display:none!important; } button { display:none!important; } }
+
 
   /* LEGEND */
   .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 12px; }
@@ -257,25 +333,17 @@
   </div>
 
   <!-- AT-RISK CALLOUT -->
-  <div class="risk-banner">
-    <div class="risk-banner-title">⚠ Items requiring management action</div>
-    <div class="risk-items-grid">
-      <div class="risk-item-card">
-        <div class="risk-badge rb-red">Overspend</div>
-        <div class="risk-item-name">ADP Bukidnon — 109% YTD</div>
-        <div class="risk-item-detail">Shared technical &amp; management costs (NO/FO) are the primary driver. Programme costs remain within limits. Monitor monthly to prevent year-end overspend.</div>
-      </div>
-      <div class="risk-item-card">
-        <div class="risk-badge rb-red">Cash</div>
-        <div class="risk-item-name">Cash position 40% below target</div>
-        <div class="risk-item-detail">Actual low of $301K vs. $499K target. RD USD account transfer to disbursement contributed to the decline. Requires monitoring and proactive funding requests.</div>
-      </div>
-      <div class="risk-item-card">
-        <div class="risk-badge rb-amber">Admin rate</div>
-        <div class="risk-item-name">Admin cost rate at 10.4% vs. 9.49% target</div>
-        <div class="risk-item-detail">Cost reduction in support costs is ongoing. BIR tax exemption threshold (30%) is not at risk, but internal target must be met by year-end.</div>
+  <div class="risk-banner" id="actionBanner">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+      <div class="risk-banner-title" style="margin-bottom:0;">⚠ Items requiring management action</div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <span id="actionSaved" style="font-size:10px; color:var(--green); opacity:0; transition:opacity 0.4s;">✓ Saved</span>
+        <button onclick="addActionItem()" style="display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid rgba(176,32,32,0.25);background:#fff;color:var(--red);cursor:pointer;font-family:'DM Sans',sans-serif;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add item
+        </button>
       </div>
     </div>
+    <div id="actionItemsGrid" class="risk-items-grid"></div>
   </div>
 
   <!-- KPI METRICS -->
@@ -347,9 +415,27 @@
       <div class="legend">
         <div class="legend-item"><div class="legend-sq" style="background:#2b5fab;"></div>Income</div>
         <div class="legend-item"><div class="legend-sq" style="background:#a8c0e8;"></div>Expenses</div>
+        <div class="legend-item"><div class="legend-sq" style="background:rgba(29,122,95,0.18);border:1.5px solid #1d7a5f;"></div>Net income</div>
       </div>
       <div class="chart-wrap" style="height:260px;">
         <canvas id="incomeChart" role="img" aria-label="Grouped bar chart of income vs expenses by funding source.">Income vs expenses by source.</canvas>
+      </div>
+      <div style="display:flex; gap:0; margin-top:16px; border-top:1px solid var(--border); padding-top:14px;">
+        <div style="flex:1; text-align:center; padding:0 8px; border-right:1px solid var(--border);">
+          <div style="font-size:10px; color:var(--ink3); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px;">Total income</div>
+          <div style="font-family:'DM Serif Display',serif; font-size:18px; color:var(--accent);">$9,833,069</div>
+          <div style="font-size:10px; color:var(--ink3); margin-top:2px;">all sources combined</div>
+        </div>
+        <div style="flex:1; text-align:center; padding:0 8px; border-right:1px solid var(--border);">
+          <div style="font-size:10px; color:var(--ink3); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px;">Total expenses</div>
+          <div style="font-family:'DM Serif Display',serif; font-size:18px; color:var(--ink);">$8,563,693</div>
+          <div style="font-size:10px; color:var(--ink3); margin-top:2px;">project + fundraising</div>
+        </div>
+        <div style="flex:1; text-align:center; padding:0 8px;">
+          <div style="font-size:10px; color:var(--ink3); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px;">Net income</div>
+          <div style="font-family:'DM Serif Display',serif; font-size:18px; color:var(--green);">$1,269,376</div>
+          <div style="font-size:10px; color:var(--ink3); margin-top:2px;">income minus expenses</div>
+        </div>
       </div>
     </div>
     <div class="card">
@@ -409,6 +495,7 @@
                 <th style="padding-left:28px;">Project</th>
                 <th>Area</th>
                 <th style="text-align:right;" id="burnHeader">YTD burn</th>
+                <th style="min-width:150px;"><span style="display:flex;align-items:center;gap:5px;">Comments <span style="font-size:9px;color:#9c958e;cursor:pointer;text-decoration:underline;font-weight:400;text-transform:none;letter-spacing:0;" onclick="clearAllComments()">clear all</span></span></th>
                 <th style="text-align:right;">Variance</th>
               </tr>
             </thead>
@@ -493,20 +580,31 @@
 
   <!-- ENV RISKS -->
   <div class="section grid-2">
-    <div class="card">
-      <div class="card-title">Environment &amp; risk highlights</div>
-      <div class="card-sub">Internal and external factors affecting financial position</div>
-      <div class="env-risk-item"><div><span class="env-risk-tag tag-forex">Forex</span></div>4.2% increase in USD/PHP revaluation rate (58.33 vs. 56.00 budgeted), causing underspending of USD-funded budgets. PBAS USD allocations to be adjusted at year-end based on actual exchange rates.</div>
-      <div class="env-risk-item"><div><span class="env-risk-tag tag-inflation">Inflation</span></div>March 2026 inflation at 4.1%. Middle East crisis could push inflation to 5%–7.3% and weaken peso to ₱60–₱61.30/USD, reducing purchasing power and requiring stricter cost controls.</div>
-      <div class="env-risk-item"><div><span class="env-risk-tag tag-burn">Burn rate</span></div>Aggregate 93% YTD / 41% of annual budget. Key factors: rescheduled trainings (SNC, CEW, PEACE clubs), activity integration savings, deferred AIM+ and tablet procurement, overspending in technical support &amp; CLU functions.</div>
+    <div class="card" id="envRiskCard">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+        <div class="card-title" style="margin-bottom:0;">Environment &amp; risk highlights</div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <span id="envRiskSaved" style="font-size:10px; color:var(--green); opacity:0; transition:opacity 0.4s;">✓ Saved</span>
+          <button onclick="addEnvRisk()" style="display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--ink2);cursor:pointer;font-family:'DM Sans',sans-serif;">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add item
+          </button>
+        </div>
+      </div>
+      <div class="card-sub" style="margin-bottom:12px;">Click any item to edit · drag to reorder · changes auto-saved</div>
+      <div id="envRiskList"></div>
     </div>
-    <div class="card">
-      <div class="card-title">Other highlights &amp; action points</div>
-      <div class="card-sub">Major items for follow-up and monitoring</div>
-      <div class="env-risk-item"><strong style="font-size:12px;">Emergency grant closures</strong><br>Closing procedures ongoing for PEER and MEER grants (HKG SAR, CHAF, Coca-Cola) totalling $811K. Forecasted actuals at 99% of budget.</div>
-      <div class="env-risk-item"><strong style="font-size:12px;">Fundraising investment fund</strong><br>For repayment as part of assessment before mid-year review.</div>
-      <div class="env-risk-item"><strong style="font-size:12px;">Income statement — 31% increase</strong><br>Grants and donations from Germany and Spain rose $111K in March vs. zero in February, with $114K more requested from global treasury.</div>
-      <div class="env-risk-item"><strong style="font-size:12px;">RD cash grants receivable</strong><br>Total $1.195M outstanding: ING BTE ($89K), CITI Eco Youth ($250K), AMTRAC ($839K), Leslie Foundation ($17.8K).</div>
+    <div class="card" id="highlightsCard">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+        <div class="card-title" style="margin-bottom:0;">Other highlights &amp; action points</div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <span id="highlightsSaved" style="font-size:10px; color:var(--green); opacity:0; transition:opacity 0.4s;">✓ Saved</span>
+          <button onclick="addHighlight()" style="display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--ink2);cursor:pointer;font-family:'DM Sans',sans-serif;">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add item
+          </button>
+        </div>
+      </div>
+      <div class="card-sub" style="margin-bottom:12px;">Click any item to edit · drag to reorder · changes auto-saved</div>
+      <div id="highlightsList"></div>
     </div>
   </div>
 
@@ -581,6 +679,24 @@ function filteredProjects() {
   return projects.filter(p => p.area === currentArea);
 }
 
+function getComment(name) {
+  try { return localStorage.getItem('wvph_comment_' + name) || ''; } catch(e) { return ''; }
+}
+function saveComment(name, val) {
+  try { localStorage.setItem('wvph_comment_' + name, val); } catch(e) {}
+}
+function clearAllComments() {
+  if (!confirm('Clear all comments?')) return;
+  try {
+    projects.forEach(p => localStorage.removeItem('wvph_comment_' + p.name));
+  } catch(e) {}
+  document.querySelectorAll('.comment-input').forEach(el => {
+    el.value = '';
+    el.classList.remove('has-value');
+    el.style.height = '32px';
+  });
+}
+
 function renderTable() {
   const fp = filteredProjects();
   const body = document.getElementById('projBody');
@@ -594,6 +710,8 @@ function renderTable() {
     const burnDisplay = currentMode === 'pct'
       ? `<div class="burn-cell"><div class="burn-bar"><div class="burn-fill" style="width:${fillPct}%;background:${burnColor(p.burn)};"></div></div><span class="burn-pct" style="color:${burnColor(p.burn)};font-weight:${p.burn>100?600:400};">${p.burn}%</span></div>`
       : `<div style="text-align:right;font-size:12px;color:${burnColor(p.burn)};font-weight:500;">$${(p.actual/1000).toFixed(0)}K</div>`;
+
+    const savedComment = getComment(p.name);
 
     const tr = document.createElement('tr');
     tr.dataset.area = p.area;
@@ -609,9 +727,26 @@ function renderTable() {
       </td>
       <td style="padding:10px 8px;"><span class="proj-loc ${locClass}">${p.area}</span></td>
       <td style="padding:10px 8px;">${burnDisplay}</td>
+      <td class="comment-cell"><textarea class="comment-input${savedComment ? ' has-value' : ''}" data-project="${p.name}" placeholder="Add comment…" rows="1">${savedComment}</textarea></td>
       <td style="padding:10px 8px;">${varDisplay}</td>`;
     body.appendChild(tr);
+
+    // Auto-resize textarea and save on input
+    const ta = tr.querySelector('.comment-input');
+    if (ta) {
+      autoResize(ta);
+      ta.addEventListener('input', () => {
+        autoResize(ta);
+        saveComment(p.name, ta.value);
+        ta.classList.toggle('has-value', ta.value.length > 0);
+      });
+    }
   });
+}
+
+function autoResize(el) {
+  el.style.height = '32px';
+  el.style.height = Math.max(32, el.scrollHeight) + 'px';
 }
 
 function toggleDetail(i) {
@@ -658,21 +793,67 @@ sparkData.forEach((s, i) => {
 });
 
 // Income chart
+const incomeData   = [6016993, 886990, 2895449, 33637];
+const expenseData  = [4857059, 600631, 3072366, 33637];
+const netData      = incomeData.map((v, i) => v - expenseData[i]); // [1159934, 286359, -176917, 0]
+const netColors    = netData.map(v => v >= 0 ? '#1d7a5f' : '#b02020');
+const netBgColors  = netData.map(v => v >= 0 ? 'rgba(29,122,95,0.18)' : 'rgba(176,32,32,0.18)');
+
+Chart.register({
+  id: 'barTopLabels',
+  afterDatasetsDraw(chart) {
+    // Only run on the income chart
+    if (chart.canvas.id !== 'incomeChart') return;
+    const { ctx } = chart;
+    chart.data.datasets.forEach((dataset, di) => {
+      const meta = chart.getDatasetMeta(di);
+      if (meta.hidden) return;
+      meta.data.forEach((bar, i) => {
+        const val = dataset.data[i];
+        const isNet = di === 2;
+        const absVal = Math.abs(val);
+        const prefix = isNet ? (val < 0 ? '-$' : '+$') : '$';
+        const label = prefix + (absVal >= 1e6 ? (absVal/1e6).toFixed(2) + 'M' : (absVal/1000).toFixed(0) + 'K');
+        ctx.save();
+        ctx.font = '600 10px DM Sans, sans-serif';
+        ctx.fillStyle = isNet ? (val < 0 ? '#b02020' : '#1d7a5f') : '#5c5650';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = val < 0 ? 'top' : 'bottom';
+        ctx.fillText(label, bar.x, val < 0 ? bar.y + 3 : bar.y - 3);
+        ctx.restore();
+      });
+    });
+  }
+});
+
 new Chart(document.getElementById('incomeChart'), {
   type: 'bar',
   data: {
     labels: ['Global Centre', 'Direct Funding', 'Local Fundraising', 'Other Local'],
     datasets: [
-      { label: 'Income', data: [6016993, 886990, 2895449, 33637], backgroundColor: '#2b5fab' },
-      { label: 'Expenses', data: [4857059, 600631, 3072366, 33637], backgroundColor: '#a8c0e8' }
+      { label: 'Income',     data: incomeData,  backgroundColor: '#2b5fab' },
+      { label: 'Expenses',   data: expenseData, backgroundColor: '#a8c0e8' },
+      { label: 'Net income', data: netData,      backgroundColor: netBgColors, borderColor: netColors, borderWidth: 1.5, borderRadius: 4 }
     ]
   },
   options: {
     responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
+    layout: { padding: { top: 24, bottom: 8 } },
+    plugins: {
+      legend: { display: false },
+      barTopLabels: {},
+      tooltip: { callbacks: {
+        label: ctx => {
+          const v = ctx.parsed.y;
+          const prefix = ctx.datasetIndex === 2 ? (v >= 0 ? '+$' : '-$') : '$';
+          const abs = Math.abs(v);
+          return ' ' + ctx.dataset.label + ': ' + prefix + (abs >= 1e6 ? (abs/1e6).toFixed(3) + 'M' : abs.toLocaleString());
+        }
+      }}
+    },
     scales: {
       x: { grid: { color: gridColor }, ticks: { color: tickColor, font: { size: 11 } } },
-      y: { grid: { color: gridColor }, ticks: { color: tickColor, font: { size: 10 }, callback: v => '$' + (v/1e6).toFixed(1) + 'M' } }
+      y: { grid: { color: gridColor }, ticks: { color: tickColor, font: { size: 10 }, callback: v => (v < 0 ? '-$' : '$') + (Math.abs(v)/1e6).toFixed(1) + 'M' } }
     }
   }
 });
@@ -691,12 +872,36 @@ new Chart(document.getElementById('cashChart'), {
 });
 
 // Burn chart (rendered/updated by renderBurnChart)
+const burnBarLabelsPlugin = {
+  id: 'burnBarLabels',
+  afterDatasetsDraw(chart) {
+    const { ctx, data } = chart;
+    const meta = chart.getDatasetMeta(0);
+    if (meta.hidden) return;
+    meta.data.forEach((bar, i) => {
+      const val = data.datasets[0].data[i];
+      const isPct = currentMode === 'pct';
+      const label = isPct ? val + '%' : '$' + val.toFixed(0) + 'K';
+      const color = burnColor(chart._burnRates ? chart._burnRates[i] : 70);
+      ctx.save();
+      ctx.font = '600 10.5px DM Sans, sans-serif';
+      ctx.fillStyle = color;
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      // Place label just to the right of the bar end
+      ctx.fillText(label, bar.x + 5, bar.y);
+      ctx.restore();
+    });
+  }
+};
+
 let burnChartInstance = null;
 function renderBurnChart() {
   const fp = filteredProjects();
   const labels = fp.map(p => p.name.length > 18 ? p.name.substring(0,17) + '…' : p.name);
   const data = currentMode === 'pct' ? fp.map(p => p.burn) : fp.map(p => p.actual / 1000);
   const colors = fp.map(p => burnColor(p.burn));
+  const maxVal = currentMode === 'pct' ? 125 : Math.max(...data) * 1.18;
 
   if (burnChartInstance) burnChartInstance.destroy();
   const ctx = document.getElementById('burnChart');
@@ -713,8 +918,10 @@ function renderBurnChart() {
     options: {
       indexAxis: 'y',
       responsive: true, maintainAspectRatio: false,
+      layout: { padding: { right: 44 } },
       plugins: {
         legend: { display: false },
+        burnBarLabels: {},
         annotation: currentMode === 'pct' ? {
           annotations: {
             line100: {
@@ -730,12 +937,15 @@ function renderBurnChart() {
         x: {
           grid: { color: gridColor },
           ticks: { color: tickColor, font: { size: 10 }, callback: v => currentMode === 'pct' ? v + '%' : '$' + v + 'K' },
-          min: 0
+          min: 0, max: maxVal
         },
         y: { grid: { display: false }, ticks: { color: tickColor, font: { size: 10 } } }
       }
-    }
+    },
+    plugins: [burnBarLabelsPlugin]
   });
+  // Store burn rates for color reference in plugin
+  burnChartInstance._burnRates = fp.map(p => p.burn);
 }
 
 // Aging chart — log scale
@@ -771,6 +981,28 @@ new Chart(document.getElementById('agingChart'), {
 });
 
 // Net income bar
+const netChartLabelsPlugin = {
+  id: 'netChartLabels',
+  afterDatasetsDraw(chart) {
+    if (chart.canvas.id !== 'netChart') return;
+    const { ctx } = chart;
+    const meta = chart.getDatasetMeta(0);
+    meta.data.forEach((bar, i) => {
+      const val = chart.data.datasets[0].data[i];
+      const absVal = Math.abs(val);
+      const prefix = val < 0 ? '-$' : '+$';
+      const label = prefix + (absVal >= 1e6 ? (absVal/1e6).toFixed(2) + 'M' : (absVal/1000).toFixed(0) + 'K');
+      ctx.save();
+      ctx.font = '600 10.5px DM Sans, sans-serif';
+      ctx.fillStyle = val < 0 ? '#b02020' : '#1d7a5f';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = val < 0 ? 'top' : 'bottom';
+      ctx.fillText(label, bar.x, val < 0 ? bar.y + 4 : bar.y - 4);
+      ctx.restore();
+    });
+  }
+};
+
 new Chart(document.getElementById('netChart'), {
   type: 'bar',
   data: {
@@ -783,17 +1015,308 @@ new Chart(document.getElementById('netChart'), {
   },
   options: {
     responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
+    layout: { padding: { top: 22, bottom: 22 } },
+    plugins: { legend: { display: false }, netChartLabels: {} },
     scales: {
       x: { grid: { display: false }, ticks: { color: tickColor, font: { size: 11 } } },
       y: { grid: { color: gridColor }, ticks: { color: tickColor, font: { size: 10 }, callback: v => (v < 0 ? '-' : '') + '$' + Math.abs(v/1000).toFixed(0) + 'K' } }
     }
-  }
+  },
+  plugins: [netChartLabelsPlugin]
 });
+
+
+// ─── EDITABLE HIGHLIGHTS ─────────────────────────────────────────────────────
+const DEFAULT_HIGHLIGHTS = [
+  { title: 'Emergency grant closures', body: 'Closing procedures ongoing for PEER and MEER grants (HKG SAR, CHAF, Coca-Cola) totalling $811K. Forecasted actuals at 99% of budget.' },
+  { title: 'Fundraising investment fund', body: 'For repayment as part of assessment before mid-year review.' },
+  { title: 'Income statement — 31% increase', body: 'Grants and donations from Germany and Spain rose $111K in March vs. zero in February, with $114K more requested from global treasury.' },
+  { title: 'RD cash grants receivable', body: 'Total $1.195M outstanding: ING BTE ($89K), CITI Eco Youth ($250K), AMTRAC ($839K), Leslie Foundation ($17.8K).' }
+];
+
+function loadHighlights() {
+  try {
+    const saved = localStorage.getItem('wvph_highlights');
+    return saved ? JSON.parse(saved) : DEFAULT_HIGHLIGHTS;
+  } catch(e) { return DEFAULT_HIGHLIGHTS; }
+}
+
+function saveHighlights() {
+  const items = [...document.querySelectorAll('.hl-item')].map(el => ({
+    title: el.querySelector('.hl-title-input').value,
+    body:  el.querySelector('.hl-body-input').value
+  }));
+  try { localStorage.setItem('wvph_highlights', JSON.stringify(items)); } catch(e) {}
+  const saved = document.getElementById('highlightsSaved');
+  if (saved) { saved.style.opacity = '1'; setTimeout(() => saved.style.opacity = '0', 1800); }
+}
+
+function autoResizeHl(el) {
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+}
+
+function addHighlight(title='', body='') {
+  const list = document.getElementById('highlightsList');
+  const item = createHighlightEl({ title, body });
+  list.appendChild(item);
+  item.querySelector('.hl-title-input').focus();
+  saveHighlights();
+}
+
+let dragSrc = null;
+function createHighlightEl(data) {
+  const div = document.createElement('div');
+  div.className = 'hl-item';
+  div.draggable = true;
+  div.innerHTML = `
+    <svg class="hl-drag" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="5" r="1.5" fill="currentColor"/><circle cx="15" cy="5" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="19" r="1.5" fill="currentColor"/><circle cx="15" cy="19" r="1.5" fill="currentColor"/></svg>
+    <div class="hl-body">
+      <input type="text" class="hl-title-input" value="${data.title.replace(/"/g,'&quot;')}" placeholder="Item title…">
+      <textarea class="hl-body-input" placeholder="Add details…" rows="1">${data.body}</textarea>
+    </div>
+    <button class="hl-delete" title="Remove item">×</button>`;
+
+  const titleInput = div.querySelector('.hl-title-input');
+  const bodyInput  = div.querySelector('.hl-body-input');
+  const delBtn     = div.querySelector('.hl-delete');
+
+  titleInput.addEventListener('input', saveHighlights);
+  bodyInput.addEventListener('input', () => { autoResizeHl(bodyInput); saveHighlights(); });
+  delBtn.addEventListener('click', () => { if(confirm('Remove this item?')) { div.remove(); saveHighlights(); } });
+
+  // Drag to reorder
+  div.addEventListener('dragstart', () => { dragSrc = div; setTimeout(() => div.style.opacity='0.4', 0); });
+  div.addEventListener('dragend',   () => { div.style.opacity='1'; document.querySelectorAll('.hl-item').forEach(el => el.classList.remove('drag-over')); saveHighlights(); });
+  div.addEventListener('dragover',  e => { e.preventDefault(); div.classList.add('drag-over'); });
+  div.addEventListener('dragleave', () => div.classList.remove('drag-over'));
+  div.addEventListener('drop', e => {
+    e.preventDefault(); div.classList.remove('drag-over');
+    if (dragSrc && dragSrc !== div) {
+      const list = document.getElementById('highlightsList');
+      const allItems = [...list.querySelectorAll('.hl-item')];
+      const srcIdx = allItems.indexOf(dragSrc);
+      const tgtIdx = allItems.indexOf(div);
+      if (srcIdx < tgtIdx) div.after(dragSrc); else div.before(dragSrc);
+      saveHighlights();
+    }
+  });
+
+  setTimeout(() => autoResizeHl(bodyInput), 0);
+  return div;
+}
+
+function renderHighlights() {
+  const list = document.getElementById('highlightsList');
+  if (!list) return;
+  list.innerHTML = '';
+  loadHighlights().forEach(h => list.appendChild(createHighlightEl(h)));
+}
+
+
+// ─── EDITABLE ENV RISK HIGHLIGHTS ────────────────────────────────────────────
+const DEFAULT_ENV_RISKS = [
+  { tag: 'Forex',     tagClass: 'tag-forex',     body: '4.2% increase in USD/PHP revaluation rate (58.33 vs. 56.00 budgeted), causing underspending of USD-funded budgets. PBAS USD allocations to be adjusted at year-end based on actual exchange rates.' },
+  { tag: 'Inflation', tagClass: 'tag-inflation',  body: 'March 2026 inflation at 4.1%. Middle East crisis could push inflation to 5%–7.3% and weaken peso to ₱60–₱61.30/USD, reducing purchasing power and requiring stricter cost controls.' },
+  { tag: 'Burn rate', tagClass: 'tag-burn',       body: 'Aggregate 93% YTD / 41% of annual budget. Key factors: rescheduled trainings (SNC, CEW, PEACE clubs), activity integration savings, deferred AIM+ and tablet procurement, overspending in technical support & CLU functions.' }
+];
+
+const TAG_OPTIONS = [
+  { label: 'Forex',     cls: 'tag-forex' },
+  { label: 'Inflation', cls: 'tag-inflation' },
+  { label: 'Burn rate', cls: 'tag-burn' },
+  { label: 'Risk',      cls: 'tag-burn' },
+  { label: 'Cash',      cls: 'tag-inflation' },
+  { label: 'Other',     cls: 'tag-forex' },
+];
+
+function loadEnvRisks() {
+  try {
+    const saved = localStorage.getItem('wvph_env_risks');
+    return saved ? JSON.parse(saved) : DEFAULT_ENV_RISKS;
+  } catch(e) { return DEFAULT_ENV_RISKS; }
+}
+
+function saveEnvRisks() {
+  const items = [...document.querySelectorAll('.er-item')].map(el => ({
+    tag:      el.querySelector('.er-tag-input').value,
+    tagClass: el.querySelector('.er-tag-span').className.replace('env-risk-tag ','').trim(),
+    body:     el.querySelector('.er-body-input').value
+  }));
+  try { localStorage.setItem('wvph_env_risks', JSON.stringify(items)); } catch(e) {}
+  const saved = document.getElementById('envRiskSaved');
+  if (saved) { saved.style.opacity = '1'; setTimeout(() => saved.style.opacity = '0', 1800); }
+}
+
+function addEnvRisk(tag='', tagClass='tag-forex', body='') {
+  const list = document.getElementById('envRiskList');
+  const item = createEnvRiskEl({ tag, tagClass, body });
+  list.appendChild(item);
+  item.querySelector('.er-tag-input').focus();
+  saveEnvRisks();
+}
+
+let erDragSrc = null;
+function createEnvRiskEl(data) {
+  const div = document.createElement('div');
+  div.className = 'hl-item er-item';
+  div.draggable = true;
+
+  // Build tag class selector options
+  const tagOpts = TAG_OPTIONS.map(t =>
+    `<option value="${t.cls}" ${t.cls === data.tagClass ? 'selected' : ''}>${t.label}</option>`
+  ).join('');
+
+  div.innerHTML = `
+    <svg class="hl-drag" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="5" r="1.5" fill="currentColor"/><circle cx="15" cy="5" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="19" r="1.5" fill="currentColor"/><circle cx="15" cy="19" r="1.5" fill="currentColor"/></svg>
+    <div class="hl-body">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
+        <span class="env-risk-tag er-tag-span ${data.tagClass || 'tag-forex'}" style="padding:0;">
+          <input type="text" class="er-tag-input" value="${data.tag}" placeholder="Tag…"
+            style="font-size:10px;font-weight:600;background:transparent;border:none;outline:none;width:${Math.max(40, (data.tag.length||4)*8)}px;font-family:'DM Sans',sans-serif;cursor:text;padding:2px 7px;color:inherit;">
+        </span>
+        <select class="er-class-select" title="Tag color"
+          style="font-size:10px;border:1px solid var(--border);border-radius:4px;padding:1px 4px;background:var(--surface2);color:var(--ink2);cursor:pointer;font-family:'DM Sans',sans-serif;">${tagOpts}</select>
+      </div>
+      <textarea class="hl-body-input er-body-input" placeholder="Add details…" rows="1">${data.body}</textarea>
+    </div>
+    <button class="hl-delete" title="Remove item">×</button>`;
+
+  const tagInput   = div.querySelector('.er-tag-input');
+  const tagSpan    = div.querySelector('.er-tag-span');
+  const clsSelect  = div.querySelector('.er-class-select');
+  const bodyInput  = div.querySelector('.er-body-input');
+  const delBtn     = div.querySelector('.hl-delete');
+
+  tagInput.addEventListener('input', () => {
+    tagInput.style.width = Math.max(40, tagInput.value.length * 8) + 'px';
+    saveEnvRisks();
+  });
+  clsSelect.addEventListener('change', () => {
+    tagSpan.className = 'env-risk-tag er-tag-span ' + clsSelect.value;
+    saveEnvRisks();
+  });
+  bodyInput.addEventListener('input', () => { autoResizeHl(bodyInput); saveEnvRisks(); });
+  delBtn.addEventListener('click', () => { if(confirm('Remove this item?')) { div.remove(); saveEnvRisks(); } });
+
+  // Drag to reorder
+  div.addEventListener('dragstart', () => { erDragSrc = div; setTimeout(() => div.style.opacity='0.4', 0); });
+  div.addEventListener('dragend',   () => { div.style.opacity='1'; document.querySelectorAll('.er-item').forEach(el => el.classList.remove('drag-over')); saveEnvRisks(); });
+  div.addEventListener('dragover',  e => { e.preventDefault(); div.classList.add('drag-over'); });
+  div.addEventListener('dragleave', () => div.classList.remove('drag-over'));
+  div.addEventListener('drop', e => {
+    e.preventDefault(); div.classList.remove('drag-over');
+    if (erDragSrc && erDragSrc !== div) {
+      const list = document.getElementById('envRiskList');
+      const all = [...list.querySelectorAll('.er-item')];
+      if (all.indexOf(erDragSrc) < all.indexOf(div)) div.after(erDragSrc); else div.before(erDragSrc);
+      saveEnvRisks();
+    }
+  });
+
+  setTimeout(() => autoResizeHl(bodyInput), 0);
+  return div;
+}
+
+function renderEnvRisks() {
+  const list = document.getElementById('envRiskList');
+  if (!list) return;
+  list.innerHTML = '';
+  loadEnvRisks().forEach(h => list.appendChild(createEnvRiskEl(h)));
+}
+
+
+// ─── EDITABLE ACTION ITEMS ────────────────────────────────────────────────────
+const DEFAULT_ACTION_ITEMS = [
+  { badge: 'Overspend', badgeClass: 'rb-red',   name: 'ADP Bukidnon — 109% YTD',                   detail: 'Shared technical & management costs (NO/FO) are the primary driver. Programme costs remain within limits. Monitor monthly to prevent year-end overspend.' },
+  { badge: 'Cash',      badgeClass: 'rb-red',   name: 'Cash position 40% below target',             detail: 'Actual low of $301K vs. $499K target. RD USD account transfer to disbursement contributed to the decline. Requires monitoring and proactive funding requests.' },
+  { badge: 'Admin rate',badgeClass: 'rb-amber', name: 'Admin cost rate at 10.4% vs. 9.49% target',  detail: 'Cost reduction in support costs is ongoing. BIR tax exemption threshold (30%) is not at risk, but internal target must be met by year-end.' }
+];
+
+function loadActionItems() {
+  try {
+    const saved = localStorage.getItem('wvph_action_items');
+    return saved ? JSON.parse(saved) : DEFAULT_ACTION_ITEMS;
+  } catch(e) { return DEFAULT_ACTION_ITEMS; }
+}
+
+function saveActionItems() {
+  const items = [...document.querySelectorAll('#actionItemsGrid .risk-item-card')].map(el => ({
+    badge:      el.querySelector('.ai-badge-input').value,
+    badgeClass: el.querySelector('.ai-badge-select').value,
+    name:       el.querySelector('.ai-name-input').value,
+    detail:     el.querySelector('.ai-detail-input').value
+  }));
+  try { localStorage.setItem('wvph_action_items', JSON.stringify(items)); } catch(e) {}
+  const saved = document.getElementById('actionSaved');
+  if (saved) { saved.style.opacity = '1'; setTimeout(() => saved.style.opacity = '0', 1800); }
+}
+
+function addActionItem() {
+  const grid = document.getElementById('actionItemsGrid');
+  const card = createActionItemEl({ badge: '', badgeClass: 'rb-red', name: '', detail: '' });
+  grid.appendChild(card);
+  card.querySelector('.ai-badge-input').focus();
+  saveActionItems();
+}
+
+function createActionItemEl(data) {
+  const div = document.createElement('div');
+  div.className = 'risk-item-card';
+
+  div.innerHTML = `
+    <div class="ai-card-header">
+      <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;">
+        <div class="risk-badge ${data.badgeClass}" style="display:inline-flex;align-items:center;padding:1px 7px;">
+          <input type="text" class="ai-badge-input" value="${data.badge}" placeholder="Label…"
+            style="color:inherit;width:${Math.max(40, (data.badge.length||5)*8)}px;">
+        </div>
+        <select class="ai-badge-select" title="Badge color">
+          <option value="rb-red"   ${data.badgeClass==='rb-red'   ? 'selected':''}>🔴 Red</option>
+          <option value="rb-amber" ${data.badgeClass==='rb-amber' ? 'selected':''}>🟡 Amber</option>
+        </select>
+      </div>
+      <button class="ai-delete" title="Remove">×</button>
+    </div>
+    <input type="text" class="ai-name-input" value="${data.name}" placeholder="Item name…">
+    <textarea class="ai-detail-input" placeholder="Add detail…" rows="1">${data.detail}</textarea>`;
+
+  const badgeInput  = div.querySelector('.ai-badge-input');
+  const badgeSelect = div.querySelector('.ai-badge-select');
+  const badgeWrap   = div.querySelector('.risk-badge');
+  const nameInput   = div.querySelector('.ai-name-input');
+  const detailInput = div.querySelector('.ai-detail-input');
+  const delBtn      = div.querySelector('.ai-delete');
+
+  badgeInput.addEventListener('input', () => {
+    badgeInput.style.width = Math.max(40, badgeInput.value.length * 8) + 'px';
+    saveActionItems();
+  });
+  badgeSelect.addEventListener('change', () => {
+    badgeWrap.className = 'risk-badge ' + badgeSelect.value;
+    saveActionItems();
+  });
+  nameInput.addEventListener('input', saveActionItems);
+  detailInput.addEventListener('input', () => { autoResizeHl(detailInput); saveActionItems(); });
+  delBtn.addEventListener('click', () => { if(confirm('Remove this item?')) { div.remove(); saveActionItems(); } });
+
+  setTimeout(() => autoResizeHl(detailInput), 0);
+  return div;
+}
+
+function renderActionItems() {
+  const grid = document.getElementById('actionItemsGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  loadActionItems().forEach(item => grid.appendChild(createActionItemEl(item)));
+}
 
 // Init
 renderTable();
 renderBurnChart();
+renderHighlights();
+renderEnvRisks();
+renderActionItems();
 </script>
 </body>
 </html>
