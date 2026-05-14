@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WV Philippines — April 2026 Financial Summary</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@300;400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --bg: #F3F2F0;
+    --surface: #ffffff;
+    --surface2: #E9E7E3;
+    --ink: #111222;
+    --ink2: #3F3D4C;
+    --ink3: #6D6A76;
+    --accent: #FF5515;
+    --green: #155930;
+    --amber: #FF6929;
+    --red: #B10831;
+    --border: rgba(17,18,34,0.10);
+    --border2: rgba(17,18,34,0.06);
+    --orange: #FF5515;
+    --midnight: #111222;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--ink); font-size: 14px; line-height: 1.5; }
+
+  /* HEADER */
+  .header { background: var(--midnight); color: #fff; padding: 0 40px 0; display: flex; align-items: stretch; justify-content: space-between; gap: 20px; flex-wrap: wrap; border-top: 4px solid var(--orange); }
+  .header-icon { width: 46px; height: 46px; border-radius: 0; background: var(--orange); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .header-icon svg { width: 24px; height: 24px; fill: none; stroke: #fff; stroke-width: 1.8; }
+  .header-left { display: flex; align-items: center; gap: 16px; padding: 20px 0; }
+  .header-org { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 18px; line-height: 1.2; letter-spacing: 0.02em; text-transform: uppercase; }
+  .header-sub { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 3px; }
+  .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; padding: 20px 0; }
+  .header-period { font-size: 12px; color: rgba(255,255,255,0.55); }
+  .header-updated { font-size: 11px; color: rgba(255,255,255,0.35); }
+  .status-pill { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 4px 12px; font-size: 11px; color: rgba(255,255,255,0.85); }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--orange); flex-shrink: 0; }
+  .print-btn { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.20); border-radius: 8px; padding: 6px 14px; font-size: 12px; color: rgba(255,255,255,0.8); cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.2s; }
+  .print-btn:hover { background: #e04000; }
+  .print-btn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+
+  /* LAYOUT */
+  .main { padding: 28px 40px 48px; max-width: 1280px; margin: 0 auto; }
+  .section { margin-bottom: 28px; }
+  .section-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--midnight); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 2px solid var(--orange); display: inline-block; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 22px 24px; }
+  .card-title { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px; color: var(--midnight); margin-bottom: 4px; }
+  .card-sub { font-size: 11px; color: var(--ink3); margin-bottom: 16px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-65-35 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+  .chart-wrap { position: relative; }
+
+  /* NARRATIVE BOX */
+  .narrative {
+    background: var(--midnight); color: #fff; border-radius: 4px; padding: 22px 28px;
+    margin-bottom: 28px; display: flex; gap: 20px; align-items: flex-start;
+    border-left: 4px solid var(--orange);
+  }
+  .narrative-icon { flex-shrink: 0; width: 36px; height: 36px; border-radius: 2px; background: var(--orange); display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+  .narrative-icon svg { width: 18px; height: 18px; fill: none; stroke: rgba(255,255,255,0.8); stroke-width: 1.8; }
+  .narrative-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 8px; }
+  .narrative-text { font-size: 13px; color: rgba(255,255,255,0.85); line-height: 1.7; }
+  .narrative-text strong { color: #fff; font-weight: 500; }
+
+  /* AT-RISK CALLOUT */
+  .risk-banner { background: #fff8f5; border: 1px solid rgba(177,8,49,0.2); border-left: 4px solid var(--red); border-radius: 4px; padding: 16px 20px; margin-bottom: 28px; }
+  .risk-banner-title { font-size: 11px; font-weight: 700; color: #B10831; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
+  .risk-items-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .risk-item-card { background: #fff; border: 1px solid rgba(177,8,49,0.12); border-radius: 4px; padding: 12px 14px; }
+  .risk-item-name { font-size: 12px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+  .risk-item-detail { font-size: 11px; color: var(--ink2); line-height: 1.5; }
+  .risk-badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 1px 7px; border-radius: 4px; margin-bottom: 6px; }
+  .rb-red { background: #FFDDE5; color: #B10831; }
+  .rb-amber { background: #FFE8DC; color: #FF6929; }
+
+  /* METRIC CARDS */
+  .metric-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+  .metric-card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 18px 20px; display: flex; flex-direction: column; gap: 4px; position: relative; overflow: hidden; border-top: 3px solid var(--orange); }
+  .metric-card.dark { background: var(--midnight); border-top-color: var(--orange); }
+  .metric-label { font-size: 11px; color: var(--ink3); }
+  .metric-card.dark .metric-label { color: rgba(255,255,255,0.5); }
+  .metric-value { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 22px; color: var(--midnight); line-height: 1.1; }
+  .metric-card.dark .metric-value { color: #fff; }
+  .mv-green { color: #155930 !important; }
+  .mv-amber { color: #FF6929 !important; }
+  .mv-red { color: var(--red) !important; }
+  .metric-note { font-size: 10px; color: var(--ink3); margin-top: 2px; }
+  .metric-card.dark .metric-note { color: rgba(255,255,255,0.4); }
+  .sparkline-wrap { margin-top: 10px; }
+  .trend-label { font-size: 9px; color: var(--ink3); margin-bottom: 3px; }
+  .spark-box { position: relative; width: 100%; height: 40px; }
+
+  /* AREA FILTER */
+  .filter-row { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .filter-label { font-size: 11px; color: var(--ink3); margin-right: 4px; }
+  .filter-btn { font-size: 11px; padding: 5px 14px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--ink2); cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.15s; }
+  .filter-btn.active { background: var(--midnight); color: #fff; border-color: var(--midnight); }
+  .filter-btn:hover:not(.active) { background: var(--surface2); }
+
+  /* PROJECT TABLE */
+  .proj-table { width: 100%; border-collapse: collapse; }
+  .proj-table th { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink3); padding: 0 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+  .proj-table th:nth-child(3), .proj-table th:nth-child(4) { text-align: right; }
+  .proj-table td { padding: 0; border-bottom: 1px solid var(--border2); vertical-align: top; }
+  .proj-table tbody tr:last-child td { border-bottom: none; }
+  .proj-row-main { display: flex; align-items: center; gap: 8px; padding: 10px 8px; cursor: pointer; user-select: none; }
+  .proj-row-main:hover { background: var(--surface2); border-radius: 6px; }
+  .proj-expand-icon { width: 16px; height: 16px; flex-shrink: 0; color: var(--ink3); transition: transform 0.2s; }
+  .proj-expand-icon.open { transform: rotate(90deg); }
+  .proj-name-cell { flex: 1; font-size: 12px; font-weight: 500; }
+  .proj-loc { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 20px; font-weight: 500; width: 64px; text-align: center; }
+  .loc-v { background: #E9E7E3; color: #111222; }
+  .loc-m { background: #D1EFDD; color: #155930; }
+  .loc-l { background: #FFE8DC; color: #E04000; }
+  .burn-cell { display: flex; align-items: center; gap: 6px; justify-content: flex-end; }
+  .burn-bar { width: 60px; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; flex-shrink: 0; position: relative; }
+  .burn-fill { height: 100%; border-radius: 3px; }
+  .burn-pct { font-size: 11px; color: var(--ink2); min-width: 32px; text-align: right; }
+  .variance-pos { color: #155930; font-weight: 500; font-size: 12px; min-width: 72px; text-align: right; }
+  .variance-neg { color: #B10831; font-weight: 500; font-size: 12px; min-width: 72px; text-align: right; }
+  .proj-detail { display: none; padding: 0 8px 12px 40px; }
+  .proj-detail.open { display: block; }
+  .proj-detail-inner { background: var(--surface2); border-radius: 0; padding: 12px 14px; font-size: 11px; color: var(--ink2); line-height: 1.6; border-left: 3px solid var(--orange); }
+  .toggle-mode { display: flex; align-items: center; gap: 0; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-left: auto; }
+  .toggle-btn { font-size: 11px; padding: 5px 14px; border: none; background: transparent; color: var(--ink2); cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.15s; }
+  .toggle-btn.active { background: var(--midnight); color: #fff; }
+
+  /* COMMENT COLUMN */
+  .comment-cell { padding: 6px 8px !important; vertical-align: middle !important; }
+  .comment-input {
+    width: 100%; min-width: 130px; font-size: 11px; font-family: 'Inter', sans-serif;
+    color: var(--ink2); background: transparent; border: 1px dashed transparent;
+    border-radius: 6px; padding: 5px 8px; resize: none; outline: none;
+    line-height: 1.5; transition: all 0.15s; height: 32px; overflow: hidden;
+  }
+  .comment-input::placeholder { color: var(--ink3); font-style: italic; }
+  .comment-input:hover { border-color: var(--border); background: var(--surface2); }
+  .comment-input:focus { border-color: var(--orange); background: #FFF5F0; border-style: solid; height: auto; min-height: 32px; }
+  .comment-input.has-value { border-color: var(--border); background: var(--surface2); border-style: solid; }
+  .comment-header-wrap { display: flex; align-items: center; gap: 5px; }
+  .comment-clear-all { font-size: 9px; color: var(--ink3); cursor: pointer; text-decoration: underline; margin-left: 4px; }
+  .comment-clear-all:hover { color: var(--red); }
+  @media print { .comment-input { border: none !important; background: transparent !important; } }
+  /* EDITABLE ACTION ITEMS */
+  .ai-name-input {
+    font-size: 12px; font-weight: 500; color: var(--ink); background: transparent;
+    border: none; outline: none; width: 100%; padding: 2px 4px; border-radius: 4px;
+    font-family: 'Inter', sans-serif; line-height: 1.4; margin-bottom: 4px;
+  }
+  .ai-name-input:hover { background: rgba(176,32,32,0.05); }
+  .ai-name-input:focus { background: #FFF5F0; outline: 1px solid var(--orange); }
+  .ai-detail-input {
+    font-size: 11px; color: var(--ink2); background: transparent;
+    border: none; outline: none; width: 100%; padding: 2px 4px; border-radius: 4px;
+    font-family: 'Inter', sans-serif; line-height: 1.5; resize: none; overflow: hidden; min-height: 18px;
+  }
+  .ai-detail-input:hover { background: rgba(176,32,32,0.05); }
+  .ai-detail-input:focus { background: #FFF5F0; outline: 1px solid var(--orange); }
+  .ai-badge-input {
+    font-size: 10px; font-weight: 600; background: transparent; border: none; outline: none;
+    font-family: 'Inter', sans-serif; cursor: text; padding: 0;
+  }
+  .ai-badge-select {
+    font-size: 10px; border: 1px solid rgba(176,32,32,0.2); border-radius: 4px;
+    padding: 1px 4px; background: #fff; color: var(--ink2); cursor: pointer;
+    font-family: 'Inter', sans-serif; margin-left: 4px;
+  }
+  .ai-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .ai-delete { background: transparent; border: none; cursor: pointer; color: var(--ink3); font-size: 16px; line-height: 1; padding: 0 2px; opacity: 0; transition: opacity 0.15s; }
+  .risk-item-card:hover .ai-delete { opacity: 1; }
+  .ai-delete:hover { color: var(--red); }
+  @media print { .ai-delete, #actionBanner button { display: none !important; } .ai-badge-select { display: none !important; } }
+
+  /* EDITABLE HIGHLIGHTS */
+  .hl-item { display:flex; align-items:flex-start; gap:8px; padding:10px 0; border-bottom:1px solid var(--border2); position:relative; }
+  .hl-item:last-child { border-bottom:none; }
+  .hl-drag { cursor:grab; color:var(--ink3); flex-shrink:0; margin-top:3px; opacity:0; transition:opacity 0.15s; }
+  .hl-item:hover .hl-drag { opacity:1; }
+  .hl-body { flex:1; min-width:0; }
+  .hl-title-input {
+    font-size:12px; font-weight:600; color:var(--ink); background:transparent;
+    border:none; outline:none; width:100%; padding:2px 4px; border-radius:4px;
+    font-family:'Inter',sans-serif; line-height:1.4;
+  }
+  .hl-title-input:hover { background:var(--surface2); }
+  .hl-title-input:focus { background:#f0f5ff; outline:1px solid var(--accent); }
+  .hl-body-input {
+    font-size:12px; color:var(--ink2); background:transparent;
+    border:none; outline:none; width:100%; padding:2px 4px; border-radius:4px;
+    font-family:'Inter',sans-serif; line-height:1.6; resize:none; overflow:hidden;
+    margin-top:2px; min-height:20px;
+  }
+  .hl-body-input:hover { background:var(--surface2); }
+  .hl-body-input:focus { background:#f0f5ff; outline:1px solid var(--accent); }
+  .hl-delete { flex-shrink:0; width:20px; height:20px; border-radius:4px; border:none; background:transparent;
+    color:var(--ink3); cursor:pointer; display:flex; align-items:center; justify-content:center;
+    opacity:0; transition:opacity 0.15s; margin-top:2px; font-size:14px; line-height:1; }
+  .hl-item:hover .hl-delete { opacity:1; }
+  .hl-delete:hover { background:#fce8e8; color:var(--red); }
+  .hl-item.drag-over { border-top:2px solid var(--accent); }
+  @media print { .hl-drag, .hl-delete { display:none!important; } button { display:none!important; } }
+
+
+  /* LEGEND */
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 12px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--ink2); }
+  .legend-sq { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  /* FUNDING */
+  .fund-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--border2); font-size: 12px; gap: 12px; }
+  .fund-row:last-child { border-bottom: none; }
+  .fund-name { font-weight: 500; }
+  .fund-code { font-size: 10px; color: var(--ink3); background: var(--surface2); padding: 2px 7px; border-radius: 4px; }
+  .fund-amount { font-weight: 500; }
+  .fund-total { padding-top: 12px; border-top: 1px solid var(--border); margin-top: 4px; font-weight: 600; font-size: 13px; display: flex; justify-content: space-between; }
+
+  /* AGING */
+  .aging-row { display: grid; grid-template-columns: 1fr 80px 80px 80px 90px; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border2); font-size: 12px; }
+  .aging-row:last-child { border-bottom: none; }
+  .aging-head { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink3); padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .aging-val { text-align: right; }
+  .aging-val.over60 { color: #B10831; font-weight: 500; }
+
+  /* BS MOVEMENTS */
+  .bs-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--border2); font-size: 12px; gap: 12px; }
+  .bs-row:last-child { border-bottom: none; }
+  .bs-code { font-size: 10px; color: var(--ink3); background: var(--surface2); padding: 2px 7px; border-radius: 4px; font-family: monospace; flex-shrink: 0; }
+  .bs-desc { flex: 1; }
+  .bs-change { font-size: 11px; font-weight: 500; white-space: nowrap; }
+  .bs-change.up { color: #155930; }
+  .bs-change.down { color: #B10831; }
+  .bs-reason { font-size: 10px; color: var(--ink3); margin-top: 2px; }
+
+  /* ENV RISK ITEMS */
+  .env-risk-item { padding: 12px 0; border-bottom: 1px solid var(--border2); font-size: 12px; color: var(--ink2); line-height: 1.6; }
+  .env-risk-item:last-child { border-bottom: none; }
+  .env-risk-tag { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-bottom: 5px; }
+  .tag-forex { background: #E0F0FF; color: #03586E; }
+  .tag-inflation { background: #FFF0E8; color: #E04000; }
+  .tag-burn { background: #FFF8F0; color: #FF6929; }
+
+  /* CASH GAUGE */
+  .gauge-container { display: flex; flex-direction: column; align-items: center; padding: 16px 0 8px; }
+  .gauge-alert { background: #fff0f0; border: 1px solid rgba(177,8,49,0.25); border-radius: 4px; padding: 10px 16px; width: 100%; text-align: center; margin-top: 14px; }
+  .gauge-alert-title { font-size: 11px; font-weight: 600; color: #B10831; }
+  .gauge-alert-sub { font-size: 10px; color: #B10831; opacity:0.75; margin-top: 2px; }
+
+  /* PAYABLES */
+  .payables-row { display: grid; grid-template-columns: 1fr 90px 80px 80px 90px; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border2); font-size: 12px; }
+  .payables-row:last-child { border-bottom: none; }
+  .payables-head { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink3); padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .payables-val { text-align: right; }
+  .payables-val.over60p { color: #B10831; font-weight: 500; }
+
+  /* SIGNOFF */
+  .signoff { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; border-top: 3px solid var(--orange); }
+  .signoff-person { display: flex; flex-direction: column; gap: 2px; }
+  .signoff-name { font-weight: 500; font-size: 13px; }
+  .signoff-role { font-size: 11px; color: var(--ink3); }
+  .signoff-divider { width: 1px; height: 36px; background: var(--border); }
+
+  /* FOOTER */
+  .footer { padding: 18px 40px; text-align: center; font-size: 11px; color: var(--ink3); border-top: 2px solid var(--orange); background: var(--midnight); color: rgba(255,255,255,0.5); }
+
+  /* PRINT */
+  @media print {
+    body { background: #fff; font-size: 12px; }
+    .header { background: #1a1714 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .print-btn { display: none !important; }
+    .filter-row { display: none !important; }
+    .proj-detail { display: block !important; }
+    .card, .metric-card, .narrative, .risk-banner { break-inside: avoid; }
+    .main { padding: 16px 24px; }
+    @page { margin: 1cm; }
+  }
+
+  @media (max-width: 960px) {
+    .header { padding: 20px; }
+    .main { padding: 20px 16px 36px; }
+    .metric-row { grid-template-columns: repeat(3, 1fr); }
+    .grid-2, .grid-3, .grid-65-35 { grid-template-columns: 1fr; }
+    .risk-items-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 540px) {
+    .metric-row { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-left">
+    <div class="header-icon" style="width:56px;height:56px;background:var(--orange);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <svg viewBox="0 0 32 32" width="32" height="32" fill="none">
+        <path d="M4 28 L28 4 L28 28 Z" fill="var(--orange)"/>
+        <path d="M8 28 L28 8 L28 28 Z" fill="rgba(0,0,0,0.15)"/>
+        <path d="M16 10 L18 15 L23 15 L19 18 L21 23 L16 20 L11 23 L13 18 L9 15 L14 15 Z" fill="white" opacity="0.9"/>
+      </svg>
+    </div>
+    <div>
+      <div class="header-org">World Vision Philippines</div>
+      <div class="header-sub">Monthly Financial Summary &amp; Management Review · FFR Dashboard</div>
+    </div>
+  </div>
+  <div class="header-right">
+      <div style="margin-bottom:8px;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 72" width="285" height="54" aria-label="World Vision logo" role="img">
+          <text x="2" y="52" font-family="Georgia,'Times New Roman',serif" font-weight="700" font-size="42" fill="#ffffff" letter-spacing="-1">World Vision</text>
+          <path d="M296 1 L378 1 L378 68 Q342 68 296 1 Z" fill="#FF5515"/>
+          <path d="M320 1 Q378 1 378 68 Q342 68 320 1 Z" fill="rgba(0,0,0,0.10)"/>
+          <g transform="translate(352,32)">
+            <path d="M0,-15 C2,-5 5,-2 15,0 C5,2 2,5 0,15 C-2,5 -5,2 -15,0 C-5,-2 -2,-5 0,-15 Z" fill="white"/>
+          </g>
+          <text x="371" y="9" font-family="Arial,sans-serif" font-size="8" fill="white">®</text>
+        </svg>
+      </div>
+    <div class="header-period">Period ending April 2026</div>
+    <div class="header-updated">Last updated: May 14, 2026</div>
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
+      <div class="status-pill"><span class="status-dot"></span>YTD Burn 93% &nbsp;·&nbsp; Annual 41%</div>
+      <button class="print-btn" onclick="window.print()">
+        <svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print / Save PDF
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- NARRATIVE SUMMARY -->
+  <div class="narrative">
+    <div class="narrative-icon">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </div>
+    <div style="flex:1;">
+      <div class="narrative-label">Finance manager summary — April 2026</div>
+      <div class="narrative-text">
+        The office closed April 2026 with a <strong>net surplus of $1.04M</strong>, driven by strong Global Centre and Direct Funding receipts. However, three areas require management attention:
+        <strong>cash position remains 65% below the target low</strong> at $181K (vs. $521K target);
+        <strong>admin cost rate has crept to 10.6%</strong> against a 9.49% target, primarily from technical support and CLU cost overruns;
+        and <strong>ADP Bukidnon is the only project in overspend</strong> at 109% YTD driven by shared NO/FO costs rather than direct programme costs.
+        The majority of underspending across other projects is attributable to rescheduled activities, integration savings, and deferred implementation — all with catch-up plans in place for Q2.
+      </div>
+    </div>
+  </div>
+
+  <!-- AT-RISK CALLOUT -->
+  <div class="risk-banner" id="actionBanner">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+      <div class="risk-banner-title" style="margin-bottom:0;">⚠ Items requiring management action</div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <span id="actionSaved" style="font-size:10px; color:var(--green); opacity:0; transition:opacity 0.4s;">✓ Saved</span>
+        <button onclick="addActionItem()" style="display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid rgba(176,32,32,0.25);background:#fff;color:var(--red);cursor:pointer;font-family:'Inter',sans-serif;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add item
+        </button>
+      </div>
+    </div>
+    <div id="actionItemsGrid" class="risk-items-grid"></div>
+  </div>
+
+  <!-- KPI METRICS -->
+  <div class="section">
+    <div class="section-label">Financial overview</div>
+    <div class="metric-row">
+      <div class="metric-card dark">
+        <div class="metric-label">Total income received</div>
+        <div class="metric-value">$10.94M</div>
+        <div class="metric-note">FY2026 YTD · all sources</div>
+        <div class="sparkline-wrap">
+          <div class="trend-label">6-month trend (est.)</div>
+          <div class="spark-box"><canvas id="spark0" role="img" aria-label="Sparkline for total income trend"></canvas></div>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Total expenditures</div>
+        <div class="metric-value">$9.90M</div>
+        <div class="metric-note">Project + fundraising</div>
+        <div class="sparkline-wrap">
+          <div class="trend-label">6-month trend (est.)</div>
+          <div class="spark-box"><canvas id="spark1" role="img" aria-label="Sparkline for expenditure trend"></canvas></div>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Net surplus</div>
+        <div class="metric-value mv-green">$1.04M</div>
+        <div class="metric-note">Before hosting &amp; forex</div>
+        <div class="sparkline-wrap">
+          <div class="trend-label">6-month trend (est.)</div>
+          <div class="spark-box"><canvas id="spark2" role="img" aria-label="Sparkline for net surplus trend"></canvas></div>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Admin cost rate</div>
+        <div class="metric-value mv-amber">10.6%</div>
+        <div class="metric-note">Target: 9.49%</div>
+        <div class="sparkline-wrap">
+          <div class="trend-label">6-month trend (est.)</div>
+          <div class="spark-box"><canvas id="spark3" role="img" aria-label="Sparkline for admin rate trend"></canvas></div>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Cash low (actual)</div>
+        <div class="metric-value mv-red">$181K</div>
+        <div class="metric-note">Target $521K — 65% gap</div>
+        <div class="sparkline-wrap">
+          <div class="trend-label">6-month trend (est.)</div>
+          <div class="spark-box"><canvas id="spark4" role="img" aria-label="Sparkline for cash position trend"></canvas></div>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Total receivables</div>
+        <div class="metric-value">$85,369</div>
+        <div class="metric-note">Account 180 · Other Accounts Receivable</div>
+        <div class="sparkline-wrap">
+          <div class="trend-label">6-month trend (est.)</div>
+          <div class="spark-box"><canvas id="spark5" role="img" aria-label="Sparkline for receivables trend"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INCOME & CASH -->
+  <div class="section grid-65-35">
+    <div class="card">
+      <div class="card-title">Income &amp; expenditure by funding source</div>
+      <div class="card-sub">USD · FY2026 year-to-date as of April 30, 2026</div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-sq" style="background:#FF5515;"></div>Income</div>
+        <div class="legend-item"><div class="legend-sq" style="background:#C9C4BC;"></div>Expenses</div>
+        <div class="legend-item"><div class="legend-sq" style="background:rgba(21,89,48,0.15);border:1.5px solid #155930;"></div>Net income</div>
+      </div>
+      <div class="chart-wrap" style="height:260px;">
+        <canvas id="incomeChart" role="img" aria-label="Grouped bar chart of income vs expenses by funding source.">Income vs expenses by source.</canvas>
+      </div>
+      <div style="display:flex; gap:0; margin-top:16px; border-top:1px solid var(--border); padding-top:14px;">
+        <div style="flex:1; text-align:center; padding:0 8px; border-right:1px solid var(--border);">
+          <div style="font-size:10px; color:var(--ink3); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px;">Total income</div>
+          <div style="font-family:'Inter',sans-serif;font-weight:700; font-size:18px; color:var(--accent);">$10,938,007</div>
+          <div style="font-size:10px; color:var(--ink3); margin-top:2px;">all sources combined</div>
+        </div>
+        <div style="flex:1; text-align:center; padding:0 8px; border-right:1px solid var(--border);">
+          <div style="font-size:10px; color:var(--ink3); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px;">Total expenses</div>
+          <div style="font-family:'Inter',sans-serif;font-weight:700; font-size:18px; color:var(--ink);">$9,899,909</div>
+          <div style="font-size:10px; color:var(--ink3); margin-top:2px;">project + fundraising</div>
+        </div>
+        <div style="flex:1; text-align:center; padding:0 8px;">
+          <div style="font-size:10px; color:var(--ink3); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px;">Net income</div>
+          <div style="font-family:'Inter',sans-serif;font-weight:700; font-size:18px; color:#155930;">$1,038,098</div>
+          <div style="font-size:10px; color:var(--ink3); margin-top:2px;">income minus expenses</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Cash position</div>
+      <div class="card-sub">Actual low vs target (USD)</div>
+      <div class="gauge-container">
+        <div class="chart-wrap" style="height:170px; width:100%;">
+          <canvas id="cashChart" role="img" aria-label="Doughnut showing actual cash $301K vs target $499K — 40% below.">Cash position gauge.</canvas>
+        </div>
+        <div style="text-align:center; margin-top:6px;">
+          <div style="font-family:'Inter',sans-serif;font-weight:700; font-size:28px; color:#B10831;">$181K</div>
+          <div style="font-size:11px; color:var(--ink3);">actual vs <strong style="color:var(--ink2);">$521K</strong> target</div>
+        </div>
+        <div class="gauge-alert">
+          <div class="gauge-alert-title">65% below target low</div>
+          <div class="gauge-alert-sub">Actual $181K vs $521K target — requires urgent action</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECTS SECTION -->
+  <div class="section">
+    <div class="section-label">Project burn rates &amp; variance detail</div>
+    <div class="card">
+      <!-- FILTER ROW -->
+      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+        <div>
+          <div class="card-title" style="margin-bottom:2px;">All projects — YTD performance</div>
+          <div class="card-sub" style="margin-bottom:0;">Click any row to expand variance explanation</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <div class="filter-row" style="margin-bottom:0;">
+            <span class="filter-label">Filter:</span>
+            <button class="filter-btn active" onclick="filterArea('all',this)">All areas</button>
+            <button class="filter-btn" onclick="filterArea('Luzon',this)">Luzon</button>
+            <button class="filter-btn" onclick="filterArea('Visayas',this)">Visayas</button>
+            <button class="filter-btn" onclick="filterArea('Mindanao',this)">Mindanao</button>
+          </div>
+          <div class="toggle-mode">
+            <button class="toggle-btn active" id="btnPct" onclick="setMode('pct')">% Burn</button>
+            <button class="toggle-btn" id="btnUsd" onclick="setMode('usd')">$ Variance</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="gap:28px;">
+        <div>
+          <div class="chart-wrap" style="height:340px;">
+            <canvas id="burnChart" role="img" aria-label="Horizontal bar chart of project burn rates. Reference line at 100%.">Burn rates.</canvas>
+          </div>
+        </div>
+        <div>
+          <table class="proj-table" id="projTable">
+            <thead>
+              <tr>
+                <th style="padding-left:28px;">Project</th>
+                <th>Area</th>
+                <th style="text-align:right;" id="burnHeader">YTD burn</th>
+                <th style="text-align:right;">Variance</th>
+                <th style="min-width:150px;"><span style="display:flex;align-items:center;gap:5px;">Comments <span style="font-size:9px;color:#9c958e;cursor:pointer;text-decoration:underline;font-weight:400;text-transform:none;letter-spacing:0;" onclick="clearAllComments()">clear all</span></span></th>
+              </tr>
+            </thead>
+            <tbody id="projBody">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECEIVABLES & PAYABLES & FUNDING -->
+  <div class="section grid-2">
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      <div class="card">
+        <div class="card-title">Prepayments, Receivables and Other Assets</div>
+        <div class="card-sub">Ageing by account · USD · as of April 30, 2026 · log scale used for readability</div>
+        <div class="legend">
+          <div class="legend-item"><div class="legend-sq" style="background:#111222;"></div>0–30 days</div>
+          <div class="legend-item"><div class="legend-sq" style="background:#FF6929;"></div>31–60 days</div>
+          <div class="legend-item"><div class="legend-sq" style="background:#B10831;"></div>&gt;60 days</div>
+        </div>
+        <div class="chart-wrap" style="height:200px;">
+          <canvas id="agingChart" role="img" aria-label="Grouped bar chart of receivables ageing by account on log scale.">Receivables ageing.</canvas>
+        </div>
+        <div style="margin-top:14px;">
+          <div class="aging-row aging-head">
+            <div>Account</div><div style="text-align:right;">0–30d</div><div style="text-align:right;">31–60d</div><div style="text-align:right;">&gt;60d</div><div style="text-align:right;">Total Balance</div>
+          </div>
+          <div class="aging-row"><div>Travel advances (150)</div><div class="aging-val">$88,496</div><div class="aging-val">$20,911</div><div class="aging-val over60">$29</div><div class="aging-val" style="font-weight:500;color:var(--midnight);">$112,808</div></div>
+          <div class="aging-row"><div>Salary advances (155)</div><div class="aging-val">$2,461</div><div class="aging-val">$2,493</div><div class="aging-val over60">$6,185</div><div class="aging-val" style="font-weight:500;color:var(--midnight);">$11,141</div></div>
+          <div class="aging-row"><div>Supplier advances (17002)</div><div class="aging-val">-$12,276</div><div class="aging-val">-$23,573</div><div class="aging-val over60">$468,970</div><div class="aging-val" style="font-weight:500;color:var(--midnight);">$432,932</div></div>
+          <div class="aging-row"><div>Refundable deposits (17003)</div><div class="aging-val">-$526</div><div class="aging-val">-$678</div><div class="aging-val over60">$24,835</div><div class="aging-val" style="font-weight:500;color:var(--midnight);">$23,630</div></div>
+          <div class="aging-row"><div>Partner advances (172)</div><div class="aging-val">-$140,588</div><div class="aging-val">$37,059</div><div class="aging-val over60">$283,899</div><div class="aging-val" style="font-weight:500;color:var(--midnight);">$180,371</div></div>
+          <div class="aging-row"><div>Other receivables (180)</div><div class="aging-val">$11,152</div><div class="aging-val">$1,915</div><div class="aging-val over60">$72,299</div><div class="aging-val" style="font-weight:500;color:var(--midnight);">$85,369</div></div>
+          <div class="aging-row"><div>Other assets (190)</div><div class="aging-val">-$14,200</div><div class="aging-val">$7,265</div><div class="aging-val over60">$173,966</div><div class="aging-val" style="font-weight:500;color:var(--midnight);">$167,032</div></div>
+          <div class="aging-row" style="border-top:1.5px solid var(--border);margin-top:4px;padding-top:8px;font-weight:600;">
+            <div>Total</div>
+            <div class="aging-val">-$65,481</div>
+            <div class="aging-val">$45,392</div>
+            <div class="aging-val over60" style="color:var(--midnight);">$1,104,153</div>
+            <div class="aging-val" style="font-weight:700;color:var(--midnight);">$1,013,283</div>
+          </div>
+          <div style="margin-top:10px;padding:10px 12px;background:var(--surface2);border-radius:4px;border-left:3px solid var(--orange);font-size:10px;color:var(--ink3);line-height:1.6;">
+            <strong style="color:var(--ink2);">Note:</strong> Amounts above are sourced from the ageing report. Any variance between the ageing breakdown and the total current balance is due to report timing — the extract may be generated after certain settlements have already been processed in the subsequent period.
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Payables ageing</div>
+        <div class="card-sub">USD · as of April 30, 2026</div>
+        <div class="payables-row payables-head">
+          <div>Account</div><div style="text-align:right;">Total Balance</div><div style="text-align:right;">0–30d</div><div style="text-align:right;">31–60d</div><div style="text-align:right;">&gt;60d</div>
+        </div>
+        <div class="payables-row"><div>Accounts payable (200)</div><div class="payables-val" style="font-weight:500;color:var(--midnight);">($438,300)</div><div class="payables-val">$11,494</div><div class="payables-val over60p">($26,609)</div><div class="payables-val over60p">($83,152)</div></div>
+        <div class="payables-row"><div>Retention fee payable (210)</div><div class="payables-val" style="font-weight:500;color:var(--midnight);">($26,976)</div><div class="payables-val">($2,778)</div><div class="payables-val over60p">($1,199)</div><div class="payables-val over60p">($23,000)</div></div>
+        <div class="payables-row"><div>Payroll &amp; taxes payable (230)</div><div class="payables-val" style="font-weight:500;color:var(--midnight);">($350,697)</div><div class="payables-val">$28,046</div><div class="payables-val over60p">($84,273)</div><div class="payables-val over60p">($294,755)</div></div>
+        <div class="payables-row"><div>Accrued pension &amp; severance (250)</div><div class="payables-val" style="font-weight:500;color:var(--midnight);">($41,271)</div><div class="payables-val">($40,601)</div><div class="payables-val over60p">($670)</div><div class="payables-val">—</div></div>
+        <div class="payables-row"><div>Other liabilities (260)</div><div class="payables-val" style="font-weight:500;color:var(--midnight);">($258,158)</div><div class="payables-val">$14,066</div><div class="payables-val over60p">($2,625)</div><div class="payables-val over60p">($269,599)</div></div>
+        <div class="payables-row" style="border-top:1.5px solid var(--border);margin-top:4px;padding-top:8px;font-weight:600;">
+          <div>Total</div>
+          <div class="payables-val" style="font-weight:700;color:var(--midnight);">($1,115,402)</div>
+          <div class="payables-val">$10,227</div>
+          <div class="payables-val over60p">($115,376)</div>
+          <div class="payables-val over60p">($670,506)</div>
+        </div>
+        <div style="margin-top:10px;padding:10px 12px;background:var(--surface2);border-radius:4px;border-left:3px solid var(--orange);font-size:10px;color:var(--ink3);line-height:1.6;">
+          <strong style="color:var(--ink2);">Note:</strong> Amounts above are sourced from the ageing report. Any variance between the ageing breakdown and the total current balance is due to report timing — the extract may be generated after certain settlements have already been processed in the subsequent period.
+        </div>
+      </div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      <div class="card">
+        <div class="card-title">Net income by funding source</div>
+        <div class="card-sub">Net excess / (deficit) · USD</div>
+        <div class="chart-wrap" style="height:190px;">
+          <canvas id="netChart" role="img" aria-label="Bar chart showing net income by funding source.">Net income by source.</canvas>
+        </div>
+        <div style="margin-top:14px; padding-top:12px; border-top:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:7px;"><span style="color:var(--ink2);">Long-term investments (Jun 2027–Sep 2028)</span><span style="font-weight:500;">$1,313,098</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:7px;"><span style="color:var(--ink2);">Short-term investments (&lt;1 year)</span><span style="font-weight:500;">$192,018</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:var(--ink2);">Cash equivalents (&lt;3 months, for rollover)</span><span style="font-weight:500;">$1,562,959</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Direct funding — April 2026</div>
+        <div class="card-sub">All amounts USD · reported to GC Accounting</div>
+        <div style="display:flex;align-items:center;justify-content:center;padding:28px 0;flex-direction:column;gap:8px;">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9C4BC" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <div style="font-size:13px;font-weight:500;color:var(--ink2);">No direct funding received</div>
+          <div style="font-size:11px;color:var(--ink3);">April 2026</div>
+        </div>
+        <div class="fund-total"><span>Total direct funding</span><span>$0</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Balance sheet movements</div>
+        <div class="card-sub">Accounts with &gt;25% change month-on-month</div>
+        <div class="bs-row">
+          <span class="bs-code">172</span>
+          <div class="bs-desc">
+            <div>Advances to Partners</div>
+            <div class="bs-reason" style="margin-top:4px;">
+              <input type="text" id="bs_172_input" placeholder="Add explanation…"
+                style="width:100%;font-size:11px;color:var(--ink2);background:var(--surface2);border:1px dashed var(--border);border-radius:4px;outline:none;padding:4px 8px;font-family:'Inter',sans-serif;transition:all 0.15s;"
+                onfocus="this.style.borderColor='var(--orange)';this.style.background='#FFF5F0'"
+                onblur="this.style.borderColor='var(--border)';this.style.background='var(--surface2)';saveBsNote('bs_172',this.value)"
+                oninput="saveBsNote('bs_172',this.value)">
+            </div>
+          </div>
+          <span class="bs-change up">−47% (−$157.4K)</span>
+        </div>
+        <div class="bs-row">
+          <span class="bs-code">200</span>
+          <div class="bs-desc">
+            <div>Accounts Payable</div>
+            <div class="bs-reason" style="margin-top:4px;">
+              <input type="text" id="bs_200_input" placeholder="Add explanation…"
+                style="width:100%;font-size:11px;color:var(--ink2);background:var(--surface2);border:1px dashed var(--border);border-radius:4px;outline:none;padding:4px 8px;font-family:'Inter',sans-serif;transition:all 0.15s;"
+                onfocus="this.style.borderColor='var(--orange)';this.style.background='#FFF5F0'"
+                onblur="this.style.borderColor='var(--border)';this.style.background='var(--surface2)';saveBsNote('bs_200',this.value)"
+                oninput="saveBsNote('bs_200',this.value)">
+            </div>
+          </div>
+          <span class="bs-change down">+215% (+$299.2K)</span>
+        </div>
+        <div class="bs-row">
+          <span class="bs-code">250</span>
+          <div class="bs-desc">
+            <div>Accrued Pension &amp; Severance</div>
+            <div class="bs-reason" style="margin-top:4px;">
+              <input type="text" id="bs_250_input" placeholder="Add explanation…"
+                style="width:100%;font-size:11px;color:var(--ink2);background:var(--surface2);border:1px dashed var(--border);border-radius:4px;outline:none;padding:4px 8px;font-family:'Inter',sans-serif;transition:all 0.15s;"
+                onfocus="this.style.borderColor='var(--orange)';this.style.background='#FFF5F0'"
+                onblur="this.style.borderColor='var(--border)';this.style.background='var(--surface2)';saveBsNote('bs_250',this.value)"
+                oninput="saveBsNote('bs_250',this.value)">
+            </div>
+          </div>
+          <span class="bs-change down">+6,060% (+$40.6K)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ENV RISKS -->
+  <div class="section grid-2">
+    <div class="card" id="envRiskCard">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+        <div class="card-title" style="margin-bottom:0;">Environment &amp; risk highlights</div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <span id="envRiskSaved" style="font-size:10px; color:var(--green); opacity:0; transition:opacity 0.4s;">✓ Saved</span>
+          <button onclick="addEnvRisk()" style="display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:4px 12px;border-radius:2px;border:none;background:var(--orange);color:#fff;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add item
+          </button>
+        </div>
+      </div>
+      <div class="card-sub" style="margin-bottom:12px;">Click any item to edit · drag to reorder · changes auto-saved</div>
+      <div id="envRiskList"></div>
+    </div>
+    <div class="card" id="highlightsCard">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+        <div class="card-title" style="margin-bottom:0;">Other highlights &amp; action points</div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <span id="highlightsSaved" style="font-size:10px; color:var(--green); opacity:0; transition:opacity 0.4s;">✓ Saved</span>
+          <button onclick="addHighlight()" style="display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:4px 12px;border-radius:2px;border:none;background:var(--orange);color:#fff;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add item
+          </button>
+        </div>
+      </div>
+      <div class="card-sub" style="margin-bottom:12px;">Click any item to edit · drag to reorder · changes auto-saved</div>
+      <div id="highlightsList"></div>
+    </div>
+  </div>
+
+  <!-- SIGNOFF -->
+  <div class="section">
+    <div class="section-label">Management sign-off</div>
+    <div class="signoff">
+      <div class="signoff-person"><span class="signoff-name">Arceli Ponce</span><span class="signoff-role">Finance Manager — Accounting, Reporting &amp; Compliance</span></div>
+      <div class="signoff-divider"></div>
+      <div class="signoff-person"><span class="signoff-name">Zuzee Sabarre-Acedera</span><span class="signoff-role">Finance Director</span></div>
+      <div class="signoff-divider"></div>
+      <div class="signoff-person"><span class="signoff-name">Herbert Carpio</span><span class="signoff-role">National Director</span></div>
+
+    </div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  World Vision Philippines — Monthly Financial Summary &amp; Management Review · Period ending April 2026 · Dashboard generated May 14, 2026
+</footer>
+
+<script>
+// ─── DATA ────────────────────────────────────────────────────────────────────
+const projects = [
+  { name: 'Southern Leyte', area: 'Visayas', burn: 70, annualBurn: 24, actual: 144783, budget: 206772, variance: 61989, over: false,
+    note: 'Primary factors: timing of SNFC-related activities and rescheduling of community training due to limited facilitator availability. Variance included in midyear planning.' },
+  { name: 'ADP Aklan 1', area: 'Visayas', burn: 60, annualBurn: 30, actual: 60931, budget: 100842, variance: 39911, over: false,
+    note: 'Budget for Celebrating Families has no cost due to integration of SNC activities. Scale Up Initiatives delayed while identifying sustainable livelihood project. AIM+ deferred to April. Remaining budget for forward economic intervention.' },
+  { name: 'Sultan Kudarat AP', area: 'Mindanao', burn: 89, annualBurn: 39, actual: 315823, budget: 354795, variance: 38972, over: false,
+    note: 'SNC activities rescheduled to integrate with CEW and PEACE clubs formation in May. SOP activities integrated with BBB in March. Savings to be used for RC validation during Back to School in May.' },
+  { name: 'Este Area Programme', area: 'Visayas', burn: 83, annualBurn: 42, actual: 180396, budget: 216412, variance: 36016, over: false,
+    note: 'Underspending from rescheduled Mental Health sessions, minimal GEDSDI and GMP capacity building, and S4T TOT timing. Ongoing IPF capacity building also contributing. Variance in midyear planning.' },
+  { name: 'Bohol NE ADP', area: 'Visayas', burn: 72, annualBurn: 27, actual: 88151, budget: 123100, variance: 34949, over: false,
+    note: 'Cost savings from facilitation of farewell letters and videos. Ongoing capacity building for new IPF approach. Variance to be addressed in midyear planning.' },
+  { name: 'ADP North Cebu', area: 'Visayas', burn: 67, annualBurn: 27, actual: 68950, budget: 103245, variance: 34295, over: false,
+    note: 'Minimal expense on Gender Equality and partnerships due to integration in CoMSCA Summit. Teachers training and reading hubs not yet implemented due to TINO emergency response prioritisation. Variance in midyear planning.' },
+  { name: 'Bohol 5 AP', area: 'Visayas', burn: 64, annualBurn: 34, actual: 58255, budget: 91257, variance: 33002, over: false,
+    note: 'Underspending from timing of implementation vs. original plan. ADP prioritised IPF capacity building for staff and community. Variance to be addressed in midyear planning.' },
+  { name: 'ADP Pangasinan', area: 'Luzon', burn: 91, annualBurn: 35, actual: 292686, budget: 321566, variance: 28880, over: false,
+    note: 'Activities delayed due to prerequisite processes: livelihood support dependent on CSA training and RF profiling completion. Community mapping postponed due to schedule conflicts. All rescheduled for succeeding months; included in midyear budget revision.' },
+  { name: 'Bohol 03 ADP', area: 'Visayas', burn: 63, annualBurn: 27, actual: 46708, budget: 74504, variance: 27795, over: false,
+    note: 'Underspending from timing vs. original plan and deferred hiring of support staff to replace resigned PO. ADP prioritised IPF capacity building. Variance to be addressed in midyear planning.' },
+  { name: 'ADP Bukidnon', area: 'Mindanao', burn: 109, annualBurn: 47, actual: 422367, budget: 388129, variance: -34238, over: true,
+    note: 'DPC activity expenditures remain within acceptable limits. Shared costs from technical and management teams (NO and FO levels) are the primary driver of overall budget overspending. Annual burn rate remains within acceptable levels. Action: Continue monitoring at full cost level to ensure no year-end overspend.' },
+];
+
+let currentArea = 'all';
+let currentMode = 'pct';
+
+function burnColor(v) { return v > 100 ? '#B10831' : v >= 85 ? '#FF6929' : '#111222'; }
+
+function filterArea(area, btn) {
+  currentArea = area;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+  renderBurnChart();
+}
+
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('btnPct').classList.toggle('active', mode === 'pct');
+  document.getElementById('btnUsd').classList.toggle('active', mode === 'usd');
+  document.getElementById('burnHeader').textContent = mode === 'pct' ? 'YTD burn' : '$ variance';
+  renderTable();
+  renderBurnChart();
+}
+
+function filteredProjects() {
+  if (currentArea === 'all') return projects;
+  return projects.filter(p => p.area === currentArea);
+}
+
+function getComment(name) {
+  try { return localStorage.getItem('wvph_apr_comment_' + name) || ''; } catch(e) { return ''; }
+}
+function saveComment(name, val) {
+  try { localStorage.setItem('wvph_apr_comment_' + name, val); } catch(e) {}
+}
+function clearAllComments() {
+  if (!confirm('Clear all comments?')) return;
+  try {
+    projects.forEach(p => localStorage.removeItem('wvph_apr_comment_' + p.name));
+  } catch(e) {}
+  document.querySelectorAll('.comment-input').forEach(el => {
+    el.value = '';
+    el.classList.remove('has-value');
+    el.style.height = '32px';
+  });
+}
+
+function renderTable() {
+  const fp = filteredProjects();
+  const body = document.getElementById('projBody');
+  body.innerHTML = '';
+  fp.forEach((p, i) => {
+    const locClass = p.area === 'Visayas' ? 'loc-v' : p.area === 'Mindanao' ? 'loc-m' : 'loc-l';
+    const fillPct = Math.min(p.burn, 100);
+    const varDisplay = currentMode === 'pct'
+      ? `<span class="${p.over ? 'variance-neg' : 'variance-pos'}">${p.over ? '−' : '+'}${Math.abs(p.variance).toLocaleString('en', {maximumFractionDigits:0})}</span>`
+      : `<span class="${p.over ? 'variance-neg' : 'variance-pos'}">${p.over ? '−' : '+'}$${(Math.abs(p.variance)/1000).toFixed(1)}K</span>`;
+    const burnDisplay = currentMode === 'pct'
+      ? `<div class="burn-cell"><div class="burn-bar"><div class="burn-fill" style="width:${fillPct}%;background:${burnColor(p.burn)};"></div></div><span class="burn-pct" style="color:${burnColor(p.burn)};font-weight:${p.burn>100?600:400};">${p.burn}%</span></div>`
+      : `<div style="text-align:right;font-size:12px;color:${burnColor(p.burn)};font-weight:500;">$${(p.actual/1000).toFixed(0)}K</div>`;
+
+    const savedComment = getComment(p.name);
+
+    const tr = document.createElement('tr');
+    tr.dataset.area = p.area;
+    tr.innerHTML = `
+      <td>
+        <div class="proj-row-main" onclick="toggleDetail(${i})">
+          <svg class="proj-expand-icon" id="icon${i}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <span class="proj-name-cell">${p.name}</span>
+        </div>
+        <div class="proj-detail" id="detail${i}">
+          <div class="proj-detail-inner">${p.note}</div>
+        </div>
+      </td>
+      <td style="padding:10px 8px;"><span class="proj-loc ${locClass}">${p.area}</span></td>
+      <td style="padding:10px 8px;">${burnDisplay}</td>
+      <td style="padding:10px 8px;">${varDisplay}</td>
+      <td class="comment-cell"><textarea class="comment-input${savedComment ? ' has-value' : ''}" data-project="${p.name}" placeholder="Add comment…" rows="1">${savedComment}</textarea></td>`;
+    body.appendChild(tr);
+
+    // Auto-resize textarea and save on input
+    const ta = tr.querySelector('.comment-input');
+    if (ta) {
+      autoResize(ta);
+      ta.addEventListener('input', () => {
+        autoResize(ta);
+        saveComment(p.name, ta.value);
+        ta.classList.toggle('has-value', ta.value.length > 0);
+      });
+    }
+  });
+}
+
+function autoResize(el) {
+  el.style.height = '32px';
+  el.style.height = Math.max(32, el.scrollHeight) + 'px';
+}
+
+function toggleDetail(i) {
+  const detail = document.getElementById('detail' + i);
+  const icon = document.getElementById('icon' + i);
+  const isOpen = detail.classList.contains('open');
+  detail.classList.toggle('open', !isOpen);
+  icon.classList.toggle('open', !isOpen);
+}
+
+// ─── CHARTS ──────────────────────────────────────────────────────────────────
+const gridColor = 'rgba(17,18,34,0.07)';
+const tickColor = '#6D6A76';
+
+// Sparklines
+const sparkData = [
+  { data: [7.2,7.8,8.1,8.5,9.1,9.83], color: '#fff' },
+  { data: [5.8,6.2,6.9,7.3,7.8,8.53], color: 'rgba(255,255,255,0.6)' },
+  { data: [1.1,1.3,0.9,1.4,1.1,1.25], color: '#155930' },
+  { data: [9.1,9.3,9.6,9.8,10.1,10.4], color: '#FF6929' },
+  { data: [520,490,460,510,380,301], color: '#B10831' },
+  { data: [0.88,0.92,0.95,1.0,1.03,1.06], color: '#111222' },
+];
+sparkData.forEach((s, i) => {
+  const ctx = document.getElementById('spark' + i);
+  if (!ctx) return;
+  const mn = Math.min(...s.data), mx = Math.max(...s.data), pad = (mx - mn) * 0.2 || 0.5;
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Oct','Nov','Dec','Jan','Feb','Mar'],
+      datasets: [{ data: s.data, borderColor: s.color, borderWidth: 1.5, pointRadius: 0, tension: 0.4, fill: false }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      animation: false,
+      plugins: { legend: { display: false }, tooltip: { enabled: false } },
+      scales: {
+        x: { display: false },
+        y: { display: false, min: mn - pad, max: mx + pad }
+      }
+    }
+  });
+});
+
+// Income chart
+const incomeData   = [6861174.13, 886989.62, 3140390.49, 49453.22];
+const expenseData  = [5690633.22, 687779.76, 3521496.36, 0];
+const netData      = incomeData.map((v, i) => v - expenseData[i]); // [1170541, 199210, -381106, 49453]
+const netColors    = netData.map(v => v >= 0 ? 'rgba(29,122,95,0.18)' : 'rgba(177,8,49,0.18)');
+const netBgColors  = netData.map(v => v >= 0 ? 'rgba(21,89,48,0.15)' : 'rgba(177,8,49,0.15)');
+
+Chart.register({
+  id: 'barTopLabels',
+  afterDatasetsDraw(chart) {
+    // Only run on the income chart
+    if (chart.canvas.id !== 'incomeChart') return;
+    const { ctx } = chart;
+    chart.data.datasets.forEach((dataset, di) => {
+      const meta = chart.getDatasetMeta(di);
+      if (meta.hidden) return;
+      meta.data.forEach((bar, i) => {
+        const val = dataset.data[i];
+        const isNet = di === 2;
+        const absVal = Math.abs(val);
+        const prefix = isNet ? (val < 0 ? '-$' : '+$') : '$';
+        const label = prefix + (absVal >= 1e6 ? (absVal/1e6).toFixed(2) + 'M' : (absVal/1000).toFixed(0) + 'K');
+        ctx.save();
+        ctx.font = '600 10px DM Sans, sans-serif';
+        ctx.fillStyle = isNet ? (val < 0 ? '#B10831' : '#155930') : '#3F3D4C';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = val < 0 ? 'top' : 'bottom';
+        ctx.fillText(label, bar.x, val < 0 ? bar.y + 3 : bar.y - 3);
+        ctx.restore();
+      });
+    });
+  }
+});
+
+new Chart(document.getElementById('incomeChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Global Centre', 'Direct Funding', 'Local Fundraising', 'Other Local'],
+    datasets: [
+      { label: 'Income',     data: incomeData,  backgroundColor: '#2b5fab' },
+      { label: 'Expenses',   data: expenseData, backgroundColor: '#a8c0e8' },
+      { label: 'Net income', data: netData,      backgroundColor: netBgColors, borderColor: netColors, borderWidth: 1.5, borderRadius: 4 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    layout: { padding: { top: 24, bottom: 8 } },
+    plugins: {
+      legend: { display: false },
+      barTopLabels: {},
+      tooltip: { callbacks: {
+        label: ctx => {
+          const v = ctx.parsed.y;
+          const prefix = ctx.datasetIndex === 2 ? (v >= 0 ? '+$' : '-$') : '$';
+          const abs = Math.abs(v);
+          return ' ' + ctx.dataset.label + ': ' + prefix + (abs >= 1e6 ? (abs/1e6).toFixed(3) + 'M' : abs.toLocaleString());
+        }
+      }}
+    },
+    scales: {
+      x: { grid: { color: gridColor }, ticks: { color: tickColor, font: { size: 11 } } },
+      y: { grid: { color: gridColor }, ticks: { color: tickColor, font: { size: 10 }, callback: v => (v < 0 ? '-$' : '$') + (Math.abs(v)/1e6).toFixed(1) + 'M' } }
+    }
+  }
+});
+
+// Cash donut
+new Chart(document.getElementById('cashChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Actual ($181K)', 'Gap ($340K)'],
+    datasets: [{ data: [181270.85, 339929.15], backgroundColor: ['#B10831', '#E9E7E3'], borderWidth: 0 }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, cutout: '72%',
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' $' + ctx.parsed.toLocaleString() } } }
+  }
+});
+
+// Burn chart (rendered/updated by renderBurnChart)
+const burnBarLabelsPlugin = {
+  id: 'burnBarLabels',
+  afterDatasetsDraw(chart) {
+    const { ctx, data } = chart;
+    const meta = chart.getDatasetMeta(0);
+    if (meta.hidden) return;
+    meta.data.forEach((bar, i) => {
+      const val = data.datasets[0].data[i];
+      const isPct = currentMode === 'pct';
+      const label = isPct ? val + '%' : '$' + val.toFixed(0) + 'K';
+      const color = burnColor(chart._burnRates ? chart._burnRates[i] : 70);
+      ctx.save();
+      ctx.font = '600 10.5px DM Sans, sans-serif';
+      ctx.fillStyle = color;
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      // Place label just to the right of the bar end
+      ctx.fillText(label, bar.x + 5, bar.y);
+      ctx.restore();
+    });
+  }
+};
+
+let burnChartInstance = null;
+function renderBurnChart() {
+  const fp = filteredProjects();
+  const labels = fp.map(p => p.name.length > 18 ? p.name.substring(0,17) + '…' : p.name);
+  const data = currentMode === 'pct' ? fp.map(p => p.burn) : fp.map(p => p.actual / 1000);
+  const colors = fp.map(p => burnColor(p.burn));
+  const maxVal = currentMode === 'pct' ? 125 : Math.max(...data) * 1.18;
+
+  if (burnChartInstance) burnChartInstance.destroy();
+  const ctx = document.getElementById('burnChart');
+  burnChartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: currentMode === 'pct' ? 'YTD Burn Rate (%)' : 'YTD Actual ($K)',
+        data,
+        backgroundColor: colors
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      layout: { padding: { right: 44 } },
+      plugins: {
+        legend: { display: false },
+        burnBarLabels: {},
+        annotation: currentMode === 'pct' ? {
+          annotations: {
+            line100: {
+              type: 'line', xMin: 100, xMax: 100,
+              borderColor: 'rgba(176,32,32,0.5)', borderWidth: 1.5,
+              borderDash: [4, 3],
+              label: { content: '100%', enabled: true, position: 'end', color: '#b02020', font: { size: 9 } }
+            }
+          }
+        } : {}
+      },
+      scales: {
+        x: {
+          grid: { color: gridColor },
+          ticks: { color: tickColor, font: { size: 10 }, callback: v => currentMode === 'pct' ? v + '%' : '$' + v + 'K' },
+          min: 0, max: maxVal
+        },
+        y: { grid: { display: false }, ticks: { color: tickColor, font: { size: 10 } } }
+      }
+    },
+    plugins: [burnBarLabelsPlugin]
+  });
+  // Store burn rates for color reference in plugin
+  burnChartInstance._burnRates = fp.map(p => p.burn);
+}
+
+// Aging chart — log scale
+new Chart(document.getElementById('agingChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Travel Adv.', 'Salary Adv.', 'Supplier Adv.', 'Refundable Dep.', 'Partner Adv.', 'Other AR', 'Other Assets'],
+    datasets: [
+      { label: '0–30 days', data: [88496, 2461, -12276, -526, -140588, 11152, -14200], backgroundColor: '#111222' },
+      { label: '31–60 days', data: [20911, 2493, -23573, -678, 37059, 1915, 7265], backgroundColor: '#FF6929' },
+      { label: '>60 days', data: [29, 6185, 468970, 24835, 283899, 72299, 173966], backgroundColor: '#B10831' }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: {
+      callbacks: {
+        label: ctx => {
+          const v = ctx.parsed.y;
+          return ' $' + (v < 200 ? 0 : v).toLocaleString();
+        }
+      }
+    }},
+    scales: {
+      x: { stacked: true, grid: { display: false }, ticks: { color: tickColor, font: { size: 11 } } },
+      y: {
+        stacked: true, type: 'logarithmic',
+        grid: { color: gridColor },
+        ticks: { color: tickColor, font: { size: 10 }, callback: v => v >= 1000 ? '$' + (v/1000).toFixed(0) + 'K' : '' }
+      }
+    }
+  }
+});
+
+// Net income bar
+const netChartLabelsPlugin = {
+  id: 'netChartLabels',
+  afterDatasetsDraw(chart) {
+    if (chart.canvas.id !== 'netChart') return;
+    const { ctx } = chart;
+    const meta = chart.getDatasetMeta(0);
+    meta.data.forEach((bar, i) => {
+      const val = chart.data.datasets[0].data[i];
+      const absVal = Math.abs(val);
+      const prefix = val < 0 ? '-$' : '+$';
+      const label = prefix + (absVal >= 1e6 ? (absVal/1e6).toFixed(2) + 'M' : (absVal/1000).toFixed(0) + 'K');
+      ctx.save();
+      ctx.font = '600 10.5px DM Sans, sans-serif';
+      ctx.fillStyle = val < 0 ? '#B10831' : '#155930';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = val < 0 ? 'top' : 'bottom';
+      ctx.fillText(label, bar.x, val < 0 ? bar.y + 4 : bar.y - 4);
+      ctx.restore();
+    });
+  }
+};
+
+new Chart(document.getElementById('netChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Global Centre', 'Direct Funding', 'Local Fundraising', 'Other Local'],
+    datasets: [{
+      label: 'Net excess / (deficit)',
+      data: [1170540.91, 199209.86, -381105.87, 49453.22],
+      backgroundColor: [1170540.91, 199209.86, -381105.87, 49453.22].map(v => v >= 0 ? '#155930' : '#B10831')
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    layout: { padding: { top: 22, bottom: 22 } },
+    plugins: { legend: { display: false }, netChartLabels: {} },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: tickColor, font: { size: 11 } } },
+      y: { grid: { color: gridColor }, ticks: { color: tickColor, font: { size: 10 }, callback: v => (v < 0 ? '-' : '') + '$' + Math.abs(v/1000).toFixed(0) + 'K' } }
+    }
+  },
+  plugins: [netChartLabelsPlugin]
+});
+
+
+// ─── EDITABLE HIGHLIGHTS ─────────────────────────────────────────────────────
+const DEFAULT_HIGHLIGHTS = [
+  { title: 'Emergency grant closures', body: 'Closing procedures ongoing for PEER and MEER grants (HKG SAR, CHAF, Coca-Cola) totalling $811K. Forecasted actuals at 99% of budget.' },
+  { title: 'Fundraising investment fund', body: 'For repayment as part of assessment before mid-year review.' },
+  { title: 'Income statement — 31% increase', body: 'Grants and donations from Germany and Spain rose $111K in March vs. zero in February, with $114K more requested from global treasury.' },
+  { title: 'RD cash grants receivable', body: 'Total $1.195M outstanding: ING BTE ($89K), CITI Eco Youth ($250K), AMTRAC ($839K), Leslie Foundation ($17.8K).' }
+];
+
+function loadHighlights() {
+  try {
+    const saved = localStorage.getItem('wvph_apr_highlights');
+    return saved ? JSON.parse(saved) : DEFAULT_HIGHLIGHTS;
+  } catch(e) { return DEFAULT_HIGHLIGHTS; }
+}
+
+function saveHighlights() {
+  const items = [...document.querySelectorAll('.hl-item')].map(el => ({
+    title: el.querySelector('.hl-title-input').value,
+    body:  el.querySelector('.hl-body-input').value
+  }));
+  try { localStorage.setItem('wvph_apr_highlights', JSON.stringify(items)); } catch(e) {}
+  const saved = document.getElementById('highlightsSaved');
+  if (saved) { saved.style.opacity = '1'; setTimeout(() => saved.style.opacity = '0', 1800); }
+}
+
+function autoResizeHl(el) {
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+}
+
+function addHighlight(title='', body='') {
+  const list = document.getElementById('highlightsList');
+  const item = createHighlightEl({ title, body });
+  list.appendChild(item);
+  item.querySelector('.hl-title-input').focus();
+  saveHighlights();
+}
+
+let dragSrc = null;
+function createHighlightEl(data) {
+  const div = document.createElement('div');
+  div.className = 'hl-item';
+  div.draggable = true;
+  div.innerHTML = `
+    <svg class="hl-drag" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="5" r="1.5" fill="currentColor"/><circle cx="15" cy="5" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="19" r="1.5" fill="currentColor"/><circle cx="15" cy="19" r="1.5" fill="currentColor"/></svg>
+    <div class="hl-body">
+      <input type="text" class="hl-title-input" value="${data.title.replace(/"/g,'&quot;')}" placeholder="Item title…">
+      <textarea class="hl-body-input" placeholder="Add details…" rows="1">${data.body}</textarea>
+    </div>
+    <button class="hl-delete" title="Remove item">×</button>`;
+
+  const titleInput = div.querySelector('.hl-title-input');
+  const bodyInput  = div.querySelector('.hl-body-input');
+  const delBtn     = div.querySelector('.hl-delete');
+
+  titleInput.addEventListener('input', saveHighlights);
+  bodyInput.addEventListener('input', () => { autoResizeHl(bodyInput); saveHighlights(); });
+  delBtn.addEventListener('click', () => { if(confirm('Remove this item?')) { div.remove(); saveHighlights(); } });
+
+  // Drag to reorder
+  div.addEventListener('dragstart', () => { dragSrc = div; setTimeout(() => div.style.opacity='0.4', 0); });
+  div.addEventListener('dragend',   () => { div.style.opacity='1'; document.querySelectorAll('.hl-item').forEach(el => el.classList.remove('drag-over')); saveHighlights(); });
+  div.addEventListener('dragover',  e => { e.preventDefault(); div.classList.add('drag-over'); });
+  div.addEventListener('dragleave', () => div.classList.remove('drag-over'));
+  div.addEventListener('drop', e => {
+    e.preventDefault(); div.classList.remove('drag-over');
+    if (dragSrc && dragSrc !== div) {
+      const list = document.getElementById('highlightsList');
+      const allItems = [...list.querySelectorAll('.hl-item')];
+      const srcIdx = allItems.indexOf(dragSrc);
+      const tgtIdx = allItems.indexOf(div);
+      if (srcIdx < tgtIdx) div.after(dragSrc); else div.before(dragSrc);
+      saveHighlights();
+    }
+  });
+
+  setTimeout(() => autoResizeHl(bodyInput), 0);
+  return div;
+}
+
+function renderHighlights() {
+  const list = document.getElementById('highlightsList');
+  if (!list) return;
+  list.innerHTML = '';
+  loadHighlights().forEach(h => list.appendChild(createHighlightEl(h)));
+}
+
+
+// ─── EDITABLE ENV RISK HIGHLIGHTS ────────────────────────────────────────────
+const DEFAULT_ENV_RISKS = [
+  { tag: 'Forex',     tagClass: 'tag-forex',     body: '4.2% increase in USD/PHP revaluation rate (58.33 vs. 56.00 budgeted), causing underspending of USD-funded budgets. PBAS USD allocations to be adjusted at year-end based on actual exchange rates.' },
+  { tag: 'Inflation', tagClass: 'tag-inflation',  body: 'April 2026 inflation at 4.1%. Middle East crisis could push inflation to 5%–7.3% and weaken peso to ₱60–₱61.30/USD, reducing purchasing power and requiring stricter cost controls.' },
+  { tag: 'Burn rate', tagClass: 'tag-burn',       body: 'Aggregate 93% YTD / 41% of annual budget. Key factors: rescheduled trainings (SNC, CEW, PEACE clubs), activity integration savings, deferred AIM+ and tablet procurement, overspending in technical support & CLU functions.' }
+];
+
+const TAG_OPTIONS = [
+  { label: 'Forex',     cls: 'tag-forex' },
+  { label: 'Inflation', cls: 'tag-inflation' },
+  { label: 'Burn rate', cls: 'tag-burn' },
+  { label: 'Risk',      cls: 'tag-burn' },
+  { label: 'Cash',      cls: 'tag-inflation' },
+  { label: 'Other',     cls: 'tag-forex' },
+];
+
+function loadEnvRisks() {
+  try {
+    const saved = localStorage.getItem('wvph_apr_env_risks');
+    return saved ? JSON.parse(saved) : DEFAULT_ENV_RISKS;
+  } catch(e) { return DEFAULT_ENV_RISKS; }
+}
+
+function saveEnvRisks() {
+  const items = [...document.querySelectorAll('.er-item')].map(el => ({
+    tag:      el.querySelector('.er-tag-input').value,
+    tagClass: el.querySelector('.er-tag-span').className.replace('env-risk-tag ','').trim(),
+    body:     el.querySelector('.er-body-input').value
+  }));
+  try { localStorage.setItem('wvph_apr_env_risks', JSON.stringify(items)); } catch(e) {}
+  const saved = document.getElementById('envRiskSaved');
+  if (saved) { saved.style.opacity = '1'; setTimeout(() => saved.style.opacity = '0', 1800); }
+}
+
+function addEnvRisk(tag='', tagClass='tag-forex', body='') {
+  const list = document.getElementById('envRiskList');
+  const item = createEnvRiskEl({ tag, tagClass, body });
+  list.appendChild(item);
+  item.querySelector('.er-tag-input').focus();
+  saveEnvRisks();
+}
+
+let erDragSrc = null;
+function createEnvRiskEl(data) {
+  const div = document.createElement('div');
+  div.className = 'hl-item er-item';
+  div.draggable = true;
+
+  // Build tag class selector options
+  const tagOpts = TAG_OPTIONS.map(t =>
+    `<option value="${t.cls}" ${t.cls === data.tagClass ? 'selected' : ''}>${t.label}</option>`
+  ).join('');
+
+  div.innerHTML = `
+    <svg class="hl-drag" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="5" r="1.5" fill="currentColor"/><circle cx="15" cy="5" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="19" r="1.5" fill="currentColor"/><circle cx="15" cy="19" r="1.5" fill="currentColor"/></svg>
+    <div class="hl-body">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
+        <span class="env-risk-tag er-tag-span ${data.tagClass || 'tag-forex'}" style="padding:0;">
+          <input type="text" class="er-tag-input" value="${data.tag}" placeholder="Tag…"
+            style="font-size:10px;font-weight:600;background:transparent;border:none;outline:none;width:${Math.max(40, (data.tag.length||4)*8)}px;font-family:'Inter',sans-serif;cursor:text;padding:2px 7px;color:inherit;">
+        </span>
+        <select class="er-class-select" title="Tag color"
+          style="font-size:10px;border:1px solid var(--border);border-radius:4px;padding:1px 4px;background:var(--surface2);color:var(--ink2);cursor:pointer;font-family:'Inter',sans-serif;">${tagOpts}</select>
+      </div>
+      <textarea class="hl-body-input er-body-input" placeholder="Add details…" rows="1">${data.body}</textarea>
+    </div>
+    <button class="hl-delete" title="Remove item">×</button>`;
+
+  const tagInput   = div.querySelector('.er-tag-input');
+  const tagSpan    = div.querySelector('.er-tag-span');
+  const clsSelect  = div.querySelector('.er-class-select');
+  const bodyInput  = div.querySelector('.er-body-input');
+  const delBtn     = div.querySelector('.hl-delete');
+
+  tagInput.addEventListener('input', () => {
+    tagInput.style.width = Math.max(40, tagInput.value.length * 8) + 'px';
+    saveEnvRisks();
+  });
+  clsSelect.addEventListener('change', () => {
+    tagSpan.className = 'env-risk-tag er-tag-span ' + clsSelect.value;
+    saveEnvRisks();
+  });
+  bodyInput.addEventListener('input', () => { autoResizeHl(bodyInput); saveEnvRisks(); });
+  delBtn.addEventListener('click', () => { if(confirm('Remove this item?')) { div.remove(); saveEnvRisks(); } });
+
+  // Drag to reorder
+  div.addEventListener('dragstart', () => { erDragSrc = div; setTimeout(() => div.style.opacity='0.4', 0); });
+  div.addEventListener('dragend',   () => { div.style.opacity='1'; document.querySelectorAll('.er-item').forEach(el => el.classList.remove('drag-over')); saveEnvRisks(); });
+  div.addEventListener('dragover',  e => { e.preventDefault(); div.classList.add('drag-over'); });
+  div.addEventListener('dragleave', () => div.classList.remove('drag-over'));
+  div.addEventListener('drop', e => {
+    e.preventDefault(); div.classList.remove('drag-over');
+    if (erDragSrc && erDragSrc !== div) {
+      const list = document.getElementById('envRiskList');
+      const all = [...list.querySelectorAll('.er-item')];
+      if (all.indexOf(erDragSrc) < all.indexOf(div)) div.after(erDragSrc); else div.before(erDragSrc);
+      saveEnvRisks();
+    }
+  });
+
+  setTimeout(() => autoResizeHl(bodyInput), 0);
+  return div;
+}
+
+function renderEnvRisks() {
+  const list = document.getElementById('envRiskList');
+  if (!list) return;
+  list.innerHTML = '';
+  loadEnvRisks().forEach(h => list.appendChild(createEnvRiskEl(h)));
+}
+
+
+// ─── EDITABLE ACTION ITEMS ────────────────────────────────────────────────────
+const DEFAULT_ACTION_ITEMS = [
+  { badge: 'Overspend', badgeClass: 'rb-red',   name: 'ADP Bukidnon — 109% YTD',                   detail: 'Shared technical & management costs (NO/FO) are the primary driver. Programme costs remain within limits. Monitor monthly to prevent year-end overspend.' },
+  { badge: 'Cash',      badgeClass: 'rb-red',   name: 'Cash position 65% below target',             detail: 'Actual low of $181K vs. $521K target. Requires urgent monitoring and proactive funding requests.' },
+  { badge: 'Admin rate',badgeClass: 'rb-amber', name: 'Admin cost rate at 10.6% vs. 9.49% target',  detail: 'Cost reduction in support costs is ongoing. BIR tax exemption threshold (30%) is not at risk, but internal target must be met by year-end.' }
+];
+
+function loadActionItems() {
+  try {
+    const saved = localStorage.getItem('wvph_apr_action_items');
+    return saved ? JSON.parse(saved) : DEFAULT_ACTION_ITEMS;
+  } catch(e) { return DEFAULT_ACTION_ITEMS; }
+}
+
+function saveActionItems() {
+  const items = [...document.querySelectorAll('#actionItemsGrid .risk-item-card')].map(el => ({
+    badge:      el.querySelector('.ai-badge-input').value,
+    badgeClass: el.querySelector('.ai-badge-select').value,
+    name:       el.querySelector('.ai-name-input').value,
+    detail:     el.querySelector('.ai-detail-input').value
+  }));
+  try { localStorage.setItem('wvph_apr_action_items', JSON.stringify(items)); } catch(e) {}
+  const saved = document.getElementById('actionSaved');
+  if (saved) { saved.style.opacity = '1'; setTimeout(() => saved.style.opacity = '0', 1800); }
+}
+
+function addActionItem() {
+  const grid = document.getElementById('actionItemsGrid');
+  const card = createActionItemEl({ badge: '', badgeClass: 'rb-red', name: '', detail: '' });
+  grid.appendChild(card);
+  card.querySelector('.ai-badge-input').focus();
+  saveActionItems();
+}
+
+function createActionItemEl(data) {
+  const div = document.createElement('div');
+  div.className = 'risk-item-card';
+
+  div.innerHTML = `
+    <div class="ai-card-header">
+      <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;">
+        <div class="risk-badge ${data.badgeClass}" style="display:inline-flex;align-items:center;padding:1px 7px;">
+          <input type="text" class="ai-badge-input" value="${data.badge}" placeholder="Label…"
+            style="color:inherit;width:${Math.max(40, (data.badge.length||5)*8)}px;">
+        </div>
+        <select class="ai-badge-select" title="Badge color">
+          <option value="rb-red"   ${data.badgeClass==='rb-red'   ? 'selected':''}>🔴 Red</option>
+          <option value="rb-amber" ${data.badgeClass==='rb-amber' ? 'selected':''}>🟡 Amber</option>
+        </select>
+      </div>
+      <button class="ai-delete" title="Remove">×</button>
+    </div>
+    <input type="text" class="ai-name-input" value="${data.name}" placeholder="Item name…">
+    <textarea class="ai-detail-input" placeholder="Add detail…" rows="1">${data.detail}</textarea>`;
+
+  const badgeInput  = div.querySelector('.ai-badge-input');
+  const badgeSelect = div.querySelector('.ai-badge-select');
+  const badgeWrap   = div.querySelector('.risk-badge');
+  const nameInput   = div.querySelector('.ai-name-input');
+  const detailInput = div.querySelector('.ai-detail-input');
+  const delBtn      = div.querySelector('.ai-delete');
+
+  badgeInput.addEventListener('input', () => {
+    badgeInput.style.width = Math.max(40, badgeInput.value.length * 8) + 'px';
+    saveActionItems();
+  });
+  badgeSelect.addEventListener('change', () => {
+    badgeWrap.className = 'risk-badge ' + badgeSelect.value;
+    saveActionItems();
+  });
+  nameInput.addEventListener('input', saveActionItems);
+  detailInput.addEventListener('input', () => { autoResizeHl(detailInput); saveActionItems(); });
+  delBtn.addEventListener('click', () => { if(confirm('Remove this item?')) { div.remove(); saveActionItems(); } });
+
+  setTimeout(() => autoResizeHl(detailInput), 0);
+  return div;
+}
+
+function renderActionItems() {
+  const grid = document.getElementById('actionItemsGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  loadActionItems().forEach(item => grid.appendChild(createActionItemEl(item)));
+}
+
+
+// ─── BALANCE SHEET EDITABLE NOTES ────────────────────────────────────────────
+function saveBsNote(key, val) {
+  try { localStorage.setItem('wvph_apr_' + key, val); } catch(e) {}
+}
+function loadBsNotes() {
+  ['bs_172','bs_200','bs_250'].forEach(key => {
+    try {
+      const val = localStorage.getItem('wvph_apr_' + key);
+      const el = document.getElementById(key + '_input');
+      if (el && val) { el.value = val; el.style.color = 'var(--ink2)'; }
+    } catch(e) {}
+  });
+}
+
+// Init
+renderTable();
+renderBurnChart();
+renderHighlights();
+renderEnvRisks();
+renderActionItems();
+loadBsNotes();
+</script>
+</body>
+</html>
