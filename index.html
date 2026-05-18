@@ -360,8 +360,14 @@
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
     </div>
     <div style="flex:1;">
-      <div class="narrative-label">Finance manager summary — Period ending April 2026</div>
-      <div class="narrative-text">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px;">
+        <div class="narrative-label" style="margin-bottom:0;">Finance manager summary — Period ending April 2026</div>
+        <button id="regenBtn" onclick="regenerateSummary()" style="display:inline-flex;align-items:center;gap:6px;background:var(--orange);border:none;border-radius:4px;padding:6px 14px;font-size:11px;font-weight:600;color:#fff;cursor:pointer;font-family:'Inter',sans-serif;transition:background 0.2s;flex-shrink:0;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+          Regenerate with AI
+        </button>
+      </div>
+      <div class="narrative-text" id="narrativeText" contenteditable="true" style="outline:none;border-radius:4px;padding:4px;transition:background 0.15s;" onfocus="this.style.background='rgba(255,255,255,0.05)'" onblur="this.style.background='transparent';saveNarrative()">
         The office closed April 2026 with a <strong>net surplus of $1.04M</strong>, driven by strong Global Centre and Direct Funding receipts. However, six areas require management attention:
         (1) <strong>cash position remains 65% below the target low</strong> at $181K (vs. $521K target);
         (2) <strong>admin cost rate stands at 10.6%</strong> against a 9.49% target, with cost reduction in support costs ongoing;
@@ -1805,6 +1811,128 @@ function renderCaNotes() {
   loadCaNotes().forEach(h => list.appendChild(createCaNoteEl(h)));
 }
 
+
+// ─── AI-POWERED NARRATIVE REGENERATION ───────────────────────────────────────
+function saveNarrative() {
+  const el = document.getElementById('narrativeText');
+  if (el) {
+    try { localStorage.setItem('wvph_apr_narrative', el.innerHTML); } catch(e) {}
+  }
+}
+
+function loadNarrative() {
+  try {
+    const saved = localStorage.getItem('wvph_apr_narrative');
+    const el = document.getElementById('narrativeText');
+    if (saved && el) el.innerHTML = saved;
+  } catch(e) {}
+}
+
+function collectDashboardData() {
+  // Collect action items
+  const actionItems = [...document.querySelectorAll('#actionItemsGrid .risk-item-card')].map(el => ({
+    badge: el.querySelector('.ai-badge-input')?.value || '',
+    name:  el.querySelector('.ai-name-input')?.value || '',
+    detail: el.querySelector('.ai-detail-input')?.value || ''
+  }));
+
+  // Collect KPI figures
+  const kpis = {
+    totalIncome:    document.querySelector('.metric-card.dark .metric-value')?.textContent?.trim() || '',
+    totalExpenses:  document.querySelectorAll('.metric-value')[1]?.textContent?.trim() || '',
+    netSurplus:     document.querySelectorAll('.metric-value')[2]?.textContent?.trim() || '',
+    adminRate:      document.querySelectorAll('.metric-value')[3]?.textContent?.trim() || '',
+    cashActual:     document.querySelectorAll('.metric-value')[4]?.textContent?.trim() || '',
+    cashTarget:     document.querySelectorAll('.metric-note')[4]?.textContent?.trim() || '',
+    receivables:    document.querySelectorAll('.metric-value')[5]?.textContent?.trim() || ''
+  };
+
+  // Collect overspending projects
+  const overspendProjects = projects.filter(p => p.over).map(p => `${p.name} (${p.burn}% YTD)`);
+
+  // Collect env risks
+  const envRisks = [...document.querySelectorAll('.er-item')].map(el => ({
+    tag:  el.querySelector('.er-tag-input')?.value || '',
+    body: el.querySelector('.er-body-input')?.value || ''
+  }));
+
+  // Collect highlights
+  const highlights = [...document.querySelectorAll('#highlightsList .hl-item')].map(el => ({
+    title: el.querySelector('.hl-title-input')?.value || '',
+    body:  el.querySelector('.hl-body-input')?.value || ''
+  }));
+
+  return { actionItems, kpis, overspendProjects, envRisks, highlights };
+}
+
+async function regenerateSummary() {
+  const btn = document.getElementById('regenBtn');
+  const narrativeEl = document.getElementById('narrativeText');
+  if (!narrativeEl) return;
+
+  // Show loading state
+  btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 1s linear infinite"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg> Generating…';
+  btn.disabled = true;
+  narrativeEl.style.opacity = '0.5';
+
+  const data = collectDashboardData();
+
+  const prompt = `You are a Finance Manager at World Vision Philippines writing a concise executive summary for a monthly Financial Review Report (FFR) dashboard for the period ending April 2026.
+
+Based on the following dashboard data, write a single paragraph (4-6 sentences) summary. The summary should:
+- Start with the overall financial result (net surplus/deficit)
+- Mention the number of management action items and briefly list the key ones
+- Note the overspending projects
+- Mention key environmental risks (inflation, forex)
+- End with a note on underspending and catch-up plans
+- Use bold HTML tags (<strong>) for key figures and findings
+- Be professional, concise, and factual
+- Do NOT use bullet points or numbered lists — prose only
+
+DASHBOARD DATA:
+KPIs: ${JSON.stringify(data.kpis)}
+Management action items (${data.actionItems.length} total): ${data.actionItems.map(a => a.name).join('; ')}
+Overspending projects: ${data.overspendProjects.join(', ') || 'None'}
+Environment & risks: ${data.envRisks.map(e => e.tag + ': ' + e.body).join(' | ')}
+Other highlights: ${data.highlights.map(h => h.title).join(', ')}
+
+Write only the paragraph text with HTML bold tags. No preamble, no labels, just the paragraph.`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const result = await response.json();
+    const text = result.content?.[0]?.text || '';
+
+    if (text) {
+      narrativeEl.innerHTML = text;
+      saveNarrative();
+    } else {
+      alert('Could not generate summary. Please try again.');
+    }
+  } catch(err) {
+    alert('Error connecting to AI. Please check your connection and try again.');
+    console.error(err);
+  } finally {
+    btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg> Regenerate with AI';
+    btn.disabled = false;
+    narrativeEl.style.opacity = '1';
+  }
+}
+
+// Spin animation for loading icon
+const spinStyle = document.createElement('style');
+spinStyle.textContent = '@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }';
+document.head.appendChild(spinStyle);
+
 // Init
 renderTable();
 renderBurnChart();
@@ -1814,6 +1942,7 @@ renderActionItems();
 loadBsNotes();
 renderDpcs();
 renderCaNotes();
+loadNarrative();
 
 // Load from Google Sheets and merge (Sheets takes priority over localStorage)
 (async () => {
