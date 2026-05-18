@@ -145,6 +145,26 @@
   .comment-clear-all { font-size: 9px; color: var(--ink3); cursor: pointer; text-decoration: underline; margin-left: 4px; }
   .comment-clear-all:hover { color: var(--red); }
   @media print { .comment-input { border: none !important; background: transparent !important; } }
+  /* COLLAPSIBLE COMMENT */
+  .comment-collapse-wrap { padding: 4px 0; }
+  .comment-toggle-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 10px; font-weight: 500; color: var(--ink3);
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 4px; padding: 3px 8px; cursor: pointer;
+    font-family: 'Inter', sans-serif; transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .comment-toggle-btn:hover { background: #FFF5F0; border-color: var(--orange); color: var(--orange); }
+  .comment-toggle-btn.open { background: #FFF5F0; border-color: var(--orange); color: var(--orange); }
+  .comment-expandable { margin-top: 6px; }
+  .comment-expandable .comment-input { min-height: 60px; height: auto; font-size: 11px; line-height: 1.6; }
+  @media print {
+    .comment-toggle-btn { display: none !important; }
+    .comment-expandable { display: block !important; }
+    .comment-expandable .comment-input { border: none !important; background: transparent !important; }
+  }
+
   /* EDITABLE ACTION ITEMS */
   .ai-name-input {
     font-size: 12px; font-weight: 500; color: var(--ink); background: transparent;
@@ -328,9 +348,9 @@
       <div class="narrative-text">
         The office closed April 2026 with a <strong>net surplus of $1.04M</strong>, driven by strong Global Centre and Direct Funding receipts. However, three areas require management attention:
         <strong>cash position remains 65% below the target low</strong> at $181K (vs. $521K target);
-        <strong>admin cost rate has crept to 10.6%</strong> against a 9.49% target, primarily from technical support and CLU cost overruns;
-        and <strong>ADP Bukidnon is the only project in overspend</strong> at 109% YTD driven by shared NO/FO costs rather than direct programme costs.
-        The majority of underspending across other projects is attributable to rescheduled activities, integration savings, and deferred implementation — all with catch-up plans in place for Q2.
+        <strong>admin cost rate stands at 10.6%</strong> against a 9.49% target, with cost reduction in support costs ongoing;
+        and <strong>ADP Bukidnon, ADP Albay, Camarines Sur ADP, and Antique 3 are in overspend</strong>, primarily driven by advance implementation of activities, higher SNC kit costs, and staff/technical cost absorption.
+        The majority of underspending across other projects is attributable to rescheduled activities, deferred learning kit deliveries ahead of school year opening, IPF integration transition timelines, and procurement adjustments — all with catch-up plans in place.
       </div>
     </div>
   </div>
@@ -448,9 +468,9 @@
           <canvas id="netChart" role="img" aria-label="Bar chart showing net income by funding source.">Net income by source.</canvas>
         </div>
         <div style="margin-top:14px; padding-top:12px; border-top:1px solid var(--border);">
-          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:7px;"><span style="color:var(--ink2);">Long-term investments (Jun 2027–Sep 2028)</span><span style="font-weight:500;">$1,313,098</span></div>
-          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:7px;"><span style="color:var(--ink2);">Short-term investments (&lt;1 year)</span><span style="font-weight:500;">$192,018</span></div>
-          <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:var(--ink2);">Cash equivalents (&lt;3 months, for rollover)</span><span style="font-weight:500;">$1,562,959</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:7px;"><span style="color:var(--ink2);">Long-term investments (Jun 2027–Sep 2028)</span><span style="font-weight:500;">$1,315,308</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:7px;"><span style="color:var(--ink2);">Short-term investments (&lt;1 year)</span><span style="font-weight:500;">$192,342</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:var(--ink2);">Cash equivalents (&lt;3 months, for rollover)</span><span style="font-weight:500;">$1,064,748</span></div>
         </div>
       </div>
       
@@ -519,7 +539,7 @@
                 <th>Area</th>
                 <th style="text-align:right;" id="burnHeader">YTD burn</th>
                 <th style="text-align:right;">Variance</th>
-                <th style="min-width:150px;"><span style="display:flex;align-items:center;gap:5px;">Comments <span style="font-size:9px;color:#9c958e;cursor:pointer;text-decoration:underline;font-weight:400;text-transform:none;letter-spacing:0;" onclick="clearAllComments()">clear all</span></span></th>
+                <th style="min-width:150px;"><span style="display:flex;align-items:center;gap:5px;">Comments <span id="commentSyncIndicator" style="font-size:9px;opacity:0;margin-right:4px;transition:opacity 0.3s;"></span><span style="font-size:9px;color:#9c958e;cursor:pointer;text-decoration:underline;font-weight:400;text-transform:none;letter-spacing:0;" onclick="clearAllComments()">clear all</span></span></th>
               </tr>
             </thead>
             <tbody id="projBody">
@@ -596,46 +616,20 @@
         <div class="card-title">Balance sheet movements</div>
         <div class="card-sub">Accounts with &gt;25% change month-on-month</div>
         <div class="bs-row">
-          <span class="bs-code">172</span>
+          <span class="bs-code">121</span>
           <div class="bs-desc">
-            <div>Advances to Partners</div>
-            <div class="bs-reason" style="margin-top:4px;">
-              <input type="text" id="bs_172_input" placeholder="Add explanation…"
-                style="width:100%;font-size:11px;color:var(--ink2);background:var(--surface2);border:1px dashed var(--border);border-radius:4px;outline:none;padding:4px 8px;font-family:'Inter',sans-serif;transition:all 0.15s;"
-                onfocus="this.style.borderColor='var(--orange)';this.style.background='#FFF5F0'"
-                onblur="this.style.borderColor='var(--border)';this.style.background='var(--surface2)';saveBsNote('bs_172',this.value)"
-                oninput="saveBsNote('bs_172',this.value)">
-            </div>
+            <div>Restricted Cash — Checking Account &amp; Cash Equivalents</div>
+            <div class="bs-reason">Decreased by $120K (−41%) — still within the target low</div>
           </div>
-          <span class="bs-change up">−47% (−$157.4K)</span>
-        </div>
-        <div class="bs-row">
-          <span class="bs-code">200</span>
-          <div class="bs-desc">
-            <div>Accounts Payable</div>
-            <div class="bs-reason" style="margin-top:4px;">
-              <input type="text" id="bs_200_input" placeholder="Add explanation…"
-                style="width:100%;font-size:11px;color:var(--ink2);background:var(--surface2);border:1px dashed var(--border);border-radius:4px;outline:none;padding:4px 8px;font-family:'Inter',sans-serif;transition:all 0.15s;"
-                onfocus="this.style.borderColor='var(--orange)';this.style.background='#FFF5F0'"
-                onblur="this.style.borderColor='var(--border)';this.style.background='var(--surface2)';saveBsNote('bs_200',this.value)"
-                oninput="saveBsNote('bs_200',this.value)">
-            </div>
-          </div>
-          <span class="bs-change down">+215% (+$299.2K)</span>
+          <span class="bs-change up">−41% (−$120K)</span>
         </div>
         <div class="bs-row">
           <span class="bs-code">250</span>
           <div class="bs-desc">
             <div>Accrued Pension &amp; Severance</div>
-            <div class="bs-reason" style="margin-top:4px;">
-              <input type="text" id="bs_250_input" placeholder="Add explanation…"
-                style="width:100%;font-size:11px;color:var(--ink2);background:var(--surface2);border:1px dashed var(--border);border-radius:4px;outline:none;padding:4px 8px;font-family:'Inter',sans-serif;transition:all 0.15s;"
-                onfocus="this.style.borderColor='var(--orange)';this.style.background='#FFF5F0'"
-                onblur="this.style.borderColor='var(--border)';this.style.background='var(--surface2)';saveBsNote('bs_250',this.value)"
-                oninput="saveBsNote('bs_250',this.value)">
-            </div>
+            <div class="bs-reason">Increased by $40K (+6,000%) — minimal retirement expense recorded in March; March plus April retirement expense recorded in April resulting in significant increase</div>
           </div>
-          <span class="bs-change down">+6,060% (+$40.6K)</span>
+          <span class="bs-change down">+6,000% (+$40K)</span>
         </div>
       </div>
     </div>
@@ -693,26 +687,42 @@
 <script>
 // ─── DATA ────────────────────────────────────────────────────────────────────
 const projects = [
-  { name: 'Southern Leyte', area: 'Visayas', burn: 70, annualBurn: 24, actual: 144783, budget: 206772, variance: 61989, over: false,
-    note: 'Primary factors: timing of SNFC-related activities and rescheduling of community training due to limited facilitator availability. Variance included in midyear planning.' },
-  { name: 'ADP Aklan 1', area: 'Visayas', burn: 60, annualBurn: 30, actual: 60931, budget: 100842, variance: 39911, over: false,
-    note: 'Budget for Celebrating Families has no cost due to integration of SNC activities. Scale Up Initiatives delayed while identifying sustainable livelihood project. AIM+ deferred to April. Remaining budget for forward economic intervention.' },
-  { name: 'Sultan Kudarat AP', area: 'Mindanao', burn: 89, annualBurn: 39, actual: 315823, budget: 354795, variance: 38972, over: false,
-    note: 'SNC activities rescheduled to integrate with CEW and PEACE clubs formation in May. SOP activities integrated with BBB in March. Savings to be used for RC validation during Back to School in May.' },
-  { name: 'Este Area Programme', area: 'Visayas', burn: 83, annualBurn: 42, actual: 180396, budget: 216412, variance: 36016, over: false,
-    note: 'Underspending from rescheduled Mental Health sessions, minimal GEDSDI and GMP capacity building, and S4T TOT timing. Ongoing IPF capacity building also contributing. Variance in midyear planning.' },
-  { name: 'Bohol NE ADP', area: 'Visayas', burn: 72, annualBurn: 27, actual: 88151, budget: 123100, variance: 34949, over: false,
-    note: 'Cost savings from facilitation of farewell letters and videos. Ongoing capacity building for new IPF approach. Variance to be addressed in midyear planning.' },
-  { name: 'ADP North Cebu', area: 'Visayas', burn: 67, annualBurn: 27, actual: 68950, budget: 103245, variance: 34295, over: false,
-    note: 'Minimal expense on Gender Equality and partnerships due to integration in CoMSCA Summit. Teachers training and reading hubs not yet implemented due to TINO emergency response prioritisation. Variance in midyear planning.' },
-  { name: 'Bohol 5 AP', area: 'Visayas', burn: 64, annualBurn: 34, actual: 58255, budget: 91257, variance: 33002, over: false,
-    note: 'Underspending from timing of implementation vs. original plan. ADP prioritised IPF capacity building for staff and community. Variance to be addressed in midyear planning.' },
-  { name: 'ADP Pangasinan', area: 'Luzon', burn: 91, annualBurn: 35, actual: 292686, budget: 321566, variance: 28880, over: false,
-    note: 'Activities delayed due to prerequisite processes: livelihood support dependent on CSA training and RF profiling completion. Community mapping postponed due to schedule conflicts. All rescheduled for succeeding months; included in midyear budget revision.' },
-  { name: 'Bohol 03 ADP', area: 'Visayas', burn: 63, annualBurn: 27, actual: 46708, budget: 74504, variance: 27795, over: false,
-    note: 'Underspending from timing vs. original plan and deferred hiring of support staff to replace resigned PO. ADP prioritised IPF capacity building. Variance to be addressed in midyear planning.' },
-  { name: 'ADP Bukidnon', area: 'Mindanao', burn: 109, annualBurn: 47, actual: 422367, budget: 388129, variance: -34238, over: true,
-    note: 'DPC activity expenditures remain within acceptable limits. Shared costs from technical and management teams (NO and FO levels) are the primary driver of overall budget overspending. Annual burn rate remains within acceptable levels. Action: Continue monitoring at full cost level to ensure no year-end overspend.' },
+  { name: 'Antique 3', area: 'Visayas', burn: 113, annualBurn: 42, actual: 250074, budget: 220949, variance: -29125, over: true,
+    note: 'Overspending attributed to the advance implementation of conduct life skills sessions including safeguarding and different activities related to environmental sustainability and climate action in alignment to the new programming approach.' },
+  { name: 'Southern Leyte', area: 'Visayas', burn: 81, annualBurn: 35, actual: 210159, budget: 260599, variance: 50440, over: false,
+    note: 'Underspending attributed to budget for purchase of supplies for SNC materials, delivered only in first week of May. Part of variance also due to budget for AIM activities scheduled to commence in May 2026. Included in midyear budget revision.' },
+  { name: 'Bohol 03 ADP', area: 'Visayas', burn: 71, annualBurn: 38, actual: 66327, budget: 93222, variance: 26895, over: false,
+    note: 'Primary factor of underspending was the non-hiring of Program Officer replacement. Need to consider in the remaining six months.' },
+  { name: 'Bohol NE ADP', area: 'Visayas', burn: 69, annualBurn: 30, actual: 99042, budget: 143461, variance: 44420, over: false,
+    note: 'Primary factor contributing to variance is delay in timing of requests compared to approved plan. ADP needs to fast-track implementation in remaining months aligned with revised budget. FM already provided major activities to budget holder and OM.' },
+  { name: 'ADP North Cebu', area: 'Visayas', burn: 64, annualBurn: 42, actual: 77703, budget: 120701, variance: 42997, over: false,
+    note: 'Underspending due to minimal expense in Gender Equality and Develop key partnerships. Staff integrated these in CoMSCA Summit activities. Teachers training and reading hubs not yet implemented due to TINO emergency response. Variance will be incorporated into midyear planning.' },
+  { name: 'Bohol 5 AP', area: 'Visayas', burn: 66, annualBurn: 41, actual: 69035, budget: 103880, variance: 34845, over: false,
+    note: 'Underspending attributed to timing of implementation relative to original plan. ADP prioritised capacity building for staff and community on new IPF approach. VE already factored in revised plan and budget.' },
+  { name: 'Antique 2', area: 'Visayas', burn: 69, annualBurn: 35, actual: 88848, budget: 129485, variance: 40637, over: false,
+    note: 'Underspending due to postponed training workshops on new DMEAL processes and rescheduled Channels of Hope and child-led program activities due to unavailability of facilitators. Already factored in midyear budget revision.' },
+  { name: 'ADP Aklan 1', area: 'Visayas', burn: 68, annualBurn: 37, actual: 75341, budget: 110846, variance: 35504, over: false,
+    note: 'Underspending due to delayed Scale Up Initiatives while identifying sustainable livelihood project. Celebrating Families budget has no cost due to SNC activities integration. AIM+ implementation deferred to May. Already incorporated in budget revision.' },
+  { name: 'Zamboanga Del Norte ADP', area: 'Mindanao', burn: 58, annualBurn: 43, actual: 118296, budget: 204771, variance: 86475, over: false,
+    note: 'Overall AP underspending mainly due to rescheduled delivery of learning kits from April to June in preparation for school year opening. Additional factors include lower staff costs and reduced cluster and IPF/SOP NO/FO expenses. Budget revision to be processed and posted in May 2026.' },
+  { name: 'Sultan Kudarat AP', area: 'Mindanao', burn: 81, annualBurn: 45, actual: 361431, budget: 445047, variance: 83616, over: false,
+    note: 'Overall AP underspending mainly due to rescheduling of learning kit deliveries from April to June for school year opening, lower cluster and IPF/SOP NO/FO costs, cancellation of mobile device procurement (budget reallocated to IPF), and rescheduling of SFP, M&E, CEW writing, and scale-up activities to June.' },
+  { name: 'North Cotabato Program', area: 'Mindanao', burn: 75, annualBurn: 37, actual: 150460, budget: 200753, variance: 50293, over: false,
+    note: 'YTD underspending mainly attributed to deferment of EWV and SNC interventions, rescheduled to commence from May onwards as part of budget revision planning. AP team has completed catch-up plans for remaining months.' },
+  { name: 'ADP Bukidnon', area: 'Mindanao', burn: 108, annualBurn: 56, actual: 506975, budget: 467904, variance: -39071, over: true,
+    note: 'YTD overspending primarily driven by high absorption of staff and technical costs; however these remain within approved annual budget. Ministry costs still within acceptable YTD burn rate. Staff and technical cost charging will be reduced in succeeding months.' },
+  { name: 'ADP Albay', area: 'Luzon', burn: 129, annualBurn: 58, actual: 138846, budget: 107421, variance: -31425, over: true,
+    note: 'Overspending due to advance delivery of SNC kits as planned, and Sponsorship Direct charge costs (Global charges). Mismatch in Global charges budget already included in midyear revised budget submitted to SO. Staff costs also exceeded budget due to travel and training related to IPF implementation.' },
+  { name: 'Camarines Sur ADP', area: 'Luzon', burn: 124, annualBurn: 59, actual: 175385, budget: 141072, variance: -34312, over: true,
+    note: 'Overspending driven by higher SNC customized kit and Sponsorship Direct charge costs (Global charges), and increased staff travel for IPF activities. These are already considered in the midyear budget revision submitted to SO and for Sunsystems uploading in May.' },
+  { name: 'PH Multiple Cyclones ER', area: 'Mindanao', burn: 63, annualBurn: 40, actual: 105224, budget: 167905, variance: 62681, over: false,
+    note: 'CITI Grant remaining balances primarily from livelihood farming materials where actual procurement costs were lower than approved budget. HK SAR Grant Match implementation ongoing. Following NCE approval for CITI on May 13, new project end date moved to June 30, 2026.' },
+  { name: 'COMMUNITY READINESS (ANTICI)', area: 'Visayas', burn: 65, annualBurn: 16, actual: 100224, budget: 153868, variance: 53644, over: false,
+    note: 'Several major activities remain dependent on release of finalized Operational Guidelines for RA 12287. Final version expected between May and June 2026. Team coordinating with OCD on OG development. Budget monitoring and analysis being strengthened through regular budget-vs-actual reviews.' },
+  { name: 'PH Earthquake Response', area: 'Luzon', burn: 92, annualBurn: 92, actual: 289132, budget: 315697, variance: 26565, over: false,
+    note: 'Underspending pertains to NEPRF budget planned only until April. Most earthquake response activities have achieved target burn rate. Remaining NEPRF budget will be reallocated through June 2026 to support completion and closeout activities.' },
+  { name: 'Abaca Value Chain (ERACS)', area: 'Mindanao', burn: 47, annualBurn: 25, actual: 22864, budget: 49161, variance: 26297, over: false,
+    note: 'Underspending mainly due to postponement of training activity rescheduled to May based on availability of resource person. Action: follow through with AP team on catch-up plans.' },
 ];
 
 let currentArea = 'all';
@@ -745,8 +755,16 @@ function filteredProjects() {
 function getComment(name) {
   try { return localStorage.getItem('wvph_apr_comment_' + name) || ''; } catch(e) { return ''; }
 }
+
+const debouncedSaveComment = debounce(async (name, val) => {
+  showSyncing('commentSyncIndicator', false);
+  await postToSheet({ action: 'saveComment', period: PERIOD, project: name, value: val });
+  showSyncing('commentSyncIndicator', true);
+}, 800);
+
 function saveComment(name, val) {
   try { localStorage.setItem('wvph_apr_comment_' + name, val); } catch(e) {}
+  debouncedSaveComment(name, val);
 }
 function clearAllComments() {
   if (!confirm('Clear all comments?')) return;
@@ -774,7 +792,11 @@ function renderTable() {
       ? `<div class="burn-cell"><div class="burn-bar"><div class="burn-fill" style="width:${fillPct}%;background:${burnColor(p.burn)};"></div></div><span class="burn-pct" style="color:${burnColor(p.burn)};font-weight:${p.burn>100?600:400};">${p.burn}%</span></div>`
       : `<div style="text-align:right;font-size:12px;color:${burnColor(p.burn)};font-weight:500;">$${(p.actual/1000).toFixed(0)}K</div>`;
 
-    const savedComment = getComment(p.name);
+    const savedComment = getComment(p.name) || p.note || '';
+    // Auto-save note to localStorage if not already saved
+    if (!getComment(p.name) && p.note) {
+      saveComment(p.name, p.note);
+    }
 
     const tr = document.createElement('tr');
     tr.dataset.area = p.area;
@@ -791,7 +813,17 @@ function renderTable() {
       <td style="padding:10px 8px;"><span class="proj-loc ${locClass}">${p.area}</span></td>
       <td style="padding:10px 8px;">${burnDisplay}</td>
       <td style="padding:10px 8px;">${varDisplay}</td>
-      <td class="comment-cell"><textarea class="comment-input${savedComment ? ' has-value' : ''}" data-project="${p.name}" placeholder="Add comment…" rows="1">${savedComment}</textarea></td>`;
+      <td class="comment-cell">
+        <div class="comment-collapse-wrap">
+          <button class="comment-toggle-btn" onclick="toggleComment(this)" title="View/edit variance explanation">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            <span class="comment-btn-label">${savedComment ? `View note` : `Add note`}</span>
+          </button>
+          <div class="comment-expandable" style="display:none;">
+            <textarea class="comment-input${savedComment ? ` has-value` : ``}" data-project="${p.name}" placeholder="Add variance explanation or action plan..." rows="3">${savedComment}</textarea>
+          </div>
+        </div>
+      </td>`;
     body.appendChild(tr);
 
     // Auto-resize textarea and save on input
@@ -802,6 +834,9 @@ function renderTable() {
         autoResize(ta);
         saveComment(p.name, ta.value);
         ta.classList.toggle('has-value', ta.value.length > 0);
+        // Update button label
+        const btn = tr.querySelector('.comment-btn-label');
+        if (btn) btn.textContent = ta.value ? 'View note' : 'Add note';
       });
     }
   });
@@ -1091,10 +1126,10 @@ new Chart(document.getElementById('netChart'), {
 
 // ─── EDITABLE HIGHLIGHTS ─────────────────────────────────────────────────────
 const DEFAULT_HIGHLIGHTS = [
-  { title: 'Emergency grant closures', body: 'Closing procedures ongoing for PEER and MEER grants (HKG SAR, CHAF, Coca-Cola) totalling $811K. Forecasted actuals at 99% of budget.' },
+  { title: 'Emergency grant closures', body: 'Closing, clean-up procedures and submission to SO completed for Philippines Earthquake Emergency Response (PEER) and Multiple Cyclone Emergency Response (MEER) projects — Coca-Cola International and CHAF grants. Both grants have 99–100% burn rate. HEA team awaiting feedback from CANO and PHLO. Ongoing closing procedures, financial audit and field validation for HKG SAR-funded Multiple Cyclone Response Project — expected completion by June 2026.' },
   { title: 'Fundraising investment fund', body: 'For repayment as part of assessment before mid-year review.' },
-  { title: 'Income statement — 31% increase', body: 'Grants and donations from Germany and Spain rose $111K in March vs. zero in February, with $114K more requested from global treasury.' },
-  { title: 'RD cash grants receivable', body: 'Total $1.195M outstanding: ING BTE ($89K), CITI Eco Youth ($250K), AMTRAC ($839K), Leslie Foundation ($17.8K).' }
+  { title: 'EU PEACE Project Audit', body: 'Ongoing compliance with audit sample requirements for the EU PEACE Project, a closed project supported by WV Ireland. Audit being conducted by Grant Thornton (Ireland) as contracted by the Support Office.' },
+  { title: 'RD Cash Grants Receivable', body: 'Total $1.3M outstanding based on agreed funding remittance tranches: ING BTE ($89K), CITI Eco Youth ($250K), and AMTRAC ($982K).' }
 ];
 
 function loadHighlights() {
@@ -1104,6 +1139,9 @@ function loadHighlights() {
   } catch(e) { return DEFAULT_HIGHLIGHTS; }
 }
 
+const debouncedSaveHighlights = debounce(async (items) => {
+  await postToSheet({ action: 'saveHighlights', period: PERIOD, items });
+}, 800);
 function saveHighlights() {
   const items = [...document.querySelectorAll('.hl-item')].map(el => ({
     title: el.querySelector('.hl-title-input').value,
@@ -1112,6 +1150,7 @@ function saveHighlights() {
   try { localStorage.setItem('wvph_apr_highlights', JSON.stringify(items)); } catch(e) {}
   const saved = document.getElementById('highlightsSaved');
   if (saved) { saved.style.opacity = '1'; setTimeout(() => saved.style.opacity = '0', 1800); }
+  debouncedSaveHighlights(items);
 }
 
 function autoResizeHl(el) {
@@ -1179,7 +1218,7 @@ function renderHighlights() {
 
 // ─── EDITABLE ENV RISK HIGHLIGHTS ────────────────────────────────────────────
 const DEFAULT_ENV_RISKS = [
-  { tag: 'Forex',     tagClass: 'tag-forex',     body: '4.2% increase in USD/PHP revaluation rate (58.33 vs. 56.00 budgeted), causing underspending of USD-funded budgets. PBAS USD allocations to be adjusted at year-end based on actual exchange rates.' },
+  { tag: 'Forex',     tagClass: 'tag-forex',     body: '4% increase in average USD/PHP revaluation rate (58.23 vs. 56.00 budgeted), resulting in underspending of USD-funded budgets. Forex implications on internationally-funded projects will be continuously monitored, with necessary budget adjustments and realignments to be completed prior to year-end closure. PBAS USD allocations for PHLO-funded projects will be adjusted by year-end based on actual exchange rates.' },
   { tag: 'Inflation', tagClass: 'tag-inflation',  body: 'April 2026 inflation at 4.1%. Middle East crisis could push inflation to 5%–7.3% and weaken peso to ₱60–₱61.30/USD, reducing purchasing power and requiring stricter cost controls.' },
   { tag: 'Burn rate', tagClass: 'tag-burn',       body: 'Aggregate 93% YTD / 41% of annual budget. Key factors: rescheduled trainings (SNC, CEW, PEACE clubs), activity integration savings, deferred AIM+ and tablet procurement, overspending in technical support & CLU functions.' }
 ];
@@ -1200,6 +1239,9 @@ function loadEnvRisks() {
   } catch(e) { return DEFAULT_ENV_RISKS; }
 }
 
+const debouncedSaveEnvRisks = debounce(async (items) => {
+  await postToSheet({ action: 'saveEnvRisks', period: PERIOD, items });
+}, 800);
 function saveEnvRisks() {
   const items = [...document.querySelectorAll('.er-item')].map(el => ({
     tag:      el.querySelector('.er-tag-input').value,
@@ -1209,6 +1251,7 @@ function saveEnvRisks() {
   try { localStorage.setItem('wvph_apr_env_risks', JSON.stringify(items)); } catch(e) {}
   const saved = document.getElementById('envRiskSaved');
   if (saved) { saved.style.opacity = '1'; setTimeout(() => saved.style.opacity = '0', 1800); }
+  debouncedSaveEnvRisks(items);
 }
 
 function addEnvRisk(tag='', tagClass='tag-forex', body='') {
@@ -1291,9 +1334,24 @@ function renderEnvRisks() {
 
 // ─── EDITABLE ACTION ITEMS ────────────────────────────────────────────────────
 const DEFAULT_ACTION_ITEMS = [
-  { badge: 'Overspend', badgeClass: 'rb-red',   name: 'ADP Bukidnon — 109% YTD',                   detail: 'Shared technical & management costs (NO/FO) are the primary driver. Programme costs remain within limits. Monitor monthly to prevent year-end overspend.' },
-  { badge: 'Cash',      badgeClass: 'rb-red',   name: 'Cash position 65% below target',             detail: 'Actual low of $181K vs. $521K target. Requires urgent monitoring and proactive funding requests.' },
-  { badge: 'Admin rate',badgeClass: 'rb-amber', name: 'Admin cost rate at 10.6% vs. 9.49% target',  detail: 'Cost reduction in support costs is ongoing. BIR tax exemption threshold (30%) is not at risk, but internal target must be met by year-end.' }
+  { badge: 'Overspend', badgeClass: 'rb-red',
+    name: 'Multiple projects overspending — Bukidnon 108%, Albay 129%, Cam Sur 124%, Antique 3 113%',
+    detail: 'Bukidnon: high absorption of staff and technical costs — remain within approved annual budget; to be reduced in succeeding months. Albay & Cam Sur: advance SNC kit delivery and higher Global charges — included in midyear revised budget submitted to SO. Antique 3: advance implementation of life skills and sustainability activities in alignment with new programming approach.' },
+  { badge: 'Cash', badgeClass: 'rb-red',
+    name: 'Cash position 65% below target',
+    detail: 'Actual low of $181K vs. $521K target. Requires urgent monitoring and proactive funding requests to stay within target low.' },
+  { badge: 'Admin rate', badgeClass: 'rb-amber',
+    name: 'Admin cost rate at 10.6% vs. 9.49% target',
+    detail: 'Cost reduction in support costs is ongoing to align with the target admin rate. Total Support and Fundraising expense (PSC, DPCS, SOM, SSC) is 19% — still within BIR tax exemption requirement of no more than 30% of donation received.' },
+  { badge: 'Inflation', badgeClass: 'rb-amber',
+    name: 'Inflation surged to 7.2% in April — highest since March 2023',
+    detail: 'Primarily driven by fuel price increases linked to the ongoing Middle East conflict. Expected to increase procurement costs, reduce purchasing power of project budgets, and pose additional risk to admin ratio and burn rate targets. Stricter cost controls, more frequent re-planning, and tighter alignment of expenses with project budgets required.' },
+  { badge: 'Forex', badgeClass: 'rb-amber',
+    name: 'USD/PHP revaluation rate 4% above budget (58.23 vs 56.00)',
+    detail: 'Resulting in underspending of USD-funded budgets. Forex implications on internationally-funded projects to be continuously monitored, with necessary budget adjustments and realignments to be completed prior to year-end closure. PBAS USD allocations for PHLO-funded projects to be adjusted by year-end based on actual exchange rates.' },
+  { badge: 'Local deficit', badgeClass: 'rb-red',
+    name: 'Local fundraising net deficit of $381K',
+    detail: '$980K of current project spending drawn from projects whose income was received in prior FY — including AMTRAC ($415K, ended March 31, 2026), MMS Project ($23K), Citi Project AID Programme ($172K), and Empowerment through Entrepreneurship Program ($43K). One-time AMTRAC funding of $836K received June 2025 with ongoing next-phase proposal.' }
 ];
 
 function loadActionItems() {
@@ -1303,6 +1361,9 @@ function loadActionItems() {
   } catch(e) { return DEFAULT_ACTION_ITEMS; }
 }
 
+const debouncedSaveActionItems = debounce(async (items) => {
+  await postToSheet({ action: 'saveActionItems', period: PERIOD, items });
+}, 800);
 function saveActionItems() {
   const items = [...document.querySelectorAll('#actionItemsGrid .risk-item-card')].map(el => ({
     badge:      el.querySelector('.ai-badge-input').value,
@@ -1313,6 +1374,7 @@ function saveActionItems() {
   try { localStorage.setItem('wvph_apr_action_items', JSON.stringify(items)); } catch(e) {}
   const saved = document.getElementById('actionSaved');
   if (saved) { saved.style.opacity = '1'; setTimeout(() => saved.style.opacity = '0', 1800); }
+  debouncedSaveActionItems(items);
 }
 
 function addActionItem() {
@@ -1375,10 +1437,62 @@ function renderActionItems() {
 }
 
 
-// ─── BALANCE SHEET EDITABLE NOTES ────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+// GOOGLE SHEETS REAL-TIME BACKEND
+// Replace YOUR_SCRIPT_URL_HERE with your deployed Apps Script URL
+// ═══════════════════════════════════════════════════════════════
+const SCRIPT_URL = 'YOUR_SCRIPT_URL_HERE';
+const PERIOD     = 'april2026';
+
+// Debounce helper — prevents saving on every keystroke
+function debounce(fn, delay) {
+  let t;
+  return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), delay); };
+}
+
+// Show/hide sync indicator
+function showSyncing(id, done) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = done ? '✓ Saved' : '⟳ Saving…';
+  el.style.opacity = '1';
+  el.style.color = done ? 'var(--green)' : 'var(--ink3)';
+  if (done) setTimeout(() => el.style.opacity = '0', 2000);
+}
+
+// ── POST to Google Sheets ─────────────────────────────────────
+async function postToSheet(body) {
+  if (SCRIPT_URL === 'YOUR_SCRIPT_URL_HERE') return; // not set up yet
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(body),
+      headers: { 'Content-Type': 'text/plain' } // Apps Script requires text/plain for CORS
+    });
+  } catch(e) { console.warn('Sheet sync failed:', e); }
+}
+
+// ── GET from Google Sheets ────────────────────────────────────
+async function getFromSheet() {
+  if (SCRIPT_URL === 'YOUR_SCRIPT_URL_HERE') return null;
+  try {
+    const res = await fetch(`${SCRIPT_URL}?action=getAll&period=${PERIOD}`);
+    return await res.json();
+  } catch(e) { console.warn('Sheet fetch failed:', e); return null; }
+}
+
+// ── BALANCE SHEET NOTES ───────────────────────────────────────
 function saveBsNote(key, val) {
   try { localStorage.setItem('wvph_apr_' + key, val); } catch(e) {}
+  debouncedSaveBsNote(key, val);
 }
+
+const debouncedSaveBsNote = debounce(async (key, val) => {
+  showSyncing('bsSyncIndicator', false);
+  await postToSheet({ action: 'saveBSNote', period: PERIOD, key, value: val });
+  showSyncing('bsSyncIndicator', true);
+}, 800);
+
 function loadBsNotes() {
   ['bs_172','bs_200','bs_250'].forEach(key => {
     try {
@@ -1389,6 +1503,20 @@ function loadBsNotes() {
   });
 }
 
+
+// ── COLLAPSIBLE COMMENT ────────────────────────────────────────────────────────
+function toggleComment(btn) {
+  const wrap = btn.closest('.comment-collapse-wrap');
+  const expandable = wrap.querySelector('.comment-expandable');
+  const isOpen = expandable.style.display !== 'none';
+  expandable.style.display = isOpen ? 'none' : 'block';
+  btn.classList.toggle('open', !isOpen);
+  if (!isOpen) {
+    const ta = expandable.querySelector('textarea');
+    if (ta) { autoResize(ta); ta.focus(); }
+  }
+}
+
 // Init
 renderTable();
 renderBurnChart();
@@ -1396,6 +1524,57 @@ renderHighlights();
 renderEnvRisks();
 renderActionItems();
 loadBsNotes();
+
+// Load from Google Sheets and merge (Sheets takes priority over localStorage)
+(async () => {
+  const data = await getFromSheet();
+  if (!data) return;
+
+  // Comments
+  if (data.comments) {
+    Object.entries(data.comments).forEach(([project, val]) => {
+      try { localStorage.setItem('wvph_apr_comment_' + project, val); } catch(e) {}
+      const inputs = document.querySelectorAll('.comment-input');
+      inputs.forEach(el => {
+        if (el.dataset.project === project) {
+          el.value = val;
+          el.classList.toggle('has-value', val.length > 0);
+          autoResize(el);
+        }
+      });
+    });
+  }
+
+  // Action items
+  if (data.actionItems && Object.keys(data.actionItems).length > 0) {
+    const sorted = Object.entries(data.actionItems).sort((a,b) => a[0]-b[0]).map(([,v]) => JSON.parse(v));
+    try { localStorage.setItem('wvph_apr_action_items', JSON.stringify(sorted)); } catch(e) {}
+    renderActionItems();
+  }
+
+  // Env risks
+  if (data.envRisks && Object.keys(data.envRisks).length > 0) {
+    const sorted = Object.entries(data.envRisks).sort((a,b) => a[0]-b[0]).map(([,v]) => JSON.parse(v));
+    try { localStorage.setItem('wvph_apr_env_risks', JSON.stringify(sorted)); } catch(e) {}
+    renderEnvRisks();
+  }
+
+  // Highlights
+  if (data.highlights && Object.keys(data.highlights).length > 0) {
+    const sorted = Object.entries(data.highlights).sort((a,b) => a[0]-b[0]).map(([,v]) => JSON.parse(v));
+    try { localStorage.setItem('wvph_apr_highlights', JSON.stringify(sorted)); } catch(e) {}
+    renderHighlights();
+  }
+
+  // BS Notes
+  if (data.bsNotes) {
+    Object.entries(data.bsNotes).forEach(([key, val]) => {
+      try { localStorage.setItem('wvph_apr_' + key, val); } catch(e) {}
+      const el = document.getElementById(key + '_input');
+      if (el && val) { el.value = val; el.style.color = 'var(--ink2)'; }
+    });
+  }
+})();
 </script>
 </body>
 </html>
