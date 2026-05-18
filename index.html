@@ -145,6 +145,22 @@
   .comment-clear-all { font-size: 9px; color: var(--ink3); cursor: pointer; text-decoration: underline; margin-left: 4px; }
   .comment-clear-all:hover { color: var(--red); }
   @media print { .comment-input { border: none !important; background: transparent !important; } }
+  /* DPCS TABLE */
+  .dpcs-input {
+    width: 100%; font-size: 12px; font-family: 'Inter', sans-serif;
+    color: var(--ink2); background: transparent; border: none;
+    outline: none; padding: 2px 4px; border-radius: 4px;
+  }
+  .dpcs-input:hover { background: var(--surface2); }
+  .dpcs-input:focus { background: #FFF5F0; outline: 1px solid var(--orange); }
+  .dpcs-input.rate { text-align: right; width: 70px; }
+  .dpcs-del { background: transparent; border: none; cursor: pointer; color: var(--ink3); font-size: 16px; line-height: 1; padding: 0 4px; opacity: 0; transition: opacity 0.15s; }
+  .dpcs-row:hover .dpcs-del { opacity: 1; }
+  .dpcs-del:hover { color: var(--red); }
+  .dpcs-variance { font-weight: 500; }
+  .dpcs-variance.over { color: var(--red); }
+  .dpcs-variance.under { color: var(--green); }
+
   /* COLLAPSIBLE COMMENT */
   .comment-collapse-wrap { padding: 4px 0; }
   .comment-toggle-btn {
@@ -546,6 +562,57 @@
             </tbody>
           </table>
         </div>
+      </div>
+    </div>
+
+  <!-- COST ALLOCATION -->
+  <div class="section">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--orange);">
+      <span style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--midnight);">Cost allocation</span>
+      <span style="font-size:10px;color:var(--ink3);">Reported quarterly — periods Oct–Dec, Jan–Mar, Apr–Jun, Jul–Sep</span>
+    </div>
+    <div class="card">
+      <div class="card-title">DPCS variance — projects with actual vs budget rate difference &gt;±10%</div>
+      <div class="card-sub">YTD cost recovery analysis · click any cell to edit · changes auto-saved</div>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:11px;" id="dpcsTable">
+          <thead>
+            <tr style="background:var(--midnight);color:#fff;">
+              <th style="padding:8px 10px;text-align:left;font-weight:600;font-size:10px;letter-spacing:0.04em;min-width:160px;">Project # / Name</th>
+              <th style="padding:8px 10px;text-align:right;font-weight:600;font-size:10px;letter-spacing:0.04em;white-space:nowrap;">YTD Actual Full Cost</th>
+              <th style="padding:8px 10px;text-align:right;font-weight:600;font-size:10px;letter-spacing:0.04em;white-space:nowrap;">YTD Actual Admin Cost Recovery</th>
+              <th style="padding:8px 10px;text-align:right;font-weight:600;font-size:10px;letter-spacing:0.04em;white-space:nowrap;">YTD Actual SC Recovery</th>
+              <th style="padding:8px 10px;text-align:right;font-weight:600;font-size:10px;letter-spacing:0.04em;white-space:nowrap;background:#c0392b;">YTD Admin Cost Recovery %</th>
+              <th style="padding:8px 10px;text-align:right;font-weight:600;font-size:10px;letter-spacing:0.04em;white-space:nowrap;background:#c0392b;">YTD SC Recovery %</th>
+              <th style="padding:8px 10px;text-align:right;font-weight:600;font-size:10px;letter-spacing:0.04em;white-space:nowrap;">SC+SCDPC Budget</th>
+              <th style="padding:8px 10px;text-align:right;font-weight:600;font-size:10px;letter-spacing:0.04em;white-space:nowrap;">Full Cost FY Budget</th>
+              <th style="padding:8px 10px;text-align:right;font-weight:600;font-size:10px;letter-spacing:0.04em;white-space:nowrap;background:#c0392b;">SC Recovery % (Budget)</th>
+              <th style="padding:8px 10px;text-align:right;font-weight:600;font-size:10px;letter-spacing:0.04em;white-space:nowrap;background:#c0392b;">SC Recovery Variance</th>
+              <th style="padding:8px 10px;width:20px;"></th>
+            </tr>
+          </thead>
+          <tbody id="dpcsBody"></tbody>
+        </table>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:8px;align-items:center;">
+        <button onclick="addDpcsRow()" style="display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:4px 12px;border-radius:2px;border:none;background:var(--orange);color:#fff;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add row
+        </button>
+        <span id="dpcsSaved" style="font-size:10px;color:var(--green);opacity:0;transition:opacity 0.4s;">✓ Saved</span>
+      </div>
+
+      <!-- Notes on Cost Recovery Variance -->
+      <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div style="font-size:12px;font-weight:600;color:var(--midnight);">Notes on cost recovery variance</div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span id="caNotesSaved" style="font-size:10px;color:var(--green);opacity:0;transition:opacity 0.4s;">✓ Saved</span>
+            <button onclick="addCaNote()" style="display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:4px 12px;border-radius:2px;border:none;background:var(--orange);color:#fff;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add note
+            </button>
+          </div>
+        </div>
+        <div id="caHighlightsList"></div>
       </div>
     </div>
   </div>
@@ -1127,12 +1194,11 @@ new Chart(document.getElementById('netChart'), {
 // ─── EDITABLE HIGHLIGHTS ─────────────────────────────────────────────────────
 const DEFAULT_HIGHLIGHTS = [
   { title: 'Emergency grant closures', body: 'Closing, clean-up procedures and submission to SO completed for Philippines Earthquake Emergency Response (PEER) and Multiple Cyclone Emergency Response (MEER) projects — Coca-Cola International and CHAF grants. Both grants have 99–100% burn rate. HEA team awaiting feedback from CANO and PHLO. Ongoing closing procedures, financial audit and field validation for HKG SAR-funded Multiple Cyclone Response Project — expected completion by June 2026.' },
-  { title: 'Fundraising investment fund', body: 'For repayment as part of assessment before mid-year review.' },
   { title: 'EU PEACE Project Audit', body: 'Ongoing compliance with audit sample requirements for the EU PEACE Project, a closed project supported by WV Ireland. Audit being conducted by Grant Thornton (Ireland) as contracted by the Support Office.' },
   { title: 'RD Cash Grants Receivable', body: 'Total $1.3M outstanding based on agreed funding remittance tranches: ING BTE ($89K), CITI Eco Youth ($250K), and AMTRAC ($982K).' }
 ];
 
-const HIGHLIGHTS_VERSION = 'v2';
+const HIGHLIGHTS_VERSION = 'v3';
 
 function loadHighlights() {
   try {
@@ -1226,9 +1292,12 @@ function renderHighlights() {
 
 // ─── EDITABLE ENV RISK HIGHLIGHTS ────────────────────────────────────────────
 const DEFAULT_ENV_RISKS = [
-  { tag: 'Forex',     tagClass: 'tag-forex',     body: '4% increase in average USD/PHP revaluation rate (58.23 vs. 56.00 budgeted), resulting in underspending of USD-funded budgets. Forex implications on internationally-funded projects will be continuously monitored, with necessary budget adjustments and realignments to be completed prior to year-end closure. PBAS USD allocations for PHLO-funded projects will be adjusted by year-end based on actual exchange rates.' },
-  { tag: 'Inflation', tagClass: 'tag-inflation',  body: 'April 2026 inflation at 4.1%. Middle East crisis could push inflation to 5%–7.3% and weaken peso to ₱60–₱61.30/USD, reducing purchasing power and requiring stricter cost controls.' },
-  { tag: 'Burn rate', tagClass: 'tag-burn',       body: 'Aggregate 93% YTD / 41% of annual budget. Key factors: rescheduled trainings (SNC, CEW, PEACE clubs), activity integration savings, deferred AIM+ and tablet procurement, overspending in technical support & CLU functions.' }
+  { tag: 'Forex', tagClass: 'tag-forex',
+    body: '4% increase in average USD/PHP revaluation rate (58.23 vs. 56.00 budgeted), resulting in underspending of USD-funded budgets. Forex implications on internationally-funded projects will be continuously monitored, with necessary budget adjustments and realignments to be completed prior to year-end closure. PBAS USD allocations for PHLO-funded projects will be adjusted by year-end based on actual exchange rates.' },
+  { tag: 'Inflation', tagClass: 'tag-inflation',
+    body: 'Inflation surged to 7.2% in April 2026 from 4.1% in March — the highest level since March 2023 — primarily driven by fuel price increases linked to the ongoing Middle East conflict. These pressures are expected to increase procurement costs, reduce purchasing power of project budgets, and pose additional risk to the admin ratio and overall burn rate targets, requiring stricter cost controls, more frequent re-planning, and tighter alignment of expenses with project budgets.' },
+  { tag: 'Burn rate', tagClass: 'tag-burn',
+    body: 'Overall underspending/variance for Sponsorship, PNS & Grants including Response projects was primarily due to delayed or rescheduled activities, procurement adjustments, and implementation transitions. Contributing factors included deferred SNC interventions and trainings, delayed delivery of learning kits and supplies, rescheduled workshops and partner activities, and postponed livelihood and reading hub initiatives. Several activities and budget allocations were also moved to succeeding months to align with IPF integration transition timelines, partner schedules, procurement availability, and school opening preparations.' }
 ];
 
 const TAG_OPTIONS = [
@@ -1240,7 +1309,7 @@ const TAG_OPTIONS = [
   { label: 'Other',     cls: 'tag-forex' },
 ];
 
-const ENV_RISKS_VERSION = 'v2';
+const ENV_RISKS_VERSION = 'v3';
 
 function loadEnvRisks() {
   try {
@@ -1542,6 +1611,197 @@ function toggleComment(btn) {
   }
 }
 
+
+// ─── COST ALLOCATION ──────────────────────────────────────────────────────────
+const DEFAULT_DPCS = [
+  { project: 'P300936 CITI GLOBAL RELIEF GRANT', ytdActualFullCost: '56,844', ytdAdminRecovery: '-1,716', ytdScRecovery: '555', ytdAdminPct: '-3.02%', ytdScPct: '0.98%', scScdpcBudget: '10,000', fullCostBudget: '81,786', scRecoveryBudgetPct: '12.23%', scVariance: '11%' },
+  { project: 'P300819 Improving Water, Sanitation and Hygiene (WASH) Faci', ytdActualFullCost: '5,524', ytdAdminRecovery: '1,690', ytdScRecovery: '1,769', ytdAdminPct: '30.60%', ytdScPct: '32.02%', scScdpcBudget: '5,256', fullCostBudget: '69,827', scRecoveryBudgetPct: '7.53%', scVariance: '-24%' }
+];
+
+const DEFAULT_CA_NOTES = [
+  { title: 'Grants Support Cost Variance', body: 'P300936 - CITI GLOBAL RELIEF GRANT: Project has NCE expected to complete by June 30, 2026. Full recovery of $10K expected on assumption all DPC implementations are completed as planned.' },
+  { title: 'Outstanding issues with Support Offices', body: 'Nothing to report for April 2026.' }
+];
+
+const DPCS_VERSION = 'v1';
+const CA_NOTES_VERSION = 'v1';
+
+function loadDpcs() {
+  try {
+    const ver = localStorage.getItem('wvph_apr_dpcs_version');
+    if (ver !== DPCS_VERSION) {
+      localStorage.removeItem('wvph_apr_dpcs');
+      localStorage.setItem('wvph_apr_dpcs_version', DPCS_VERSION);
+      return DEFAULT_DPCS;
+    }
+    const saved = localStorage.getItem('wvph_apr_dpcs');
+    return saved ? JSON.parse(saved) : DEFAULT_DPCS;
+  } catch(e) { return DEFAULT_DPCS; }
+}
+
+function saveDpcs() {
+  const rows = [...document.querySelectorAll('.dpcs-row')].map(row => ({
+    project:    row.querySelector('.dpcs-project').value,
+    budgetRate: row.querySelector('.dpcs-budget').value,
+    actualRate: row.querySelector('.dpcs-actual').value,
+    note:       row.querySelector('.dpcs-note') ? row.querySelector('.dpcs-note').value : ''
+  }));
+  try { localStorage.setItem('wvph_apr_dpcs', JSON.stringify(rows)); } catch(e) {}
+  const el = document.getElementById('dpcsSaved');
+  if (el) { el.style.opacity = '1'; setTimeout(() => el.style.opacity = '0', 1800); }
+}
+
+function calcVariance(budget, actual) {
+  const b = parseFloat(budget);
+  const a = parseFloat(actual);
+  if (isNaN(b) || isNaN(a)) return { text: '—', cls: '' };
+  const diff = a - b;
+  return { text: (diff >= 0 ? '+' : '') + diff.toFixed(1) + '%', cls: diff > 0 ? 'over' : 'under' };
+}
+
+function dpcsCell(val, align) {
+  return `<td style="padding:6px 8px;border-bottom:1px solid var(--border2);${align ? 'text-align:right;' : ''}"><input class="dpcs-input${align ? ' rate' : ''}" value="${val || ''}" placeholder="—" style="${align ? 'text-align:right;width:80px;' : ''}"></td>`;
+}
+
+function dpcsHighlightCell(val) {
+  const num = parseFloat((val || '').replace('%',''));
+  let bg = '';
+  if (!isNaN(num)) bg = num < 0 ? 'background:#fde8e8;color:#b02020;' : num > 20 ? 'background:#d4edda;color:#155930;' : '';
+  return `<td style="padding:6px 8px;border-bottom:1px solid var(--border2);text-align:right;${bg}font-weight:600;"><input class="dpcs-input rate" value="${val || ''}" placeholder="—" style="text-align:right;width:70px;font-weight:600;background:transparent;${bg}"></td>`;
+}
+
+function createDpcsRow(data) {
+  const tr = document.createElement('tr');
+  tr.className = 'dpcs-row';
+  tr.style.background = 'var(--surface)';
+  tr.innerHTML =
+    dpcsCell(data.project || '', false) +
+    dpcsCell(data.ytdActualFullCost || '', true) +
+    dpcsCell(data.ytdAdminRecovery || '', true) +
+    dpcsCell(data.ytdScRecovery || '', true) +
+    dpcsHighlightCell(data.ytdAdminPct || '') +
+    dpcsHighlightCell(data.ytdScPct || '') +
+    dpcsCell(data.scScdpcBudget || '', true) +
+    dpcsCell(data.fullCostBudget || '', true) +
+    dpcsHighlightCell(data.scRecoveryBudgetPct || '') +
+    dpcsHighlightCell(data.scVariance || '') +
+    `<td style="padding:6px 8px;border-bottom:1px solid var(--border2);width:20px;"><button class="dpcs-del" onclick="this.closest('tr').remove();saveDpcs();" title="Remove">×</button></td>`;
+
+  tr.querySelectorAll('.dpcs-input').forEach(inp => inp.addEventListener('input', saveDpcs));
+  return tr;
+}
+
+function saveDpcs() {
+  const rows = [...document.querySelectorAll('.dpcs-row')].map(row => {
+    const inputs = [...row.querySelectorAll('.dpcs-input')];
+    return {
+      project: inputs[0]?.value || '',
+      ytdActualFullCost: inputs[1]?.value || '',
+      ytdAdminRecovery: inputs[2]?.value || '',
+      ytdScRecovery: inputs[3]?.value || '',
+      ytdAdminPct: inputs[4]?.value || '',
+      ytdScPct: inputs[5]?.value || '',
+      scScdpcBudget: inputs[6]?.value || '',
+      fullCostBudget: inputs[7]?.value || '',
+      scRecoveryBudgetPct: inputs[8]?.value || '',
+      scVariance: inputs[9]?.value || ''
+    };
+  });
+  try { localStorage.setItem('wvph_apr_dpcs', JSON.stringify(rows)); } catch(e) {}
+  const el = document.getElementById('dpcsSaved');
+  if (el) { el.style.opacity = '1'; setTimeout(() => el.style.opacity = '0', 1800); }
+}
+
+function addDpcsRow() {
+  const tbody = document.getElementById('dpcsBody');
+  tbody.appendChild(createDpcsRow({}));
+}
+
+function renderDpcs() {
+  const tbody = document.getElementById('dpcsBody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  loadDpcs().forEach(d => tbody.appendChild(createDpcsRow(d)));
+}
+
+// Cost allocation notes (reuse highlights pattern)
+function loadCaNotes() {
+  try {
+    const ver = localStorage.getItem('wvph_apr_ca_notes_version');
+    if (ver !== CA_NOTES_VERSION) {
+      localStorage.removeItem('wvph_apr_ca_notes');
+      localStorage.setItem('wvph_apr_ca_notes_version', CA_NOTES_VERSION);
+      return DEFAULT_CA_NOTES;
+    }
+    const saved = localStorage.getItem('wvph_apr_ca_notes');
+    return saved ? JSON.parse(saved) : DEFAULT_CA_NOTES;
+  } catch(e) { return DEFAULT_CA_NOTES; }
+}
+
+function saveCaNotes() {
+  const items = [...document.querySelectorAll('#caHighlightsList .hl-item')].map(el => ({
+    title: el.querySelector('.hl-title-input').value,
+    body:  el.querySelector('.hl-body-input').value
+  }));
+  try { localStorage.setItem('wvph_apr_ca_notes', JSON.stringify(items)); } catch(e) {}
+  const el = document.getElementById('caNotesSaved');
+  if (el) { el.style.opacity = '1'; setTimeout(() => el.style.opacity = '0', 1800); }
+}
+
+function addCaNote(title='', body='') {
+  const list = document.getElementById('caHighlightsList');
+  const item = createCaNoteEl({ title, body });
+  list.appendChild(item);
+  item.querySelector('.hl-title-input').focus();
+  saveCaNotes();
+}
+
+let caDragSrc = null;
+function createCaNoteEl(data) {
+  const div = document.createElement('div');
+  div.className = 'hl-item';
+  div.draggable = true;
+  div.innerHTML = `
+    <svg class="hl-drag" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="5" r="1.5" fill="currentColor"/><circle cx="15" cy="5" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="19" r="1.5" fill="currentColor"/><circle cx="15" cy="19" r="1.5" fill="currentColor"/></svg>
+    <div class="hl-body">
+      <input type="text" class="hl-title-input" value="${data.title.replace(/"/g,'&quot;')}" placeholder="Note title…">
+      <textarea class="hl-body-input" placeholder="Add details…" rows="1">${data.body}</textarea>
+    </div>
+    <button class="hl-delete" title="Remove">×</button>`;
+
+  const titleInput = div.querySelector('.hl-title-input');
+  const bodyInput  = div.querySelector('.hl-body-input');
+  const delBtn     = div.querySelector('.hl-delete');
+
+  titleInput.addEventListener('input', saveCaNotes);
+  bodyInput.addEventListener('input', () => { autoResizeHl(bodyInput); saveCaNotes(); });
+  delBtn.addEventListener('click', () => { if(confirm('Remove this note?')) { div.remove(); saveCaNotes(); } });
+
+  div.addEventListener('dragstart', () => { caDragSrc = div; setTimeout(() => div.style.opacity='0.4', 0); });
+  div.addEventListener('dragend',   () => { div.style.opacity='1'; saveCaNotes(); });
+  div.addEventListener('dragover',  e => { e.preventDefault(); div.classList.add('drag-over'); });
+  div.addEventListener('dragleave', () => div.classList.remove('drag-over'));
+  div.addEventListener('drop', e => {
+    e.preventDefault(); div.classList.remove('drag-over');
+    if (caDragSrc && caDragSrc !== div) {
+      const list = document.getElementById('caHighlightsList');
+      const all = [...list.querySelectorAll('.hl-item')];
+      if (all.indexOf(caDragSrc) < all.indexOf(div)) div.after(caDragSrc); else div.before(caDragSrc);
+      saveCaNotes();
+    }
+  });
+
+  setTimeout(() => autoResizeHl(bodyInput), 0);
+  return div;
+}
+
+function renderCaNotes() {
+  const list = document.getElementById('caHighlightsList');
+  if (!list) return;
+  list.innerHTML = '';
+  loadCaNotes().forEach(h => list.appendChild(createCaNoteEl(h)));
+}
+
 // Init
 renderTable();
 renderBurnChart();
@@ -1549,6 +1809,8 @@ renderHighlights();
 renderEnvRisks();
 renderActionItems();
 loadBsNotes();
+renderDpcs();
+renderCaNotes();
 
 // Load from Google Sheets and merge (Sheets takes priority over localStorage)
 (async () => {
