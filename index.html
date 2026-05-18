@@ -1132,8 +1132,16 @@ const DEFAULT_HIGHLIGHTS = [
   { title: 'RD Cash Grants Receivable', body: 'Total $1.3M outstanding based on agreed funding remittance tranches: ING BTE ($89K), CITI Eco Youth ($250K), and AMTRAC ($982K).' }
 ];
 
+const HIGHLIGHTS_VERSION = 'v2';
+
 function loadHighlights() {
   try {
+    const savedVersion = localStorage.getItem('wvph_apr_highlights_version');
+    if (savedVersion !== HIGHLIGHTS_VERSION) {
+      localStorage.removeItem('wvph_apr_highlights');
+      localStorage.setItem('wvph_apr_highlights_version', HIGHLIGHTS_VERSION);
+      return DEFAULT_HIGHLIGHTS;
+    }
     const saved = localStorage.getItem('wvph_apr_highlights');
     return saved ? JSON.parse(saved) : DEFAULT_HIGHLIGHTS;
   } catch(e) { return DEFAULT_HIGHLIGHTS; }
@@ -1232,8 +1240,16 @@ const TAG_OPTIONS = [
   { label: 'Other',     cls: 'tag-forex' },
 ];
 
+const ENV_RISKS_VERSION = 'v2';
+
 function loadEnvRisks() {
   try {
+    const savedVersion = localStorage.getItem('wvph_apr_env_risks_version');
+    if (savedVersion !== ENV_RISKS_VERSION) {
+      localStorage.removeItem('wvph_apr_env_risks');
+      localStorage.setItem('wvph_apr_env_risks_version', ENV_RISKS_VERSION);
+      return DEFAULT_ENV_RISKS;
+    }
     const saved = localStorage.getItem('wvph_apr_env_risks');
     return saved ? JSON.parse(saved) : DEFAULT_ENV_RISKS;
   } catch(e) { return DEFAULT_ENV_RISKS; }
@@ -1354,8 +1370,17 @@ const DEFAULT_ACTION_ITEMS = [
     detail: '$980K of current project spending drawn from projects whose income was received in prior FY — including AMTRAC ($415K, ended March 31, 2026), MMS Project ($23K), Citi Project AID Programme ($172K), and Empowerment through Entrepreneurship Program ($43K). One-time AMTRAC funding of $836K received June 2025 with ongoing next-phase proposal.' }
 ];
 
+const ACTION_ITEMS_VERSION = 'v2'; // bump this whenever DEFAULT_ACTION_ITEMS changes
+
 function loadActionItems() {
   try {
+    const savedVersion = localStorage.getItem('wvph_apr_action_items_version');
+    if (savedVersion !== ACTION_ITEMS_VERSION) {
+      // Version mismatch — clear old cache and use new defaults
+      localStorage.removeItem('wvph_apr_action_items');
+      localStorage.setItem('wvph_apr_action_items_version', ACTION_ITEMS_VERSION);
+      return DEFAULT_ACTION_ITEMS;
+    }
     const saved = localStorage.getItem('wvph_apr_action_items');
     return saved ? JSON.parse(saved) : DEFAULT_ACTION_ITEMS;
   } catch(e) { return DEFAULT_ACTION_ITEMS; }
