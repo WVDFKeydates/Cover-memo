@@ -79,6 +79,7 @@
 
   /* METRIC CARDS */
   .metric-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+  .metric-row-secondary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 12px; }
   .metric-card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 18px 20px; display: flex; flex-direction: column; gap: 4px; position: relative; overflow: hidden; border-top: 3px solid var(--orange); }
   .metric-card.dark { background: var(--midnight); border-top-color: var(--orange); }
   .metric-label { font-size: 11px; color: var(--ink3); }
@@ -453,6 +454,30 @@
         </div>
       </div>
     </div>
+
+    <!-- SECONDARY KPIs from screenshot -->
+    <div class="metric-row-secondary">
+      <div class="metric-card" style="background:#FFF0EB;border-top-color:var(--orange);">
+        <div class="metric-label" style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--orange);">Approved Commitment</div>
+        <div class="metric-value" style="font-size:26px;">$18M</div>
+        <div class="metric-note">Total approved project commitment</div>
+      </div>
+      <div class="metric-card" style="background:#FFF0EB;border-top-color:var(--orange);">
+        <div class="metric-label" style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--orange);">Annual Budget Full Cost</div>
+        <div class="metric-value" style="font-size:26px;">$18.1M</div>
+        <div class="metric-note">Full cost annual budget</div>
+      </div>
+      <div class="metric-card" style="background:#FFF0EB;border-top-color:var(--orange);">
+        <div class="metric-label" style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--orange);">Project YTD Actual</div>
+        <div class="metric-value" style="font-size:26px;">$8.6M</div>
+        <div class="metric-note">Year-to-date actual spend</div>
+      </div>
+      <div class="metric-card" style="background:#FFF0EB;border-top-color:var(--orange);">
+        <div class="metric-label" style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--orange);">YTD % Spent Location</div>
+        <div class="metric-value mv-amber" style="font-size:26px;">92%</div>
+        <div class="metric-note">YTD burn rate at location level</div>
+      </div>
+    </div>
   </div>
 
   <!-- INCOME & CASH -->
@@ -573,6 +598,34 @@
         </div>
       </div>
     </div>
+
+  <!-- FUNDING TYPE STATUS -->
+  <div class="section">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--orange);">
+      <span style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--midnight);">Funding type status vs NO planned budget</span>
+      <span style="font-size:10px;color:var(--ink3);">Amounts in USD</span>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden;">
+      <div style="overflow-x:auto;">
+        <table id="fundingTypeTable" style="width:100%;border-collapse:collapse;font-size:11px;">
+          <thead>
+            <tr style="background:var(--midnight);color:#fff;">
+              <th style="padding:10px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:0.04em;min-width:80px;border-right:1px solid rgba(255,255,255,0.1);">SO TYPE</th>
+              <th style="padding:10px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:0.04em;min-width:140px;border-right:1px solid rgba(255,255,255,0.1);">Funding Type</th>
+              <th style="padding:10px 12px;text-align:right;font-weight:600;font-size:10px;letter-spacing:0.04em;white-space:nowrap;border-right:1px solid rgba(255,255,255,0.1);">NO Planned Budget</th>
+              <th style="padding:10px 12px;text-align:right;font-weight:600;font-size:10px;letter-spacing:0.04em;white-space:nowrap;border-right:1px solid rgba(255,255,255,0.1);">Approved Commitment</th>
+              <th style="padding:10px 12px;text-align:right;font-weight:600;font-size:10px;letter-spacing:0.04em;white-space:nowrap;border-right:1px solid rgba(255,255,255,0.1);">FY26 Posted Led B Budget</th>
+              <th style="padding:10px 12px;text-align:right;font-weight:600;font-size:10px;letter-spacing:0.04em;white-space:nowrap;border-right:1px solid rgba(255,255,255,0.1);">% Achieved (PBAS vs NO Planned)</th>
+              <th style="padding:10px 12px;text-align:right;font-weight:600;font-size:10px;letter-spacing:0.04em;white-space:nowrap;">% Achieved (LEDB vs NO Planned)</th>
+            </tr>
+          </thead>
+          <tbody id="fundingTypeBody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
 
   <!-- COST ALLOCATION -->
   <div class="section">
@@ -1933,6 +1986,87 @@ const spinStyle = document.createElement('style');
 spinStyle.textContent = '@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }';
 document.head.appendChild(spinStyle);
 
+
+// ─── FUNDING TYPE STATUS TABLE ────────────────────────────────────────────────
+const FUNDING_TYPE_DATA = [
+  // [soType, fundingType, noPlanned, approvedCommitment, fy26LedbBudget, pctPbas, pctLedb, isTotal, isGrand]
+  { soType: 'INTL', type: 'Sponsorship',            noPlan: 7766080,   approved: 8876845,  ledb: 8750784,  pbas: 114, ledbPct: 113, isTotal: false, isGrand: false },
+  { soType: '',     type: 'Private Non-Sponsorship', noPlan: 1359688,   approved: 2656246,  ledb: 2619026,  pbas: 195, ledbPct: 193, isTotal: false, isGrand: false },
+  { soType: '',     type: 'Multilateral',            noPlan: 479000,    approved: 0,        ledb: 0,        pbas: 0,   ledbPct: 0,   isTotal: false, isGrand: false },
+  { soType: '',     type: 'Government',              noPlan: 1570179,   approved: 2111808,  ledb: 2289135,  pbas: 134, ledbPct: 146, isTotal: false, isGrand: false },
+  { soType: 'INTL Total', type: '',                  noPlan: 11174947,  approved: 13644899, ledb: 13658945, pbas: 122, ledbPct: 122, isTotal: true,  isGrand: false },
+  { soType: 'LOCAL', type: 'Sponsorship',            noPlan: 2884440,   approved: 2833980,  ledb: 2889406,  pbas: 98,  ledbPct: 100, isTotal: false, isGrand: false },
+  { soType: '',     type: 'Private Non-Sponsorship', noPlan: 2550464,   approved: 2544982,  ledb: 2278208,  pbas: 100, ledbPct: 89,  isTotal: false, isGrand: false },
+  { soType: '',     type: 'Multilateral',            noPlan: 377976,    approved: 0,        ledb: 0,        pbas: 0,   ledbPct: 0,   isTotal: false, isGrand: false },
+  { soType: '',     type: 'Government',              noPlan: 0,         approved: 0,        ledb: 0,        pbas: 0,   ledbPct: 0,   isTotal: false, isGrand: false },
+  { soType: 'LOCAL Total', type: '',                 noPlan: 5812880,   approved: 5378962,  ledb: 5167614,  pbas: 93,  ledbPct: 89,  isTotal: true,  isGrand: false },
+  { soType: 'GRAND TOTAL', type: '',                 noPlan: 16987827,  approved: 19023861, ledb: 18826558, pbas: 112, ledbPct: 111, isTotal: false, isGrand: true  },
+];
+
+const FUNDING_VERSION = 'v1';
+
+function loadFundingData() {
+  try {
+    const ver = localStorage.getItem('wvph_apr_funding_version');
+    if (ver !== FUNDING_VERSION) {
+      localStorage.removeItem('wvph_apr_funding');
+      localStorage.setItem('wvph_apr_funding_version', FUNDING_VERSION);
+      return FUNDING_TYPE_DATA;
+    }
+    const saved = localStorage.getItem('wvph_apr_funding');
+    return saved ? JSON.parse(saved) : FUNDING_TYPE_DATA;
+  } catch(e) { return FUNDING_TYPE_DATA; }
+}
+
+function fmtUSD(v) {
+  if (!v && v !== 0) return '—';
+  if (v === 0) return '—';
+  return '$' + v.toLocaleString('en-US');
+}
+
+function pctBadge(pct) {
+  if (!pct && pct !== 0) return '—';
+  if (pct === 0) return '<span style="color:var(--ink3);">0%</span>';
+  const color = pct >= 100 ? '#155930' : pct >= 90 ? '#FF6929' : '#B10831';
+  const bg = pct >= 100 ? '#D4EDDA' : pct >= 90 ? '#FFF3CD' : '#FDDEDE';
+  return `<span style="font-weight:600;color:${color};background:${bg};padding:2px 7px;border-radius:4px;font-size:10px;">${pct}%</span>`;
+}
+
+function renderFundingTypeTable() {
+  const tbody = document.getElementById('fundingTypeBody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  const data = loadFundingData();
+
+  data.forEach(row => {
+    const tr = document.createElement('tr');
+    const isGrand = row.isGrand;
+    const isTotal = row.isTotal;
+
+    if (isGrand) {
+      tr.style.cssText = 'background:var(--midnight);color:#fff;font-weight:700;';
+    } else if (isTotal) {
+      tr.style.cssText = 'background:#E9E7E3;font-weight:700;';
+    } else {
+      tr.style.cssText = 'background:var(--surface);border-bottom:1px solid var(--border2);';
+    }
+
+    const textColor = isGrand ? '#fff' : 'var(--midnight)';
+    const cellStyle = `padding:9px 12px;font-size:11px;border-right:1px solid ${isGrand ? 'rgba(255,255,255,0.1)' : 'var(--border2)'};color:${textColor};`;
+
+    tr.innerHTML = `
+      <td style="${cellStyle}font-weight:700;">${row.soType || ''}</td>
+      <td style="${cellStyle}">${row.type || ''}</td>
+      <td style="${cellStyle}text-align:right;">${fmtUSD(row.noPlan)}</td>
+      <td style="${cellStyle}text-align:right;">${fmtUSD(row.approved)}</td>
+      <td style="${cellStyle}text-align:right;">${fmtUSD(row.ledb)}</td>
+      <td style="${cellStyle}text-align:right;">${isGrand ? '<span style="font-weight:700;color:#FF5515;">'+row.pbas+'%</span>' : pctBadge(row.pbas)}</td>
+      <td style="padding:9px 12px;font-size:11px;text-align:right;color:${textColor};">${isGrand ? '<span style="font-weight:700;color:#FF5515;">'+row.ledbPct+'%</span>' : pctBadge(row.ledbPct)}</td>`;
+
+    tbody.appendChild(tr);
+  });
+}
+
 // Init
 renderTable();
 renderBurnChart();
@@ -1942,6 +2076,7 @@ renderActionItems();
 loadBsNotes();
 renderDpcs();
 renderCaNotes();
+renderFundingTypeTable();
 loadNarrative();
 
 // Load from Google Sheets and merge (Sheets takes priority over localStorage)
