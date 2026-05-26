@@ -117,6 +117,11 @@
   .loc-v { background: #E9E7E3; color: #111222; }
   .loc-m { background: #D1EFDD; color: #155930; }
   .loc-l { background: #FFE8DC; color: #E04000; }
+  .loc-pns-hea { background: #E8F4FB; color: #0C5A8A; }
+  .loc-pns-min { background: #E8F4EE; color: #155930; }
+  .loc-pns-vis { background: #EDE8FB; color: #4A1A8A; }
+  .loc-pns-luz { background: #FBF0E8; color: #7A3A0C; }
+  .loc-pns-no  { background: #F5F0FB; color: #5A1A7A; }
   .burn-cell { display: flex; align-items: center; gap: 6px; justify-content: flex-end; }
   .burn-bar { width: 60px; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; flex-shrink: 0; position: relative; }
   .burn-fill { height: 100%; border-radius: 3px; }
@@ -563,10 +568,11 @@
         <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
           <div class="filter-row" style="margin-bottom:0;">
             <span class="filter-label">Filter:</span>
-            <button class="filter-btn active" onclick="filterArea('all',this)">All areas</button>
+            <button class="filter-btn active" onclick="filterArea('all',this)">All</button>
             <button class="filter-btn" onclick="filterArea('Luzon',this)">Luzon</button>
             <button class="filter-btn" onclick="filterArea('Visayas',this)">Visayas</button>
             <button class="filter-btn" onclick="filterArea('Mindanao',this)">Mindanao</button>
+            <button class="filter-btn" onclick="filterArea('PNS',this)">PNS/Grants</button>
           </div>
           <div class="toggle-mode">
             <button class="toggle-btn active" id="btnPct" onclick="setMode('pct')">% Burn</button>
@@ -844,13 +850,13 @@ const projects = [
     note: 'Overspending due to advance delivery of SNC kits as planned, and Sponsorship Direct charge costs (Global charges). Mismatch in Global charges budget already included in midyear revised budget submitted to SO. Staff costs also exceeded budget due to travel and training related to IPF implementation.' },
   { name: 'Camarines Sur ADP', area: 'Luzon', burn: 124, annualBurn: 59, actual: 175385, budget: 141072, variance: -34312, over: true,
     note: 'Overspending driven by higher SNC customized kit and Sponsorship Direct charge costs (Global charges), and increased staff travel for IPF activities. These are already considered in the midyear budget revision submitted to SO and for Sunsystems uploading in May.' },
-  { name: 'PH Multiple Cyclones ER', area: 'Mindanao', burn: 63, annualBurn: 40, actual: 105224, budget: 167905, variance: 62681, over: false,
+  { name: 'PH Multiple Cyclones ER', area: 'PNS/HEA', burn: 63, annualBurn: 40, actual: 105224, budget: 167905, variance: 62681, over: false,
     note: 'CITI Grant remaining balances primarily from livelihood farming materials where actual procurement costs were lower than approved budget. HK SAR Grant Match implementation ongoing. Following NCE approval for CITI on May 13, new project end date moved to June 30, 2026.' },
-  { name: 'COMMUNITY READINESS (ANTICI)', area: 'Visayas', burn: 65, annualBurn: 16, actual: 100224, budget: 153868, variance: 53644, over: false,
+  { name: 'COMMUNITY READINESS (ANTICI)', area: 'PNS/HEA', burn: 65, annualBurn: 16, actual: 100224, budget: 153868, variance: 53644, over: false,
     note: 'Several major activities remain dependent on release of finalized Operational Guidelines for RA 12287. Final version expected between May and June 2026. Team coordinating with OCD on OG development. Budget monitoring and analysis being strengthened through regular budget-vs-actual reviews.' },
-  { name: 'PH Earthquake Response', area: 'Luzon', burn: 92, annualBurn: 92, actual: 289132, budget: 315697, variance: 26565, over: false,
+  { name: 'PH Earthquake Response', area: 'PNS/HEA', burn: 92, annualBurn: 92, actual: 289132, budget: 315697, variance: 26565, over: false,
     note: 'Underspending pertains to NEPRF budget planned only until April. Most earthquake response activities have achieved target burn rate. Remaining NEPRF budget will be reallocated through June 2026 to support completion and closeout activities.' },
-  { name: 'Abaca Value Chain (ERACS)', area: 'Mindanao', burn: 47, annualBurn: 25, actual: 22864, budget: 49161, variance: 26297, over: false,
+  { name: 'Abaca Value Chain (ERACS)', area: 'PNS/Mindanao', burn: 47, annualBurn: 25, actual: 22864, budget: 49161, variance: 26297, over: false,
     note: 'Underspending mainly due to postponement of training activity rescheduled to May based on availability of resource person. Action: follow through with AP team on catch-up plans.' },
 ];
 
@@ -878,6 +884,7 @@ function setMode(mode) {
 
 function filteredProjects() {
   if (currentArea === 'all') return projects;
+  if (currentArea === 'PNS') return projects.filter(p => p.area.startsWith('PNS'));
   return projects.filter(p => p.area === currentArea);
 }
 
@@ -912,7 +919,14 @@ function renderTable() {
   const body = document.getElementById('projBody');
   body.innerHTML = '';
   fp.forEach((p, i) => {
-    const locClass = p.area === 'Visayas' ? 'loc-v' : p.area === 'Mindanao' ? 'loc-m' : 'loc-l';
+    const locClass = p.area === 'Visayas' ? 'loc-v' :
+                       p.area === 'Mindanao' ? 'loc-m' :
+                       p.area === 'Luzon' ? 'loc-l' :
+                       p.area === 'PNS/HEA' ? 'loc-pns-hea' :
+                       p.area === 'PNS/Mindanao' ? 'loc-pns-min' :
+                       p.area === 'PNS/Visayas' ? 'loc-pns-vis' :
+                       p.area === 'PNS/Luzon' ? 'loc-pns-luz' :
+                       p.area === 'PNS/NO' ? 'loc-pns-no' : 'loc-l';
     const fillPct = Math.min(p.burn, 100);
     const varDisplay = currentMode === 'pct'
       ? `<span class="${p.over ? 'variance-neg' : 'variance-pos'}">${p.over ? '−' : '+'}${Math.abs(p.variance).toLocaleString('en', {maximumFractionDigits:0})}</span>`
