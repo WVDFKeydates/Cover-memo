@@ -669,6 +669,65 @@
         <span id="dpcsSaved" style="font-size:10px;color:var(--green);opacity:0;transition:opacity 0.4s;">✓ Saved</span>
       </div>
 
+      <!-- DPCS Comments -->
+      <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
+        <div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;" onclick="toggleDpcsComment()">
+          <div style="font-size:11px;font-weight:600;color:var(--midnight);">Comments / Remarks</div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span id="dpcsCommentSaved" style="font-size:10px;color:var(--green);opacity:0;transition:opacity 0.4s;">✓ Saved</span>
+            <svg id="dpcsCommentChevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ink3)" stroke-width="2.5" style="transition:transform 0.2s;transform:rotate(0deg);flex-shrink:0;"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+        <div id="dpcsCommentBody" style="margin-top:8px;">
+          <textarea id="dpcsCommentBox"
+            placeholder="Add any comments or remarks on the DPCS variance table here…"
+            oninput="saveDpcsComment()"
+            style="width:100%;box-sizing:border-box;min-height:80px;padding:10px 12px;font-family:'Inter',sans-serif;font-size:11px;color:var(--ink2);background:var(--surface2);border:1px solid var(--border);border-radius:4px;resize:vertical;line-height:1.6;outline:none;"
+            onfocus="this.style.borderColor='var(--orange)';this.style.background='#FFF5F0';"
+            onblur="this.style.borderColor='var(--border)';this.style.background='var(--surface2)';"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- SPENDING BREAKDOWNS -->
+      <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border);">
+        <div style="font-size:12px;font-weight:600;color:var(--midnight);margin-bottom:16px;">Spending detail — YTD April 2026</div>
+
+        <!-- Spending per Allocation Type -->
+        <div style="margin-bottom:20px;">
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;">Spending per Allocation Type</div>
+          <table style="width:100%;border-collapse:collapse;font-size:11px;">
+            <thead>
+              <tr style="background:var(--midnight);color:#fff;">
+                <th style="padding:7px 10px;text-align:left;font-weight:600;font-size:10px;letter-spacing:0.04em;">Allocation Type</th>
+                <th style="padding:7px 10px;text-align:right;font-weight:600;font-size:10px;letter-spacing:0.04em;">YTD Actual</th>
+                <th style="padding:7px 10px;text-align:right;font-weight:600;font-size:10px;letter-spacing:0.04em;">Annual Budget</th>
+                <th style="padding:7px 10px;text-align:right;font-weight:600;font-size:10px;letter-spacing:0.04em;">% Spent</th>
+                <th style="padding:7px 10px;text-align:left;font-weight:600;font-size:10px;letter-spacing:0.04em;min-width:180px;">Remarks</th>
+              </tr>
+            </thead>
+            <tbody id="allocTypeBody"></tbody>
+          </table>
+        </div>
+
+        <!-- Spending per Main Expense Account (full width) -->
+        <div>
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;">Spending per Main Expense Account</div>
+          <table style="width:100%;border-collapse:collapse;font-size:11px;">
+            <thead>
+              <tr style="background:var(--midnight);color:#fff;">
+                <th style="padding:7px 10px;text-align:left;font-weight:600;font-size:10px;letter-spacing:0.04em;min-width:220px;">Account Description</th>
+                <th style="padding:7px 10px;text-align:right;font-weight:600;font-size:10px;letter-spacing:0.04em;">YTD Actual</th>
+                <th style="padding:7px 10px;text-align:right;font-weight:600;font-size:10px;letter-spacing:0.04em;">Annual Budget</th>
+                <th style="padding:7px 10px;text-align:right;font-weight:600;font-size:10px;letter-spacing:0.04em;">% Spent (Orig)</th>
+                <th style="padding:7px 10px;text-align:left;font-weight:600;font-size:10px;letter-spacing:0.04em;min-width:180px;">Remarks</th>
+              </tr>
+            </thead>
+            <tbody id="expenseAcctBody"></tbody>
+          </table>
+        </div>
+      </div>
+
       <!-- Notes on Cost Recovery Variance -->
       <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
@@ -1800,6 +1859,32 @@ function renderDpcs() {
   loadDpcs().forEach(d => tbody.appendChild(createDpcsRow(d)));
 }
 
+// DPCS comment box
+function toggleDpcsComment() {
+  const body = document.getElementById('dpcsCommentBody');
+  const chevron = document.getElementById('dpcsCommentChevron');
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : '';
+  chevron.style.transform = isOpen ? 'rotate(-90deg)' : 'rotate(0deg)';
+  try { localStorage.setItem('wvph_apr_dpcs_comment_open', isOpen ? '0' : '1'); } catch(e) {}
+}
+function saveDpcsComment() {
+  try { localStorage.setItem('wvph_apr_dpcs_comment', document.getElementById('dpcsCommentBox').value); } catch(e) {}
+  const el = document.getElementById('dpcsCommentSaved');
+  if (el) { el.style.opacity = '1'; setTimeout(() => el.style.opacity = '0', 1800); }
+}
+function loadDpcsComment() {
+  const box = document.getElementById('dpcsCommentBox');
+  if (!box) return;
+  try { box.value = localStorage.getItem('wvph_apr_dpcs_comment') || ''; } catch(e) {}
+  // Restore collapse state (default: open)
+  const isOpen = localStorage.getItem('wvph_apr_dpcs_comment_open') !== '0';
+  const body = document.getElementById('dpcsCommentBody');
+  const chevron = document.getElementById('dpcsCommentChevron');
+  if (body) body.style.display = isOpen ? '' : 'none';
+  if (chevron) chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(-90deg)';
+}
+
 // Cost allocation notes (reuse highlights pattern)
 function loadCaNotes() {
   try {
@@ -1878,6 +1963,97 @@ function renderCaNotes() {
   loadCaNotes().forEach(h => list.appendChild(createCaNoteEl(h)));
 }
 
+
+// ─── SPENDING BREAKDOWNS ─────────────────────────────────────────────────────
+const ALLOC_TYPE_DATA = [
+  { type:'DPCS', ytd:122620,  budget:null },
+  { type:'PSC',  ytd:864647,  budget:1657295 },
+  { type:'SOM',  ytd:35633,   budget:61063 },
+  { type:'SSC',  ytd:27371,   budget:46487 },
+  { type:'TSC',  ytd:235637,  budget:525544 },
+];
+
+const EXPENSE_ACCT_DATA = [
+  { desc:'Salaries',                        ytd:834126,  budget:1241506 },
+  { desc:'Benefits',                        ytd:203004,  budget:499645 },
+  { desc:'Fees & Taxes',                    ytd:85602,   budget:171768 },
+  { desc:'Travel',                          ytd:52483,   budget:131075 },
+  { desc:'Occupancy',                       ytd:39277,   budget:75501 },
+  { desc:'Telephone & Postage',             ytd:20128,   budget:28792 },
+  { desc:'Hospitality',                     ytd:13922,   budget:14592 },
+  { desc:'Office Supplies',                 ytd:12252,   budget:20804 },
+  { desc:'Office Supplies/Equipment ($1K–$5K)', ytd:10177, budget:44461 },
+  { desc:'Consultancy',                     ytd:7240,    budget:6165 },
+  { desc:'Logistics',                       ytd:2855,    budget:196 },
+  { desc:'Vehicle Operating Costs',         ytd:2679,    budget:19235 },
+  { desc:'Staff Training',                  ytd:1270,    budget:32464 },
+  { desc:'Printing',                        ytd:843,     budget:2050 },
+  { desc:'Advertising',                     ytd:50,      budget:2135 },
+];
+
+function spendPctBadge(ytd, budget) {
+  if (!budget || budget === 0) return '<span style="color:var(--ink3);">—</span>';
+  const pct = Math.round(ytd / budget * 100);
+  let bg, color;
+  if (pct >= 110) { bg = '#fde8e8'; color = '#b02020'; }
+  else if (pct >= 90) { bg = '#fff3e0'; color = '#b85c00'; }
+  else { bg = '#e8f5e9'; color = '#155930'; }
+  return `<span style="display:inline-block;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:700;background:${bg};color:${color};">${pct}%</span>`;
+}
+
+function fmt(n) {
+  if (n === null || n === undefined) return '—';
+  return n.toLocaleString('en-US');
+}
+
+function spendingRow(label, ytd, budget, isTotal, remarkKey) {
+  const bold = isTotal ? 'font-weight:700;border-top:1.5px solid var(--border);' : '';
+  const tdBase = `padding:6px 10px;border-bottom:1px solid var(--border2);${bold}`;
+  let remarkCell;
+  if (isTotal) {
+    remarkCell = `<td style="${tdBase}"></td>`;
+  } else {
+    const saved = (() => { try { return localStorage.getItem(remarkKey) || ''; } catch(e) { return ''; } })();
+    remarkCell = `<td style="${tdBase}padding-top:4px;padding-bottom:4px;">
+      <input type="text" data-rkey="${remarkKey}" value="${saved.replace(/"/g,'&quot;')}" placeholder="Add remark…"
+        style="width:100%;box-sizing:border-box;font-family:'Inter',sans-serif;font-size:11px;color:var(--ink2);background:transparent;border:none;border-bottom:1px solid transparent;outline:none;padding:2px 4px;border-radius:2px;"
+        onfocus="this.style.background='#FFF5F0';this.style.borderBottomColor='var(--orange)';"
+        onblur="this.style.background='transparent';this.style.borderBottomColor='transparent';"
+        oninput="try{localStorage.setItem(this.dataset.rkey,this.value)}catch(e){}">
+    </td>`;
+  }
+  return `<tr style="background:var(--surface);${bold}">
+    <td style="${tdBase}">${label}</td>
+    <td style="${tdBase}text-align:right;">${fmt(ytd)}</td>
+    <td style="${tdBase}text-align:right;">${fmt(budget)}</td>
+    <td style="${tdBase}text-align:right;">${spendPctBadge(ytd, budget)}</td>
+    ${remarkCell}
+  </tr>`;
+}
+
+function renderSpendingTables() {
+  // Allocation Type
+  const atBody = document.getElementById('allocTypeBody');
+  if (atBody) {
+    let html = '';
+    ALLOC_TYPE_DATA.forEach(r => { html += spendingRow(r.type, r.ytd, r.budget, false, `wvph_apr_at_remark_${r.type}`); });
+    const totYtd = ALLOC_TYPE_DATA.reduce((s,r) => s + r.ytd, 0);
+    const totBud = ALLOC_TYPE_DATA.filter(r => r.budget).reduce((s,r) => s + r.budget, 0);
+    html += spendingRow('Total', totYtd, totBud, true);
+    atBody.innerHTML = html;
+  }
+
+  // Expense Accounts
+  const eaBody = document.getElementById('expenseAcctBody');
+  if (eaBody) {
+    let html = '';
+    EXPENSE_ACCT_DATA.forEach(r => { html += spendingRow(r.desc, r.ytd, r.budget, false, `wvph_apr_ea_remark_${r.desc.replace(/\W+/g,'_')}`); });
+    const totYtd = EXPENSE_ACCT_DATA.reduce((s,r) => s + r.ytd, 0);
+    const totBud = EXPENSE_ACCT_DATA.reduce((s,r) => s + r.budget, 0);
+    html += spendingRow('Total', totYtd, totBud, true);
+    eaBody.innerHTML = html;
+  }
+}
 
 // ─── AI-POWERED NARRATIVE REGENERATION ───────────────────────────────────────
 function saveNarrative() {
@@ -2089,7 +2265,9 @@ renderEnvRisks();
 renderActionItems();
 loadBsNotes();
 renderDpcs();
+loadDpcsComment();
 renderCaNotes();
+renderSpendingTables();
 renderFundingTypeTable();
 loadNarrative();
 
